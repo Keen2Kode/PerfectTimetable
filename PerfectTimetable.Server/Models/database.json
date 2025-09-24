@@ -1,0 +1,56 @@
+{
+  "Courses": [
+    {
+      "Id": 1,
+      "Name": "Programming 101",
+      "DurationBlocks": 4,
+      "Timeslots": [
+        {
+          "Day": 0,
+          "StartBlock": 1
+        },
+        {
+          "Day": 1,
+          "StartBlock": 6
+        },
+        {
+          "Day": 2,
+          "StartBlock": 3
+        },
+        {
+          "Day": 4,
+          "StartBlock": 10
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "Name": "Data Structures TUT",
+      "DurationBlocks": 2,
+      "Timeslots": [
+        {
+          "Day": 0,
+          "StartBlock": 1
+        },
+        {
+          "Day": 2,
+          "StartBlock": 12
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "Name": "Data Structures LAB",
+      "DurationBlocks": 4,
+      "Timeslots": [
+        {
+          "Day": 1,
+          "StartBlock": 6
+        }
+      ]
+    }
+  ],
+  "StartTime": "08:00:00",
+  "BlockDuration": "00:30:00",
+  "Blocks": 16
+}

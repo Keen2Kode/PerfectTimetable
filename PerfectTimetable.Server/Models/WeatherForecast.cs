@@ -1,4 +1,4 @@
-namespace PerfectTimetable.Server
+namespace PerfectTimetable.Server.Models
 {
     public class WeatherForecast
     {

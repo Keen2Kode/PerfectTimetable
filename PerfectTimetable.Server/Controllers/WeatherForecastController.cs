@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PerfectTimetable.Server.Models;
 
 namespace PerfectTimetable.Server.Controllers
 {
