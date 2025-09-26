@@ -1,0 +1,92 @@
+*** Begin Patch
+*** Update File: vite.config.ts
+@@
+-import { defineConfig } from 'vite';
++import { defineConfig, loadEnv } from 'vite';
+ import plugin from '@vitejs/plugin-react';
+ import fs from 'fs';
+ import path from 'path';
+ import child_process from 'child_process';
+-import { env } from 'process';
++import { env as processEnv } from 'process';
+@@
+-const baseFolder =
+-    env.APPDATA !== undefined && env.APPDATA !== ''
+-        ? ${env.APPDATA}/ASP.NET/https
+-        : ${env.HOME}/.aspnet/https;
++const baseFolder =
++    processEnv.APPDATA !== undefined && processEnv.APPDATA !== ''
++        ? ${processEnv.APPDATA}/ASP.NET/https
++        : ${processEnv.HOME}/.aspnet/https;
+@@
+-const httpsPort = env.ASPNETCORE_HTTPS_PORT?.trim();
+-const urls = env.ASPNETCORE_URLS?.split(';').map(u => u.trim()).filter(Boolean) ?? [];
+-
+-if (!httpsPort && urls.length === 0) {
+-    throw new Error('Missing ASPNETCORE_HTTPS_PORT or ASPNETCORE_URLS for Vite proxy');
+-}
+-
+-const target = httpsPort ? https://localhost: : urls[0];
+-console.log('Proxy target:', target);
+-
+-
+-// https://vitejs.dev/config/
+-export default defineConfig({
+-    plugins: [plugin()],
+-    resolve: {
+-        alias: {
+-            '@': fileURLToPath(new URL('./src', import.meta.url))
+-        }
+-    },
+-    server: {
+-        proxy: {
+-            '^/weatherforecast': {
+-                target,
+-                secure: false
+-            }
+-        },
+-        port: parseInt(env.DEV_SERVER_PORT || '49935'),
+-        https: {
+-            key: fs.readFileSync(keyFilePath),
+-            cert: fs.readFileSync(certFilePath),
+-        }
+-    }
+-})
++// https://vitejs.dev/config/
++export default defineConfig(({ mode }) => {
++    const env = loadEnv(mode, process.cwd(), '');
++
++    const httpsPort = env.ASPNETCORE_HTTPS_PORT?.trim();
++    const urls = env.ASPNETCORE_URLS?.split(';').map(u => u.trim()).filter(Boolean) ?? [];
++
++    if (!httpsPort && urls.length === 0) {
++        throw new Error('Missing ASPNETCORE_HTTPS_PORT or ASPNETCORE_URLS for Vite proxy');
++    }
++
++    const target = httpsPort ? https://localhost: : urls[0];
++    const devServerPort = parseInt(env.DEV_SERVER_PORT ?? '49935', 10);
++    console.log('Proxy target:', target);
++
++    return {
++        plugins: [plugin()],
++        resolve: {
++            alias: {
++                '@': fileURLToPath(new URL('./src', import.meta.url))
++            }
++        },
++        server: {
++            proxy: {
++                '^/weatherforecast': {
++                    target,
++                    secure: false
++                }
++            },
++            port: devServerPort,
++            https: {
++                key: fs.readFileSync(keyFilePath),
++                cert: fs.readFileSync(certFilePath),
++            }
++        }
++    };
++});
+*** End Patch
