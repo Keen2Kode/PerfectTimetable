@@ -34,8 +34,21 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     }
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7137';
+
+//const httpsPort = env.ASPNETCORE_HTTPS_PORT?.trim();
+//const urls = env.ASPNETCORE_URLS?.split(';').map(u => u.trim()).filter(Boolean) ?? [];
+
+//if (!httpsPort && urls.length === 0) {
+//    throw new Error('Missing ASPNETCORE_HTTPS_PORT or ASPNETCORE_URLS for Vite proxy');
+//}
+
+//const target = httpsPort ? `https://localhost:${httpsPort}` : urls[0];
+const target = 'https://localhost:7137';
+
+
+
+
+console.log('Proxy target:', target);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -46,12 +59,12 @@ export default defineConfig({
         }
     },
     server: {
-        proxy: {
-            '^/weatherforecast': {
-                target,
-                secure: false
-            }
-        },
+        // proxy: {
+        //     '^/weatherforecast': {
+        //         target,
+        //         secure: false
+        //     }
+        // },
         port: parseInt(env.DEV_SERVER_PORT || '49935'),
         https: {
             key: fs.readFileSync(keyFilePath),
