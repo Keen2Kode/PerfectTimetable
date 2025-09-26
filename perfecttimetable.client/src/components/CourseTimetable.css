@@ -1,0 +1,60 @@
+﻿.course-timetable {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(100, 108, 255, 0.12);
+}
+
+.course-timetable__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 420px;
+}
+
+.course-timetable__table thead th {
+    background: rgba(100, 108, 255, 0.15);
+    font-weight: 600;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.course-timetable__table thead th:not(:first-child) {
+    text-align: center;
+}
+
+.course-timetable__table th,
+.course-timetable__table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid rgba(100, 108, 255, 0.12);
+    border-right: 1px solid rgba(100, 108, 255, 0.12);
+    white-space: nowrap;
+}
+
+.course-timetable__table th:last-child,
+.course-timetable__table td:last-child {
+    border-right: none;
+}
+
+.course-timetable__table tbody tr:nth-child(even) {
+    background: rgba(100, 108, 255, 0.06);
+}
+
+.course-timetable__table tbody tr:last-child th,
+.course-timetable__table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.course-timetable__time-column {
+    position: sticky;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    text-align: left;
+    z-index: 1;
+}
+
+.course-timetable__table td {
+    text-align: center;
+    color: rgba(60, 66, 87, 0.6);
+    font-size: 0.9rem;
+}

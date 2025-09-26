@@ -3,28 +3,44 @@
     border-radius: 0.75rem;
     border: 1px solid rgba(100, 108, 255, 0.25);
     background-color: rgba(100, 108, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
-.course-card__duration {
-    margin: 0.5rem 0 0;
+.course-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
-.course-card__slots {
+.course-card__meta {
+    margin: 0;
+    color: rgba(60, 66, 87, 0.75);
+    font-size: 0.95rem;
+}
+
+.course-card__timeslots {
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.course-card__slot {
+.course-card__timeslot {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 0.25rem;
 }
 
 .course-card__day {
     font-weight: 600;
+}
+
+.course-card__block {
+    color: rgba(60, 66, 87, 0.7);
+    font-size: 0.9rem;
+    text-transform: capitalize;
 }

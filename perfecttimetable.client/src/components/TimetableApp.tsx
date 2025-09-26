@@ -1,7 +1,12 @@
 ﻿import * as React from 'react';
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
+import { CourseTimetable } from './CourseTimetable';
+
+dayjs.extend(customParseFormat);
 
 type DayValue = number | string;
 
@@ -60,23 +65,33 @@ export function TimetableApp() {
         typeof value === 'string' ? value : dayNames[value] ?? `Day ${value}`
     );
 
+    const timeLabels = createTimeLabels(
+        model.startTime,
+        model.blockDuration,
+        model.blocks
+    );
+
     return (
         <div className="timetable">
             <header>
                 <h1>Perfect Timetable</h1>
                 <p>
-                    Starting {formatTime(model.startTime)}, block length{' '}
-                    {formatDuration(model.blockDuration)}, {model.blocks} blocks per day.
+                    Starting {formatTime(model.startTime)},
+                    {duration(model.blockDuration)}-minute blocks,
+                    {model.blocks} blocks per day.
                 </p>
             </header>
 
             <section className="timetable__grid">
                 {model.courses.map((course) => (
-                    <CourseCard
-                        key={course.id}
-                        course={course}
-                        friendlyDays={friendlyDays}
-                    />
+                    <div key={course.id} className="timetable__course">
+                        <CourseCard course={course} friendlyDays={friendlyDays} />
+                        <CourseTimetable
+                            courseId={course.id}
+                            friendlyDays={friendlyDays}
+                            timeLabels={timeLabels}
+                        />
+                    </div>
                 ))}
             </section>
         </div>
@@ -98,37 +113,24 @@ export function TimetableApp() {
 }
 
 function formatTime(value: string) {
-    const [hours, minutes] = value.split(':');
-    if (hours === undefined || minutes === undefined) {
-        return value;
-    }
-
-    const date = new Date();
-    date.setHours(Number(hours), Number(minutes), 0, 0);
-
-    return date.toLocaleTimeString([], {
-        hour: 'numeric',
-        minute: '2-digit',
-    });
+    return dayjs(value, 'HH:mm:ss', true).format("hh:mm A");
 }
 
-function formatDuration(value: string) {
-    const [hours, minutes] = value.split(':');
-    if (hours === undefined || minutes === undefined) {
-        return value;
-    }
+function duration(value: string): number {
+    const blockLength = dayjs(value, 'HH:mm:ss', true);
+    const stepMinutes = blockLength.hour() * 60 + blockLength.minute();
+    return stepMinutes;
+}
 
-    const totalMinutes = Number(hours) * 60 + Number(minutes);
-    if (totalMinutes % 60 === 0) {
-        const hrs = totalMinutes / 60;
-        return `${hrs} hour${hrs === 1 ? '' : 's'}`;
-    }
+function createTimeLabels(startTime: string, blockDuration: string, blocks: number) {
+    const start = dayjs(startTime, 'HH:mm:ss', true);
+    const stepMinutes = duration(blockDuration);
 
-    if (Number(hours) === 0) {
-        return `${Number(minutes)} minutes`;
+    const labels: string[] = [];
+    for (let i = 0; i < blocks; i++) {
+        labels.push(start.add(stepMinutes * i, 'minute').format("hh:mm A"));
     }
-
-    return `${Number(hours)}h ${Number(minutes)}m`;
+    return labels;
 }
 
 export default TimetableApp;
