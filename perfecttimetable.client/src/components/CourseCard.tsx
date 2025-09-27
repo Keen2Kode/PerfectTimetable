@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
-import type { Course } from './TimetableApp';
+
+import type { Course} from '../api/models/course';
 import './CourseCard.css';
 
 interface CourseCardProps {

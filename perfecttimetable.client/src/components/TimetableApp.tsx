@@ -6,29 +6,11 @@ import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
 import { CourseTimetable } from './CourseTimetable';
 
+import type { CourseModel } from '../api/models/courseModel';
+
 dayjs.extend(customParseFormat);
 
-type DayValue = number | string;
 
-interface TimeSlot {
-    day: number;
-    startBlock: number;
-}
-
-export interface Course {
-    id: number;
-    name: string;
-    durationBlocks: number;
-    timeslots: TimeSlot[];
-}
-
-interface CourseModel {
-    courses: Course[];
-    days: DayValue[];
-    startTime: string;
-    blockDuration: string;
-    blocks: number;
-}
 
 const dayNames = [
     'Sunday',
@@ -61,25 +43,19 @@ export function TimetableApp() {
         return <p>Loading timetable...</p>;
     }
 
-    const friendlyDays = model.days.map((value) =>
-        typeof value === 'string' ? value : dayNames[value] ?? `Day ${value}`
-    );
 
-    const timeLabels = createTimeLabels(
-        model.startTime,
-        model.blockDuration,
-        model.blocks
-    );
+    const friendlyDays = model.days.map((dayValue) => dayNames[dayValue]);
+    
+
+    const timeLabels = createTimeLabels(model.startTime, model.blockDuration, model.blocks);
 
     return (
         <div className="timetable">
             <header>
                 <h1>Perfect Timetable</h1>
-                <p>
-                    Starting {formatTime(model.startTime)},
-                    {duration(model.blockDuration)}-minute blocks,
-                    {model.blocks} blocks per day.
-                </p>
+                <p>Starting {formatTime(model.startTime)}</p>
+                <p>{duration(model.blockDuration)}-minute blocks</p>
+                <p>{model.blocks} blocks per day</p>
             </header>
 
             <section className="timetable__grid">
