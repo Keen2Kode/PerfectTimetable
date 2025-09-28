@@ -3,10 +3,9 @@ import type { TimeSlot } from '../api/models';
 interface SelectionSummaryProps {
     courseName: string;
     selections: TimeSlot[];
-    dayLabelLookup: Record<number, string>;
 }
 
-export function SelectionSummary({ courseName, selections, dayLabelLookup }: SelectionSummaryProps) {
+export function SelectionSummary({ courseName, selections}: SelectionSummaryProps) {
     if (selections.length === 0) {
         return (
             <div className="timetable__selection-empty" aria-live="polite">
@@ -21,7 +20,7 @@ export function SelectionSummary({ courseName, selections, dayLabelLookup }: Sel
             <ul className="timetable__selection-list">
                 {selections.map((slot, index) => (
                     <li key={`${slot.day}-${slot.startBlock}-${index}`}>
-                        <span className="timetable__selection-day">{dayLabelLookup[slot.day]}`</span>
+                        <span className="timetable__selection-day">{slot.day }`</span>
                         <span className="timetable__selection-block">Block {slot.startBlock}</span>
                     </li>
                 ))}

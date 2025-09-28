@@ -5,11 +5,11 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { Course } from './course';
-import type { DayOfWeek } from './dayOfWeek';
+import type { TimetableDay } from './timetableDay';
 
 export interface CourseModel {
   courses: Course[];
-  days: DayOfWeek[];
+  days: TimetableDay[];
   startTime: string;
   blockDuration: string;
   blocks: number;

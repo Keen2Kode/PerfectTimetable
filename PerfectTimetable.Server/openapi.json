@@ -128,7 +128,7 @@
           "days": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DayOfWeek"
+              "$ref": "#/components/schemas/TimetableDay"
             }
           },
           "startTime": {
@@ -144,9 +144,6 @@
             "format": "int32"
           }
         }
-      },
-      "DayOfWeek": {
-        "type": "integer"
       },
       "TimeSlot": {
         "required": [
@@ -164,6 +161,17 @@
             "format": "int32"
           }
         }
+      },
+      "TimetableDay": {
+        "enum": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ]
       },
       "WeatherForecast": {
         "type": "object",

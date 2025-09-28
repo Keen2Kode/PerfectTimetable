@@ -9,4 +9,5 @@ export * from './course';
 export * from './courseModel';
 export * from './dayOfWeek';
 export * from './timeSlot';
+export * from './timetableDay';
 export * from './weatherForecast';

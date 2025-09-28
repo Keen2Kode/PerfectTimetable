@@ -6,19 +6,19 @@
       "DurationBlocks": 4,
       "Timeslots": [
         {
-          "Day": 0,
+          "Day": "Monday",
           "StartBlock": 1
         },
         {
-          "Day": 1,
+          "Day": "Tuesday",
           "StartBlock": 6
         },
         {
-          "Day": 2,
+          "Day": "Wednesday",
           "StartBlock": 3
         },
         {
-          "Day": 4,
+          "Day": "Tuesday",
           "StartBlock": 10
         }
       ]
@@ -29,11 +29,11 @@
       "DurationBlocks": 2,
       "Timeslots": [
         {
-          "Day": 0,
+          "Day": "Tuesday",
           "StartBlock": 1
         },
         {
-          "Day": 2,
+          "Day": "Thursday",
           "StartBlock": 12
         }
       ]
@@ -44,7 +44,7 @@
       "DurationBlocks": 4,
       "Timeslots": [
         {
-          "Day": 1,
+          "Day": "Tuesday",
           "StartBlock": 6
         }
       ]

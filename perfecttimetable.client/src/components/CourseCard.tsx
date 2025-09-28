@@ -1,12 +1,13 @@
+import type { TimetableDay } from '../api/models';
 import type { Course} from '../api/models/course';
 import './CourseCard.css';
 
 interface CourseCardProps {
     course: Course;
-    friendlyDays: string[];
+    friendlyDays: TimetableDay[];
 }
 
-export function CourseCard({ course, friendlyDays }: CourseCardProps) {
+export function CourseCard({ course}: CourseCardProps) {
     return (
         <section className="course-card">
             <header className="course-card__header">
@@ -18,11 +19,11 @@ export function CourseCard({ course, friendlyDays }: CourseCardProps) {
 
             <ul className="course-card__timeslots">
                 {course.timeslots.map((slot, index) => {
-                    const dayLabel = friendlyDays[slot.day] ?? `Day ${slot.day}`;
+                    const dayLabel = slot.day;
 
                     return (
                         <li key={`${course.id}-${index}`} className="course-card__timeslot">
-                            <span className="course-card__day">{dayLabel}</span>
+                            <span className="course-card__day">{dayLabel.toString()}</span>
                             <span className="course-card__block">Starts at block {slot.startBlock}</span>
                         </li>
                     );

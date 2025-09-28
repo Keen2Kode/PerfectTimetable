@@ -5,7 +5,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
+import { TimetableDay } from './timetableDay';
+
 export interface TimeSlot {
-  day: number;
+  day: TimetableDay;
   startBlock: number;
 }

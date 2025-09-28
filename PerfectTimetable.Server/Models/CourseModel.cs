@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models
 {
@@ -8,12 +9,12 @@ namespace PerfectTimetable.Server.Models
         public List<Course> Courses { get; set; } = [];
 
         [Required]
-        public DayOfWeek[] Days { get; set;  } = [
-            DayOfWeek.Monday, 
-            DayOfWeek.Tuesday, 
-            DayOfWeek.Wednesday, 
-            DayOfWeek.Thursday, 
-            DayOfWeek.Friday
+        public TimetableDay[] Days { get; set;  } = [
+            TimetableDay.Monday,
+            TimetableDay.Tuesday,
+            TimetableDay.Wednesday,
+            TimetableDay.Thursday,
+            TimetableDay.Friday
         ];
 
         [Required]
@@ -28,5 +29,11 @@ namespace PerfectTimetable.Server.Models
         public int Blocks { get; set; } = 16;
 
 
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter<TimetableDay>))]
+    public enum TimetableDay
+    {
+        Monday, Tuesday, Wednesday, Thursday,Friday, Saturday,Sunday
     }
 }

@@ -9,10 +9,10 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="src\api\models\dayOfWeek - Copy.ts" />
-    <None Remove="src\api\models\dayOfWeek.ts" />
+    <None Remove="src\models\**" />
+    <TypeScriptConfiguration Remove="src\models\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\models\" />
+    <None Remove="src\api\models\dayOfWeek - Copy.ts" />
   </ItemGroup>
 </Project>

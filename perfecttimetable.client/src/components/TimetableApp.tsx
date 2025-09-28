@@ -6,19 +6,10 @@ import { CourseCard } from './CourseCard';
 import { CourseTimetable } from './CourseTimetable';
 import { SelectionSummary } from './SelectionSummary';
 
-import type { CourseModel, TimeSlot } from '../api/models';
+import type { CourseModel, TimeSlot, TimetableDay } from '../api/models';
 
 dayjs.extend(customParseFormat);
 
-const dayNames = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-];
 
 /**
  * Fetches the timetable data from the backend and renders a simple summary for
@@ -42,13 +33,7 @@ export function TimetableApp() {
         return <p>Loading timetable...</p>;
     }
 
-    const dayValues = model.days ?? [];
-    const friendlyDays = dayValues.map((dayValue) => dayNames[dayValue] ?? `Day ${dayValue}`);
-    const timeLabels = createTimeLabels(model.startTime, model.blockDuration, model.blocks);
-    const dayLabelLookup = dayValues.reduce<Record<number, string>>((lookup, value, index) => {
-        lookup[value] = friendlyDays[index] ?? `Day ${value}`;
-        return lookup;
-    }, {});
+    const friendlyDays = model.days;
 
     return (
         <div className="timetable">
@@ -66,15 +51,13 @@ export function TimetableApp() {
                         <CourseTimetable
                             courseId={course.id}
                             friendlyDays={friendlyDays}
-                            dayValues={dayValues}
-                            timeLabels={timeLabels}
+                            model={model}
                             selectedSlots={selectedSlotsByCourse[course.id] ?? []}
                             onToggleSlot={(day, startBlock) => handleSlotToggle(course.id, day, startBlock)}
                         />
                         <SelectionSummary
                             courseName={course.name}
                             selections={selectedSlotsByCourse[course.id] ?? []}
-                            dayLabelLookup={dayLabelLookup}
                         />
                     </div>
                 ))}
@@ -96,7 +79,7 @@ export function TimetableApp() {
         }
     }
 
-    function handleSlotToggle(courseId: number, day: number, startBlock: number) {
+    function handleSlotToggle(courseId: number, day: TimetableDay, startBlock: number) {
         setSelectedSlotsByCourse((previous) => {
             const currentSlots = previous[courseId] ?? [];
             const exists = currentSlots.some((slot) => slot.day === day && slot.startBlock === startBlock);
@@ -122,15 +105,5 @@ function duration(value: string): number {
     return stepMinutes;
 }
 
-function createTimeLabels(startTime: string, blockDuration: string, blocks: number) {
-    const start = dayjs(startTime, 'HH:mm:ss', true);
-    const stepMinutes = duration(blockDuration);
-
-    const labels: string[] = [];
-    for (let i = 0; i < blocks; i++) {
-        labels.push(start.add(stepMinutes * i, 'minute').format("hh:mm A"));
-    }
-    return labels;
-}
 
 export default TimetableApp;
