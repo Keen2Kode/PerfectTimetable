@@ -1,4 +1,3 @@
-import * as React from 'react';
 import './App.css';
 import TimetableApp from './components/TimetableApp';
 
