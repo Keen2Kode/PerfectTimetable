@@ -1,13 +1,17 @@
-﻿import * as React from 'react';
+﻿import type { KeyboardEvent } from 'react';
+import type { TimeSlot } from '../api/models';
 import './CourseTimetable.css';
 
 interface CourseTimetableProps {
     courseId: number;
     friendlyDays: string[];
+    dayValues: number[];
     timeLabels: string[];
+    selectedSlots: TimeSlot[];
+    onToggleSlot: (day: number, startBlock: number) => void;
 }
 
-export function CourseTimetable({ courseId, friendlyDays, timeLabels }: CourseTimetableProps) {
+export function CourseTimetable({ courseId, friendlyDays, dayValues, timeLabels, selectedSlots, onToggleSlot }: CourseTimetableProps) {
     return (
         <div className="course-timetable">
             <table className="course-timetable__table">
@@ -29,11 +33,32 @@ export function CourseTimetable({ courseId, friendlyDays, timeLabels }: CourseTi
                             <th scope="row" className="course-timetable__time-column">
                                 {label}
                             </th>
-                            {friendlyDays.map((_, columnIndex) => (
-                                <td key={`${courseId}-cell-${rowIndex}-${columnIndex}`}>
-                                    {/* Content to be added later */}
-                                </td>
-                            ))}
+                            {friendlyDays.map((_, columnIndex) => {
+                                const dayValue = dayValues[columnIndex];
+                                const startBlock = rowIndex + 1;
+                                const isSelected = selectedSlots.some(
+                                    (slot) => slot.day === dayValue && slot.startBlock === startBlock,
+                                );
+                                const cellKey = `${courseId}-cell-${rowIndex}-${columnIndex}`;
+
+                                return (
+                                    <td
+                                        key={cellKey}
+                                        className={`course-timetable__cell${isSelected ? ' course-timetable__cell--selected' : ''}`}
+                                        onClick={() => onToggleSlot(dayValue, startBlock)}
+                                        role="button"
+                                        tabIndex={0}
+                                        onKeyDown={(event: KeyboardEvent<HTMLTableCellElement>) => {
+                                            if (event.key === 'Enter' || event.key === ' ') {
+                                                event.preventDefault();
+                                                onToggleSlot(dayValue, startBlock);
+                                            }
+                                        }}
+                                        aria-pressed={isSelected}
+                                        aria-label={`Toggle block ${startBlock} on ${friendlyDays[columnIndex]}`}
+                                    />
+                                );
+                            })}
                         </tr>
                     ))}
                 </tbody>

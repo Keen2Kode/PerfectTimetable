@@ -11,18 +11,65 @@
 }
 
 .timetable__grid {
-    display: grid;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: stretch;
 }
 
 .timetable__course {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
+}
+
+.timetable__selection-empty,
+.timetable__selection-summary {
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(100, 108, 255, 0.12);
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: rgba(26, 28, 45, 0.78);
+}
+
+.timetable__selection-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.timetable__selection-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1a1c2d;
+}
+
+.timetable__selection-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+    padding-left: 1rem;
+}
+
+.timetable__selection-list li {
+    list-style: disc;
+}
+
+.timetable__selection-day {
+    font-weight: 600;
+    margin-right: 0.35rem;
+}
+
+.timetable__selection-block {
+    color: rgba(26, 28, 45, 0.6);
 }
 
 @media (min-width: 768px) {
     .timetable__grid {
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 2.5rem;
     }
 }

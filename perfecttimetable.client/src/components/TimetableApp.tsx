@@ -1,16 +1,14 @@
-﻿import * as React from 'react';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
 import { CourseTimetable } from './CourseTimetable';
+import { SelectionSummary } from './SelectionSummary';
 
-import type { CourseModel } from '../api/models/courseModel';
+import type { CourseModel, TimeSlot } from '../api/models';
 
 dayjs.extend(customParseFormat);
-
-
 
 const dayNames = [
     'Sunday',
@@ -30,6 +28,7 @@ const dayNames = [
 export function TimetableApp() {
     const [model, setModel] = useState<CourseModel | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [selectedSlotsByCourse, setSelectedSlotsByCourse] = useState<Record<number, TimeSlot[]>>({});
 
     useEffect(() => {
         void loadTimetable();
@@ -43,11 +42,13 @@ export function TimetableApp() {
         return <p>Loading timetable...</p>;
     }
 
-
-    const friendlyDays = model.days.map((dayValue) => dayNames[dayValue]);
-    
-
+    const dayValues = model.days ?? [];
+    const friendlyDays = dayValues.map((dayValue) => dayNames[dayValue] ?? `Day ${dayValue}`);
     const timeLabels = createTimeLabels(model.startTime, model.blockDuration, model.blocks);
+    const dayLabelLookup = dayValues.reduce<Record<number, string>>((lookup, value, index) => {
+        lookup[value] = friendlyDays[index] ?? `Day ${value}`;
+        return lookup;
+    }, {});
 
     return (
         <div className="timetable">
@@ -65,7 +66,15 @@ export function TimetableApp() {
                         <CourseTimetable
                             courseId={course.id}
                             friendlyDays={friendlyDays}
+                            dayValues={dayValues}
                             timeLabels={timeLabels}
+                            selectedSlots={selectedSlotsByCourse[course.id] ?? []}
+                            onToggleSlot={(day, startBlock) => handleSlotToggle(course.id, day, startBlock)}
+                        />
+                        <SelectionSummary
+                            courseName={course.name}
+                            selections={selectedSlotsByCourse[course.id] ?? []}
+                            dayLabelLookup={dayLabelLookup}
                         />
                     </div>
                 ))}
@@ -85,6 +94,21 @@ export function TimetableApp() {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         }
+    }
+
+    function handleSlotToggle(courseId: number, day: number, startBlock: number) {
+        setSelectedSlotsByCourse((previous) => {
+            const currentSlots = previous[courseId] ?? [];
+            const exists = currentSlots.some((slot) => slot.day === day && slot.startBlock === startBlock);
+            const updatedSlots = exists
+                ? currentSlots.filter((slot) => !(slot.day === day && slot.startBlock === startBlock))
+                : [...currentSlots, { day, startBlock }];
+
+            return {
+                ...previous,
+                [courseId]: updatedSlots,
+            };
+        });
     }
 }
 

@@ -10,7 +10,12 @@ export default defineConfig({
         },
         output: {
             target: 'src/api/timetableClient.ts',
+
             schemas: 'src/api/models',
+            override: {
+                enumGenerationType: 'enum',   // replaces the old enumType flag
+            },
+            
             client: 'fetch',
         },
     },
