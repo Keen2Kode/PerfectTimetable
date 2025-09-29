@@ -1,16 +1,18 @@
-import { Calendar, Views, dayjsLocalizer, type SlotInfo, type View } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import localizedFormat from "dayjs/plugin/localizedFormat";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import weekday from "dayjs/plugin/weekday";
-import localeData from "dayjs/plugin/localeData";
+import type { ComponentType, ReactNode } from 'react';
+import { Calendar, Views, dayjsLocalizer, type SlotInfo, type View } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekday from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
 
-import { TimetableDay } from "../api/models";
-import type { CourseModel, TimeSlot } from "../api/models";
-import { anchor, buildDayStarts, parseMinutes, parseTime } from "../utils/timetableTime";
-import "./CourseTimetable.css";
+import { TimetableDay } from '../api/models';
+import type { CourseModel, TimeSlot } from '../api/models';
+import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
+import { rangeToSlot, slotToRange } from '../utils/slotTime';
+import './CourseTimetable.css';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
@@ -28,13 +30,14 @@ interface CourseTimetableProps {
 }
 
 type SlotEvent = TimeSlot & { start: Date; end: Date };
-
+type SelectionPayload = SlotInfo | SlotEvent;
 
 
 export function CourseTimetable({ model, selectedSlots, onSelectionChange, blockLength }: CourseTimetableProps) {
-    const blockDurationMinutes = parseMinutes(model.blockDuration);
+    const slotBlockLength = Math.max(1, blockLength);
+    const blockLengthMinutes = parseMinutes(model.blockDuration);
     const startTime = parseTime(model.startTime);
-    const weekStart = dayjs().startOf("week");
+    const weekStart = dayjs().startOf('week');
     const dayStarts = buildDayStarts(model, weekStart, startTime);
     const view: View =
         model.days.every((day) => day !== TimetableDay.Saturday && day !== TimetableDay.Sunday)
@@ -43,56 +46,46 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
 
     const anchorDate = anchor(startTime);
     const min = anchorDate.toDate();
-    const max = anchorDate.add(blockDurationMinutes * model.blocks, "minute").toDate();
+    const max = anchorDate.add(blockLengthMinutes * model.blocks, 'minute').toDate();
+
+    const boundedStart = (slot: TimeSlot) => slot.startBlock <= model.blocks - (slotBlockLength - 1);
 
     const events = selectedSlots
-        .map<SlotEvent | null>((slot) => {
-            const dayIndex = model.days.indexOf(slot.day);
-            if (dayIndex < 0) return null;
-            const start = dayStarts[dayIndex].add((slot.startBlock - 1) * blockDurationMinutes, "minute");
-            return {
-                ...slot,
-                start: start.toDate(),
-                end: start.add(blockDurationMinutes, "minute").toDate(),
-            };
+        .map((slot) => {
+            const range = slotToRange(slot, slotBlockLength, model, dayStarts, blockLengthMinutes);
+            return range ? { ...slot, ...range } : null;
         })
         .filter((event): event is SlotEvent => Boolean(event));
 
+    const toSlot = (date: Date): TimeSlot | null => rangeToSlot(date, model, dayStarts, blockLengthMinutes);
 
-
-
-
-    function handleSelection(payload: SlotInfo | SlotEvent) {
-            const baseSlot = toSlot(payload.start);
-            if (!baseSlot) return;
-            const expanded = expandSlots(baseSlot, blockLength, model.blocks);
-            onSelectionChange(toggle(selectedSlots, expanded));
-    }
-
-    const toSlot = (date: Date): TimeSlot | null => {
-        const value = dayjs(date);
-        const dayIndex = dayStarts.findIndex((start) => value.isSame(start, "day"));
-        if (dayIndex < 0) return null;
-
-        const minutes = value.diff(dayStarts[dayIndex], "minute");
-        const startBlock = Math.floor(minutes / blockDurationMinutes) + 1;
-        if (startBlock < 1 || startBlock > model.blocks) return null;
-
-        return { day: model.days[dayIndex], startBlock };
+    const handleSelection = (payload: SelectionPayload) => {
+        const baseSlot = toSlot(payload.start);
+        if (!baseSlot || !boundedStart(baseSlot)) return;
+        //const expanded = expandSlots(baseSlot, slotBlockLength, model.blocks);
+        onSelectionChange(toggle(selectedSlots, [baseSlot]));
     };
 
-    const expandSlots = (slot: TimeSlot, blockLength: number, maxBlocks: number): TimeSlot[] => {
-        const blocks: TimeSlot[] = [];
-        for (let i = 0; i < blockLength; i += 1) {
-            const startBlock = slot.startBlock + i;
-            if (startBlock > maxBlocks) break;
-            blocks.push({ day: slot.day, startBlock });
-        }
-        return blocks;
+    //const handleSelecting = ({ start }: { start: Date; end: Date }) => {
+    //    const slot = toSlot(start);
+    //    return !slot || boundedStart(slot);
+    //};
+
+    const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
+        const slot = toSlot(value);
+        const disabled = slot ? !boundedStart(slot) : false;
+        return (
+            <div
+                className={disabled ? 'course-timetable__slot--disabled' : undefined}
+                style={disabled ? { pointerEvents: 'none' } : undefined}
+            >
+                {children}
+            </div>
+        );
     };
 
     return (
-        <div className="course-timetable">
+        <div className='course-timetable'>
             <Calendar<SlotEvent>
                 localizer={localizer}
                 defaultDate={min}
@@ -101,14 +94,17 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
                 toolbar={false}
                 selectable
                 events={events}
-                step={blockDurationMinutes}
+                step={blockLengthMinutes}
                 timeslots={1}
                 min={min}
                 max={max}
                 onSelectSlot={handleSelection}
                 onSelectEvent={handleSelection}
-                eventPropGetter={() => ({ className: "course-timetable__selection" })}
+                //onSelecting={handleSelecting}
+                eventPropGetter={() => ({ className: 'course-timetable__selection' })}
+                components={{ timeSlotWrapper: slotWrapper as ComponentType }}
                 longPressThreshold={1}
+                dayLayoutAlgorithm="no-overlap"
             />
         </div>
     );
