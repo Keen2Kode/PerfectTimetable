@@ -9,6 +9,7 @@ import { SelectionSummary } from './SelectionSummary';
 import type { CourseModel } from '../api/models';
 import { Slot } from '../api/slot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
+import SaveSelectionsButton from './SaveSelectionsButton';
 
 dayjs.extend(customParseFormat);
 
@@ -61,16 +62,7 @@ export function TimetableApp() {
                 })}
             </section>
 
-            <div className="timetable__actions-row">
-                <button
-                    type="button"
-                    className="timetable__actions-button"
-                    onClick={() => console.log('Save selections clicked')}
-                >
-                    Save Selections
-                </button>
-            </div>
-
+            <SaveSelectionsButton model={model} selections={selectedSlotsByCourse} />
         </div>
     );
 
@@ -83,12 +75,12 @@ export function TimetableApp() {
 
             const model: CourseModel = await response.json();
             setModel(model);
-            // map[course] -> slots
-            const selectedSlotsByCourse: Record<number, Slot[]> = {};
+
+            const slotsByCourse: Record<number, Slot[]> = {};
             for (const course of model.courses) {
-                selectedSlotsByCourse[course.id] = course.timeslots.map((timeSlot) => Slot.fromTimeSlot(timeSlot)); 
+                slotsByCourse[course.id] = course.timeslots.map((timeSlot) => Slot.fromTimeSlot(timeSlot));
             }
-            setSelectedSlotsByCourse(selectedSlotsByCourse);
+            setSelectedSlotsByCourse(slotsByCourse);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         }
@@ -101,3 +93,4 @@ export function TimetableApp() {
 
 
 export default TimetableApp;
+

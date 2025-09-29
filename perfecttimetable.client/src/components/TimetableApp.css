@@ -96,3 +96,25 @@
     transform: translateY(-1px);
     box-shadow: 0 12px 24px -16px rgba(63, 71, 255, 0.7);
 }
+
+.timetable__actions-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
+.timetable__save-message {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(26, 28, 45, 0.65);
+}
+
+.timetable__save-message--success {
+    color: #1d7a3a;
+}
+
+.timetable__save-message--error {
+    color: #c62839;
+}
