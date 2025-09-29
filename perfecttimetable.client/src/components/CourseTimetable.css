@@ -1,80 +1,42 @@
-﻿.course-timetable {
-    overflow-x: auto;
+.course-timetable {
     border-radius: 0.5rem;
     background: rgba(255, 255, 255, 0.55);
     box-shadow: inset 0 0 0 1px rgba(100, 108, 255, 0.12);
+    overflow: hidden;
 }
 
-.course-timetable__table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 420px;
+.course-timetable .rbc-calendar {
+    background: transparent;
 }
 
-.course-timetable__table thead th {
+.course-timetable .rbc-time-view {
+    min-height: 420px;
+}
+
+.course-timetable .rbc-header {
     background: rgba(100, 108, 255, 0.15);
     font-weight: 600;
-    text-align: left;
-    font-size: 0.95rem;
 }
 
-.course-timetable__table thead th:not(:first-child) {
-    text-align: center;
+.course-timetable .rbc-time-content {
+    border-top: 1px solid rgba(100, 108, 255, 0.12);
 }
 
-.course-timetable__table th,
-.course-timetable__table td {
-    padding: 0.6rem 0.75rem;
-    border-bottom: 1px solid rgba(100, 108, 255, 0.12);
-    border-right: 1px solid rgba(100, 108, 255, 0.12);
-    white-space: nowrap;
+.course-timetable .rbc-time-slot {
+    border-color: rgba(100, 108, 255, 0.12);
 }
 
-.course-timetable__table th:last-child,
-.course-timetable__table td:last-child {
-    border-right: none;
-}
-
-.course-timetable__table tbody tr:nth-child(even) {
-    background: rgba(100, 108, 255, 0.06);
-}
-
-.course-timetable__table tbody tr:last-child th,
-.course-timetable__table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.course-timetable__time-column {
-    position: sticky;
-    left: 0;
-    background: rgba(255, 255, 255, 0.9);
-    font-weight: 600;
-    text-align: left;
-    z-index: 1;
-}
-
-.course-timetable__table td {
-    text-align: center;
-    color: rgba(60, 66, 87, 0.6);
-    font-size: 0.9rem;
-}
-
-.course-timetable__cell {
-    cursor: pointer;
-    transition: background-color 0.18s ease, box-shadow 0.18s ease;
-    min-width: 4rem;
-}
-
-.course-timetable__cell:hover,
-.course-timetable__cell:focus-visible {
-    background: rgba(100, 108, 255, 0.25);
-    box-shadow: inset 0 0 0 2px rgba(100, 108, 255, 0.5);
-    outline: none;
-}
-
-.course-timetable__cell--selected {
+.course-timetable__selection {
     background: rgba(100, 108, 255, 0.45);
+    border: none;
     color: #1a1c2d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 600;
-    box-shadow: inset 0 0 0 2px rgba(100, 108, 255, 0.65);
+}
+
+.course-timetable .rbc-slot-selection,
+.course-timetable .rbc-selected-cell {
+    background: rgba(100, 108, 255, 0.2);
 }

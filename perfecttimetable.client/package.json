@@ -12,6 +12,8 @@
     "generate:api": "npm run sync:openapi && orval --config orval.config.ts"
   },
   "dependencies": {
+    "@types/react-big-calendar": "^1.16.3",
+    "react-big-calendar": "^1.8.3",
     "dayjs": "^1.11.18",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

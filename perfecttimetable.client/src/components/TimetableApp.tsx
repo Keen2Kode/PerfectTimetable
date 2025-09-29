@@ -6,10 +6,9 @@ import { CourseCard } from './CourseCard';
 import { CourseTimetable } from './CourseTimetable';
 import { SelectionSummary } from './SelectionSummary';
 
-import type { CourseModel, TimeSlot, TimetableDay } from '../api/models';
+import type { CourseModel, TimeSlot } from '../api/models';
 
 dayjs.extend(customParseFormat);
-
 
 /**
  * Fetches the timetable data from the backend and renders a simple summary for
@@ -33,7 +32,6 @@ export function TimetableApp() {
         return <p>Loading timetable...</p>;
     }
 
-
     return (
         <div className="timetable">
             <header>
@@ -48,10 +46,10 @@ export function TimetableApp() {
                     <div key={course.id} className="timetable__course">
                         <CourseCard course={course} friendlyDays={model.days} />
                         <CourseTimetable
-                            courseId={course.id}
                             model={model}
                             selectedSlots={selectedSlotsByCourse[course.id] ?? []}
                             onSelectionChange={(slots) => handleSelectionChange(course.id, slots)}
+                            blockLength={course.durationBlocks ?? 1}
                         />
                         <SelectionSummary
                             courseName={course.name}
@@ -79,25 +77,11 @@ export function TimetableApp() {
 
     function handleSelectionChange(courseId: number, slots: TimeSlot[]) {
         setSelectedSlotsByCourse((prev) => ({ ...prev, [courseId]: slots }));
-    };
-
-    //function handleSlotToggle(courseId: number, day: TimetableDay, startBlock: number) {
-    //    setSelectedSlotsByCourse(oldSelectedSlots => {
-    //        const slots = oldSelectedSlots[courseId] ?? [];
-    //        const i = slots.findIndex(s => s.day === day && s.startBlock === startBlock);
-
-    //        const selectedSlots = [...slots];                    
-    //        if (i >= 0) selectedSlots.splice(i, 1);             
-    //        else selectedSlots.push({ day, startBlock });       
-
-    //        return { ...oldSelectedSlots, [courseId]: selectedSlots };
-    //    });
-    //}
-
+    }
 }
 
 function formatTime(value: string) {
-    return dayjs(value, 'HH:mm:ss', true).format("hh:mm A");
+    return dayjs(value, 'HH:mm:ss', true).format('hh:mm A');
 }
 
 function duration(value: string): number {
@@ -105,6 +89,5 @@ function duration(value: string): number {
     const stepMinutes = blockLength.hour() * 60 + blockLength.minute();
     return stepMinutes;
 }
-
 
 export default TimetableApp;
