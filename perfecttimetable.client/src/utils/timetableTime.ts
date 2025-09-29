@@ -35,3 +35,7 @@ export const anchor = (startTime: Dayjs): Dayjs =>
         .minute(startTime.minute())
         .second(startTime.second())
         .millisecond(0);
+
+export function formatTime(value: string) {
+    return dayjs(value, 'HH:mm:ss', true).format('hh:mm A');
+}

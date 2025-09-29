@@ -8,6 +8,7 @@ import { SelectionSummary } from './SelectionSummary';
 
 import type { CourseModel } from '../api/models';
 import { Slot } from '../api/slot';
+import { parseMinutes, formatTime } from '../utils/timetableTime';
 
 dayjs.extend(customParseFormat);
 
@@ -38,7 +39,7 @@ export function TimetableApp() {
             <header>
                 <h1>Perfect Timetable</h1>
                 <p>Starting {formatTime(model.startTime)}</p>
-                <p>{duration(model.blockDuration)}-minute blocks</p>
+                <p>{parseMinutes(model.blockDuration)}-minute blocks</p>
                 <p>{model.blocks} blocks per day</p>
             </header>
 
@@ -81,14 +82,5 @@ export function TimetableApp() {
     }
 }
 
-function formatTime(value: string) {
-    return dayjs(value, 'HH:mm:ss', true).format('hh:mm A');
-}
-
-function duration(value: string): number {
-    const blockLength = dayjs(value, 'HH:mm:ss', true);
-    const stepMinutes = blockLength.hour() * 60 + blockLength.minute();
-    return stepMinutes;
-}
 
 export default TimetableApp;
