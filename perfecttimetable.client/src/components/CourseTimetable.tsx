@@ -9,9 +9,9 @@ import weekday from 'dayjs/plugin/weekday';
 import localeData from 'dayjs/plugin/localeData';
 
 import { TimetableDay } from '../api/models';
-import type { CourseModel, TimeSlot } from '../api/models';
+import { Slot } from '../api/slot';
+import type { CourseModel } from '../api/models';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
-import { rangeToSlot, slotToRange } from '../utils/slotTime';
 import './CourseTimetable.css';
 
 dayjs.extend(customParseFormat);
@@ -24,14 +24,13 @@ const localizer = dayjsLocalizer(dayjs);
 
 interface CourseTimetableProps {
     model: CourseModel;
-    selectedSlots: TimeSlot[];
-    onSelectionChange: (slots: TimeSlot[]) => void;
+    selectedSlots: Slot[];
+    onSelectionChange: (slots: Slot[]) => void;
     blockLength: number;
 }
 
-type SlotEvent = TimeSlot & { start: Date; end: Date };
+type SlotEvent = { slot: Slot; start: Date; end: Date };
 type SelectionPayload = SlotInfo | SlotEvent;
-
 
 export function CourseTimetable({ model, selectedSlots, onSelectionChange, blockLength }: CourseTimetableProps) {
     const slotBlockLength = Math.max(1, blockLength);
@@ -48,28 +47,22 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
     const min = anchorDate.toDate();
     const max = anchorDate.add(blockLengthMinutes * model.blocks, 'minute').toDate();
 
-    const boundedStart = (slot: TimeSlot) => slot.startBlock <= model.blocks - (slotBlockLength - 1);
+    const boundedStart = (slot: Slot) => slot.startBlock <= model.blocks - (slotBlockLength - 1);
 
-    const events = selectedSlots
+    const events: SlotEvent[] = selectedSlots
         .map((slot) => {
-            const range = slotToRange(slot, slotBlockLength, model, dayStarts, blockLengthMinutes);
-            return range ? { ...slot, ...range } : null;
+            const range = slot.toRange(slotBlockLength, model, dayStarts, blockLengthMinutes);
+            return range ? { slot, ...range } : null;
         })
         .filter((event): event is SlotEvent => Boolean(event));
 
-    const toSlot = (date: Date): TimeSlot | null => rangeToSlot(date, model, dayStarts, blockLengthMinutes);
+    const toSlot = (date: Date): Slot | null => Slot.parseTime(date, model, dayStarts, blockLengthMinutes);
 
     const handleSelection = (payload: SelectionPayload) => {
-        const baseSlot = toSlot(payload.start);
+        const baseSlot = 'slot' in payload ? payload.slot : toSlot(payload.start);
         if (!baseSlot || !boundedStart(baseSlot)) return;
-        //const expanded = expandSlots(baseSlot, slotBlockLength, model.blocks);
         onSelectionChange(toggle(selectedSlots, [baseSlot]));
     };
-
-    //const handleSelecting = ({ start }: { start: Date; end: Date }) => {
-    //    const slot = toSlot(start);
-    //    return !slot || boundedStart(slot);
-    //};
 
     const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
         const slot = toSlot(value);
@@ -100,17 +93,17 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
                 max={max}
                 onSelectSlot={handleSelection}
                 onSelectEvent={handleSelection}
-                //onSelecting={handleSelecting}
+                onSelecting={() => false}
                 eventPropGetter={() => ({ className: 'course-timetable__selection' })}
                 components={{ timeSlotWrapper: slotWrapper as ComponentType }}
-                longPressThreshold={1}
                 dayLayoutAlgorithm="no-overlap"
+                longPressThreshold={1}
             />
         </div>
     );
 }
 
-const toggle = (current: TimeSlot[], toggled: TimeSlot[]) => {
+const toggle = (current: Slot[], toggled: Slot[]) => {
     const map = new Map(current.map((slot) => [key(slot), slot]));
     for (const slot of toggled) {
         const id = key(slot);
@@ -120,4 +113,4 @@ const toggle = (current: TimeSlot[], toggled: TimeSlot[]) => {
     return [...map.values()];
 };
 
-const key = (slot: TimeSlot) => `${slot.day}-${slot.startBlock}`;
+const key = (slot: Slot) => `${slot.day}-${slot.startBlock}`;

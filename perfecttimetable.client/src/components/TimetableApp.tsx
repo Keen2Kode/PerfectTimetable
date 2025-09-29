@@ -6,7 +6,8 @@ import { CourseCard } from './CourseCard';
 import { CourseTimetable } from './CourseTimetable';
 import { SelectionSummary } from './SelectionSummary';
 
-import type { CourseModel, TimeSlot } from '../api/models';
+import type { CourseModel } from '../api/models';
+import { Slot } from '../api/slot';
 
 dayjs.extend(customParseFormat);
 
@@ -18,7 +19,7 @@ dayjs.extend(customParseFormat);
 export function TimetableApp() {
     const [model, setModel] = useState<CourseModel | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [selectedSlotsByCourse, setSelectedSlotsByCourse] = useState<Record<number, TimeSlot[]>>({});
+    const [selectedSlotsByCourse, setSelectedSlotsByCourse] = useState<Record<number, Slot[]>>({});
 
     useEffect(() => {
         void loadTimetable();
@@ -42,21 +43,21 @@ export function TimetableApp() {
             </header>
 
             <section className="timetable__grid">
-                {model.courses.map((course) => (
-                    <div key={course.id} className="timetable__course">
-                        <CourseCard course={course} friendlyDays={model.days} />
-                        <CourseTimetable
-                            model={model}
-                            selectedSlots={selectedSlotsByCourse[course.id] ?? []}
-                            onSelectionChange={(slots) => handleSelectionChange(course.id, slots)}
-                            blockLength={course.durationBlocks ?? 1}
-                        />
-                        <SelectionSummary
-                            courseName={course.name}
-                            selections={selectedSlotsByCourse[course.id] ?? []}
-                        />
-                    </div>
-                ))}
+                {model.courses.map((course) => {
+                    const selections = selectedSlotsByCourse[course.id] ?? [];
+                    return (
+                        <div key={course.id} className="timetable__course">
+                            <CourseCard course={course} friendlyDays={model.days} />
+                            <CourseTimetable
+                                model={model}
+                                selectedSlots={selections}
+                                onSelectionChange={(slots) => handleSelectionChange(course.id, slots)}
+                                blockLength={course.durationBlocks ?? 1}
+                            />
+                            <SelectionSummary courseName={course.name} selections={selections} />
+                        </div>
+                    );
+                })}
             </section>
         </div>
     );
@@ -75,7 +76,7 @@ export function TimetableApp() {
         }
     }
 
-    function handleSelectionChange(courseId: number, slots: TimeSlot[]) {
+    function handleSelectionChange(courseId: number, slots: Slot[]) {
         setSelectedSlotsByCourse((prev) => ({ ...prev, [courseId]: slots }));
     }
 }

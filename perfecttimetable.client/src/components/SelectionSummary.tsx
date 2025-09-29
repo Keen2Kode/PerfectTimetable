@@ -1,11 +1,11 @@
-import type { TimeSlot } from '../api/models';
+import type { Slot } from '../api/slot';
 
 interface SelectionSummaryProps {
     courseName: string;
-    selections: TimeSlot[];
+    selections: Slot[];
 }
 
-export function SelectionSummary({ courseName, selections}: SelectionSummaryProps) {
+export function SelectionSummary({ courseName, selections }: SelectionSummaryProps) {
     if (selections.length === 0) {
         return (
             <div className="timetable__selection-empty" aria-live="polite">
@@ -20,7 +20,7 @@ export function SelectionSummary({ courseName, selections}: SelectionSummaryProp
             <ul className="timetable__selection-list">
                 {selections.map((slot, index) => (
                     <li key={`${slot.day}-${slot.startBlock}-${index}`}>
-                        <span className="timetable__selection-day">{slot.day }`</span>
+                        <span className="timetable__selection-day">{slot.day}</span>
                         <span className="timetable__selection-block">Block {slot.startBlock}</span>
                     </li>
                 ))}
