@@ -53,7 +53,7 @@ export function TimetableApp() {
                                 model={model}
                                 selectedSlots={selections}
                                 onSelectionChange={(slots) => handleSelectionChange(course.id, slots)}
-                                blockLength={course.durationBlocks ?? 1}
+                                blockLength={Math.max(1, course.durationBlocks)}
                             />
                             <SelectionSummary courseName={course.name} selections={selections} />
                         </div>

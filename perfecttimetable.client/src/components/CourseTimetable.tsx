@@ -30,11 +30,10 @@ interface CourseTimetableProps {
 }
 
 type SlotEvent = { slot: Slot; start: Date; end: Date };
-type SelectionPayload = SlotInfo | SlotEvent;
 
 export function CourseTimetable({ model, selectedSlots, onSelectionChange, blockLength }: CourseTimetableProps) {
-    const slotBlockLength = Math.max(1, blockLength);
-    const blockLengthMinutes = parseMinutes(model.blockDuration);
+    const spanBlocks = Math.max(1, blockLength);
+    const blockDuration = parseMinutes(model.blockDuration);
     const startTime = parseTime(model.startTime);
     const weekStart = dayjs().startOf('week');
     const dayStarts = buildDayStarts(model, weekStart, startTime);
@@ -45,28 +44,25 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
 
     const anchorDate = anchor(startTime);
     const min = anchorDate.toDate();
-    const max = anchorDate.add(blockLengthMinutes * model.blocks, 'minute').toDate();
-
-    const boundedStart = (slot: Slot) => slot.startBlock <= model.blocks - (slotBlockLength - 1);
+    const max = anchorDate.add(blockDuration * model.blocks, 'minute').toDate();
 
     const events: SlotEvent[] = selectedSlots
         .map((slot) => {
-            const range = slot.toRange(slotBlockLength, model, dayStarts, blockLengthMinutes);
+            const range = slot.toRange(spanBlocks, model, dayStarts, blockDuration);
             return range ? { slot, ...range } : null;
         })
         .filter((event): event is SlotEvent => Boolean(event));
 
-    const toSlot = (date: Date): Slot | null => Slot.parseTime(date, model, dayStarts, blockLengthMinutes);
 
-    const handleSelection = (payload: SelectionPayload) => {
-        const baseSlot = 'slot' in payload ? payload.slot : toSlot(payload.start);
-        if (!baseSlot || !boundedStart(baseSlot)) return;
+    const handleSelection = (payload: SlotInfo | SlotEvent) => {
+        const baseSlot = Slot.parseTime(payload.start, model, dayStarts, blockDuration, spanBlocks);
+        if (!baseSlot) return;
         onSelectionChange(toggle(selectedSlots, [baseSlot]));
     };
 
     const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
-        const slot = toSlot(value);
-        const disabled = slot ? !boundedStart(slot) : false;
+        const slot = Slot.parseTime(value, model, dayStarts, blockDuration, spanBlocks)
+        const disabled = slot == null;
         return (
             <div
                 className={disabled ? 'course-timetable__slot--disabled' : undefined}
@@ -87,7 +83,7 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
                 toolbar={false}
                 selectable
                 events={events}
-                step={blockLengthMinutes}
+                step={blockDuration}
                 timeslots={1}
                 min={min}
                 max={max}
@@ -104,13 +100,11 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
 }
 
 const toggle = (current: Slot[], toggled: Slot[]) => {
-    const map = new Map(current.map((slot) => [key(slot), slot]));
+    const map = new Map(current.map((slot) => [slot.key(), slot]));
     for (const slot of toggled) {
-        const id = key(slot);
+        const id = slot.key();
         if (map.has(id)) map.delete(id);
         else map.set(id, slot);
     }
     return [...map.values()];
 };
-
-const key = (slot: Slot) => `${slot.day}-${slot.startBlock}`;
