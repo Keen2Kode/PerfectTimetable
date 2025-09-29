@@ -60,6 +60,17 @@ export function TimetableApp() {
                     );
                 })}
             </section>
+
+            <div className="timetable__actions-row">
+                <button
+                    type="button"
+                    className="timetable__actions-button"
+                    onClick={() => console.log('Save selections clicked')}
+                >
+                    Save Selections
+                </button>
+            </div>
+
         </div>
     );
 
