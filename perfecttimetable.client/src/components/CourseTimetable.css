@@ -44,3 +44,14 @@
 .course-timetable__slot--disabled {
     opacity: 0.4;
 }
+
+/* perfecttimetable.client/src/components/CourseTimetable.css */
+.course-timetable .rbc-allday-header,
+.course-timetable .rbc-allday-cell {
+    display: none;
+}
+
+.course-timetable .rbc-time-header + .rbc-time-content {
+    border-top: none;
+}
+

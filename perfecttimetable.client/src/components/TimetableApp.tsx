@@ -70,8 +70,14 @@ export function TimetableApp() {
                 throw new Error(`${response.status} ${response.statusText}`);
             }
 
-            const data: CourseModel = await response.json();
-            setModel(data);
+            const model: CourseModel = await response.json();
+            setModel(model);
+            // map[course] -> slots
+            const selectedSlotsByCourse: Record<number, Slot[]> = {};
+            for (const course of model.courses) {
+                selectedSlotsByCourse[course.id] = course.timeslots.map((timeSlot) => Slot.fromTimeSlot(timeSlot)); 
+            }
+            setSelectedSlotsByCourse(selectedSlotsByCourse);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         }

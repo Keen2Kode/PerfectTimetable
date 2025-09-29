@@ -61,7 +61,7 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
     };
 
     const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
-        const slot = Slot.parseTime(value, model, dayStarts, blockDuration, spanBlocks)
+        const slot = Slot.parseTime(value, model, dayStarts, blockDuration, spanBlocks);
         const disabled = slot == null;
         return (
             <div
@@ -73,10 +73,15 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
         );
     };
 
+    const components2 = {
+        timeSlotWrapper: slotWrapper as ComponentType,
+        allDay: () => null,
+    };
     return (
         <div className='course-timetable'>
             <Calendar<SlotEvent>
                 localizer={localizer}
+                
                 defaultDate={min}
                 defaultView={view}
                 views={[view]}
@@ -91,7 +96,8 @@ export function CourseTimetable({ model, selectedSlots, onSelectionChange, block
                 onSelectEvent={handleSelection}
                 onSelecting={() => false}
                 eventPropGetter={() => ({ className: 'course-timetable__selection' })}
-                components={{ timeSlotWrapper: slotWrapper as ComponentType }}
+                allDayAccessor={() => false}
+                components={components2}
                 dayLayoutAlgorithm="no-overlap"
                 longPressThreshold={1}
             />
