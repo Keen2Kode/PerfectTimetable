@@ -1,19 +1,26 @@
-﻿import type { KeyboardEvent } from 'react';
+﻿//import type { KeyboardEvent } from 'react';
 import type { CourseModel, TimeSlot, TimetableDay} from '../api/models';
 import './CourseTimetable.css';
 import dayjs from 'dayjs';
 
 interface CourseTimetableProps {
     courseId: number;
-    friendlyDays: TimetableDay[];
-    //dayValues: number[];
     model: CourseModel;
     selectedSlots: TimeSlot[];
-    onToggleSlot: (day: TimetableDay, startBlock: number) => void;
+    onSelectionChange: (slots: TimeSlot[] ) => void;
 }
 
-export function CourseTimetable({ courseId, friendlyDays,  model, selectedSlots, onToggleSlot }: CourseTimetableProps) {
+export function CourseTimetable({ courseId, model, selectedSlots, onSelectionChange }: CourseTimetableProps) {
     const timeLabels = createTimeLabels(model.startTime, model.blockDuration, model.blocks);
+
+    const handleToggle = (day: TimetableDay, startBlock: number) => {
+        const index = selectedSlots.findIndex((slot) => slot.day === day && slot.startBlock === startBlock);
+        const next = [...selectedSlots];
+        if (index >= 0) next.splice(index, 1);
+        else next.push({ day, startBlock });
+        onSelectionChange(next);
+    };
+
     return (
         <div className="course-timetable">
             <table className="course-timetable__table">
@@ -22,7 +29,7 @@ export function CourseTimetable({ courseId, friendlyDays,  model, selectedSlots,
                         <th scope="col" className="course-timetable__time-column">
                             Time
                         </th>
-                        {friendlyDays.map((day, index) => (
+                        {model.days.map((day, index) => (
                             <th scope="col" key={`${courseId}-day-${index}`}>
                                 {day}
                             </th>
@@ -35,7 +42,7 @@ export function CourseTimetable({ courseId, friendlyDays,  model, selectedSlots,
                             <th scope="row" className="course-timetable__time-column">
                                 {label}
                             </th>
-                            {friendlyDays.map((day,col) => {
+                            {model.days.map((day,col) => {
                                 const startBlock = rowIndex + 1;
                                 const isSelected = selectedSlots.some(
                                     (slot) => slot.day === day && slot.startBlock === startBlock,
@@ -46,17 +53,11 @@ export function CourseTimetable({ courseId, friendlyDays,  model, selectedSlots,
                                     <td
                                         key={cellKey}
                                         className={`course-timetable__cell${isSelected ? ' course-timetable__cell--selected' : ''}`}
-                                        onClick={() => onToggleSlot(day, startBlock)}
+                                        onClick={() => handleToggle(day, startBlock)}
                                         role="button"
                                         tabIndex={0}
-                                        onKeyDown={(event: KeyboardEvent<HTMLTableCellElement>) => {
-                                            if (event.key === 'Enter' || event.key === ' ') {
-                                                event.preventDefault();
-                                                onToggleSlot(day, startBlock);
-                                            }
-                                        }}
                                         aria-pressed={isSelected}
-                                        aria-label={`Toggle block ${startBlock} on ${friendlyDays[col]}`}
+                                        aria-label={`Toggle block ${startBlock} on ${day}`}
                                     />
                                 );
                             })}
@@ -67,6 +68,7 @@ export function CourseTimetable({ courseId, friendlyDays,  model, selectedSlots,
         </div>
     );
 }
+
 
 function createTimeLabels(startTime: string, blockDuration: string, blocks: number) {
     const start = dayjs(startTime, 'HH:mm:ss', true);

@@ -33,7 +33,6 @@ export function TimetableApp() {
         return <p>Loading timetable...</p>;
     }
 
-    const friendlyDays = model.days;
 
     return (
         <div className="timetable">
@@ -47,13 +46,12 @@ export function TimetableApp() {
             <section className="timetable__grid">
                 {model.courses.map((course) => (
                     <div key={course.id} className="timetable__course">
-                        <CourseCard course={course} friendlyDays={friendlyDays} />
+                        <CourseCard course={course} friendlyDays={model.days} />
                         <CourseTimetable
                             courseId={course.id}
-                            friendlyDays={friendlyDays}
                             model={model}
                             selectedSlots={selectedSlotsByCourse[course.id] ?? []}
-                            onToggleSlot={(day, startBlock) => handleSlotToggle(course.id, day, startBlock)}
+                            onSelectionChange={(slots) => handleSelectionChange(course.id, slots)}
                         />
                         <SelectionSummary
                             courseName={course.name}
@@ -79,20 +77,23 @@ export function TimetableApp() {
         }
     }
 
-    function handleSlotToggle(courseId: number, day: TimetableDay, startBlock: number) {
-        setSelectedSlotsByCourse((previous) => {
-            const currentSlots = previous[courseId] ?? [];
-            const exists = currentSlots.some((slot) => slot.day === day && slot.startBlock === startBlock);
-            const updatedSlots = exists
-                ? currentSlots.filter((slot) => !(slot.day === day && slot.startBlock === startBlock))
-                : [...currentSlots, { day, startBlock }];
+    function handleSelectionChange(courseId: number, slots: TimeSlot[]) {
+        setSelectedSlotsByCourse((prev) => ({ ...prev, [courseId]: slots }));
+    };
 
-            return {
-                ...previous,
-                [courseId]: updatedSlots,
-            };
-        });
-    }
+    //function handleSlotToggle(courseId: number, day: TimetableDay, startBlock: number) {
+    //    setSelectedSlotsByCourse(oldSelectedSlots => {
+    //        const slots = oldSelectedSlots[courseId] ?? [];
+    //        const i = slots.findIndex(s => s.day === day && s.startBlock === startBlock);
+
+    //        const selectedSlots = [...slots];                    
+    //        if (i >= 0) selectedSlots.splice(i, 1);             
+    //        else selectedSlots.push({ day, startBlock });       
+
+    //        return { ...oldSelectedSlots, [courseId]: selectedSlots };
+    //    });
+    //}
+
 }
 
 function formatTime(value: string) {
