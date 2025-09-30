@@ -9,10 +9,10 @@ export const fetchTimetable = () =>
   client.get<CourseModel>('/timetable').then(({ data }) => data);
 
 const postSelections = (model: CourseModel) =>
-  client.post<void>('/selections', model);
+  client.post<void>('/timetable/generate', model);
 
 const getSelectionsSummary = () =>
-  client.get<{ count?: number }>('/selections/summary').then(({ data }) => data);
+  client.get<{ count?: number }>('/timetable/generate').then(({ data }) => data);
 
 export const saveSelectionsWithSummary = (model: CourseModel) =>
   postSelections(model).then(() => getSelectionsSummary());

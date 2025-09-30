@@ -26,4 +26,17 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
 
         return model ?? new CourseModel();
     }
+
+    [HttpPost("generate")]
+    public void PostTimetable(CourseModel model)
+    {
+        Console.WriteLine("REACHED");
+    }
+
+    [HttpGet("generate")]
+    public int? GenerateTimetable()
+    {
+        Console.WriteLine("REACHED get");
+        return -1;
+    }
 }
