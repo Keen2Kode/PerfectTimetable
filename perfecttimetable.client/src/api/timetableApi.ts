@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { CourseModel, TimeSlot } from './models';
+import type { CourseModel} from './models';
 
 const client = axios.create({
   baseURL: '/',
@@ -8,11 +8,11 @@ const client = axios.create({
 export const fetchTimetable = () =>
   client.get<CourseModel>('/timetable').then(({ data }) => data);
 
-const postSelections = (payload: Record<number, TimeSlot[]>) =>
-  client.post<void>('/selections', payload);
+const postSelections = (model: CourseModel) =>
+  client.post<void>('/selections', model);
 
 const getSelectionsSummary = () =>
   client.get<{ count?: number }>('/selections/summary').then(({ data }) => data);
 
-export const saveSelectionsWithSummary = (payload: Record<number, TimeSlot[]>) =>
-  postSelections(payload).then(() => getSelectionsSummary());
+export const saveSelectionsWithSummary = (model: CourseModel) =>
+  postSelections(model).then(() => getSelectionsSummary());

@@ -36,6 +36,19 @@ export function TimetableApp() {
         return <p>Loading timetable...</p>;
     }
 
+    const selectionPayload: CourseModel = {
+        ...model,
+        courses: model.courses.map((course) => {
+            const selectedSlots = selectedSlotsByCourse[course.id];
+            const effectiveSelections = selectedSlots ?? course.timeslots.map((timeSlot) => Slot.fromTimeSlot(timeSlot));
+
+            return {
+                ...course,
+                timeslots: effectiveSelections.map((slot) => slot.toTimeSlot()),
+            };
+        }),
+    };
+
     return (
         <div className="timetable">
             <header>
@@ -63,7 +76,7 @@ export function TimetableApp() {
                 })}
             </section>
 
-            <SaveSelectionsButton model={model} selections={selectedSlotsByCourse} />
+            <SaveSelectionsButton model={ model} />
         </div>
     );
 

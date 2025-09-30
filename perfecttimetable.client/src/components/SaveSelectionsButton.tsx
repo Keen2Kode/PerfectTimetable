@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import type { CourseModel, TimeSlot } from '../api/models';
-import { Slot } from '../api/slot';
+import type { CourseModel} from '../api/models';
 import { saveSelectionsWithSummary } from '../api/timetableApi';
 
 type SaveStatus = 'idle' | 'saving' | 'success' | 'error';
 
 interface SaveSelectionsButtonProps {
     model: CourseModel;
-    selections: Record<number, Slot[]>;
 }
 
-export function SaveSelectionsButton({ model, selections }: SaveSelectionsButtonProps) {
+export function SaveSelectionsButton({ model}: SaveSelectionsButtonProps) {
     const [status, setStatus] = useState<SaveStatus>('idle');
     const [message, setMessage] = useState<string | null>(null);
 
@@ -20,12 +18,9 @@ export function SaveSelectionsButton({ model, selections }: SaveSelectionsButton
         setStatus('saving');
         setMessage(null);
 
-        const payload: Record<number, TimeSlot[]> = {};
-        for (const course of model.courses) {
-            payload[course.id] = (selections[course.id] ?? []).map((slot) => slot.toTimeSlot());
-        }
-
-        saveSelectionsWithSummary(payload)
+        //console.log("reached here,");
+        //console.log(model);
+        saveSelectionsWithSummary(model)
             .then((data) => {
                 const summaryMessage =
                     typeof data?.count === 'number'
