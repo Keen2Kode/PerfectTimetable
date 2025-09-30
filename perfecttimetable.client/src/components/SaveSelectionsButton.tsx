@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { CourseModel} from '../api/models';
-import { saveSelectionsWithSummary } from '../api/timetableApi';
+import { generateTimetable } from '../api/timetableApi';
 
 type SaveStatus = 'idle' | 'saving' | 'success' | 'error';
 
@@ -18,10 +18,9 @@ export function SaveSelectionsButton({ model}: SaveSelectionsButtonProps) {
         setStatus('saving');
         setMessage(null);
 
-        //console.log("reached here,");
-        //console.log(model);
-        saveSelectionsWithSummary(model)
+        generateTimetable(model)
             .then((data) => {
+
                 const summaryMessage =
                     typeof data?.count === 'number'
                         ? `Selections saved (${data.count} total slots).`

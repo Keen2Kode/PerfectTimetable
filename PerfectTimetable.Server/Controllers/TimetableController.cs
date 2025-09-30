@@ -1,5 +1,6 @@
 ﻿// PerfectTimetable.Server/Controllers/TimetableController.cs
 using System.Text.Json;
+using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Mvc;
 using PerfectTimetable.Server.Models;
 
@@ -28,15 +29,17 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     }
 
     [HttpPost("generate")]
-    public void PostTimetable(CourseModel model)
+    public ActionResult<int> PostTimetable([FromBody] CourseModel model)
     {
-        Console.WriteLine("REACHED");
-    }
-
-    [HttpGet("generate")]
-    public int? GenerateTimetable()
-    {
-        Console.WriteLine("REACHED get");
+        //var result = await _service.GenerateAsync(model);
+        Console.WriteLine("REACHED -1");
         return -1;
     }
+
+    //[HttpGet("generate")]
+    //public int? GenerateTimetable()
+    //{
+    //    Console.WriteLine("REACHED get");
+    //    return -1;
+    //}
 }

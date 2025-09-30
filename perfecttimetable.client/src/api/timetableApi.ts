@@ -8,11 +8,9 @@ const client = axios.create({
 export const fetchTimetable = () =>
   client.get<CourseModel>('/timetable').then(({ data }) => data);
 
-const postSelections = (model: CourseModel) =>
-  client.post<void>('/timetable/generate', model);
+export async function generateTimetable(model: CourseModel) {
+    const response = await client.post('/timetable/generate', model);
+    console.log(response);
+    return response.data;
+}
 
-const getSelectionsSummary = () =>
-  client.get<{ count?: number }>('/timetable/generate').then(({ data }) => data);
-
-export const saveSelectionsWithSummary = (model: CourseModel) =>
-  postSelections(model).then(() => getSelectionsSummary());
