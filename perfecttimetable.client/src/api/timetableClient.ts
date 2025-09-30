@@ -6,6 +6,7 @@
  */
 import type {
   CourseModel,
+  Timetable,
   WeatherForecast
 } from './models';
 
@@ -44,6 +45,46 @@ export const getTimetable = async ( options?: RequestInit): Promise<getTimetable
   
   const data: getTimetableResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as getTimetableResponse
+}
+
+
+
+export type postTimetableGenerateResponse200 = {
+  data: Timetable[]
+  status: 200
+}
+    
+export type postTimetableGenerateResponseSuccess = (postTimetableGenerateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postTimetableGenerateResponse = (postTimetableGenerateResponseSuccess)
+
+export const getPostTimetableGenerateUrl = () => {
+
+
+  
+
+  return `/timetable/generate`
+}
+
+export const postTimetableGenerate = async (courseModel: CourseModel, options?: RequestInit): Promise<postTimetableGenerateResponse> => {
+  
+  const res = await fetch(getPostTimetableGenerateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      courseModel,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: postTimetableGenerateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as postTimetableGenerateResponse
 }
 
 

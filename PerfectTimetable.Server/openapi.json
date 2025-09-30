@@ -39,6 +39,64 @@
         }
       }
     },
+    "/timetable/generate": {
+      "post": {
+        "tags": [
+          "Timetable"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Timetable"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Timetable"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Timetable"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -153,12 +211,37 @@
         "type": "object",
         "properties": {
           "day": {
-            "type": "integer",
-            "format": "int32"
+            "$ref": "#/components/schemas/TimetableDay"
           },
           "startBlock": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "Timetable": {
+        "required": [
+          "courseIds",
+          "slots",
+          "lastSlot"
+        ],
+        "type": "object",
+        "properties": {
+          "courseIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "slots": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimetableSlot"
+            }
+          },
+          "lastSlot": {
+            "$ref": "#/components/schemas/TimetableSlot"
           }
         }
       },
@@ -172,6 +255,21 @@
           "Saturday",
           "Sunday"
         ]
+      },
+      "TimetableSlot": {
+        "required": [
+          "course",
+          "timeSlot"
+        ],
+        "type": "object",
+        "properties": {
+          "course": {
+            "$ref": "#/components/schemas/Course"
+          },
+          "timeSlot": {
+            "$ref": "#/components/schemas/TimeSlot"
+          }
+        }
       },
       "WeatherForecast": {
         "type": "object",

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36511.14 d17.14
+VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "perfecttimetable.client", "perfecttimetable.client\perfecttimetable.client.esproj", "{D6C9601F-7D8C-9EB6-CD0B-36228CD4C9FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfectTimetable.Server", "PerfectTimetable.Server\PerfectTimetable.Server.csproj", "{C7751BBE-FAD2-4A90-A75B-C6FC0CF3806F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfectTimetable.ServerTests", "PerfectTimetable.ServerTests\PerfectTimetable.ServerTests.csproj", "{EF6BDB22-67A5-4845-94AD-2D3DCEEC6599}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{C7751BBE-FAD2-4A90-A75B-C6FC0CF3806F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7751BBE-FAD2-4A90-A75B-C6FC0CF3806F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7751BBE-FAD2-4A90-A75B-C6FC0CF3806F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF6BDB22-67A5-4845-94AD-2D3DCEEC6599}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF6BDB22-67A5-4845-94AD-2D3DCEEC6599}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF6BDB22-67A5-4845-94AD-2D3DCEEC6599}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF6BDB22-67A5-4845-94AD-2D3DCEEC6599}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

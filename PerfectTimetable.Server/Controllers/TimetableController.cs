@@ -29,11 +29,11 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     }
 
     [HttpPost("generate")]
-    public ActionResult<int> PostTimetable([FromBody] CourseModel model)
+    public ActionResult<List<Timetable>> PostTimetable([FromBody] CourseModel model)
     {
         //var result = await _service.GenerateAsync(model);
         Console.WriteLine("REACHED -1");
-        return -1;
+        return new TimetableFactory(model).GenerateTimetables();
     }
 
     //[HttpGet("generate")]

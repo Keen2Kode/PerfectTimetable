@@ -20,7 +20,7 @@ export function SaveSelectionsButton({ model}: SaveSelectionsButtonProps) {
 
         generateTimetable(model)
             .then((data) => {
-
+                console.log(JSON.stringify(data, null, 2));
                 const summaryMessage =
                     typeof data?.count === 'number'
                         ? `Selections saved (${data.count} total slots).`

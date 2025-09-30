@@ -1,18 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models
 {
-    public class TimeSlot
+    public class TimeSlot(TimetableDay day, int startBlock)
     {
         [Required]
-        public TimetableDay Day { get; set; }
+        public TimetableDay Day { get; set; } = day;
 
         [Required]
-        public int StartBlock { get; set; }
-        public TimeSlot(TimetableDay day, int startBlock)
-        {
-            Day = day;
-            StartBlock = startBlock;
-        }
+        public int StartBlock { get; set; } = startBlock;
+
     }
 }
