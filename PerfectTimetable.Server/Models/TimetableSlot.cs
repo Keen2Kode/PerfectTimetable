@@ -1,18 +1,28 @@
-﻿namespace PerfectTimetable.Server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PerfectTimetable.Server.Models
 {
     public record TimetableSlot
     {
-        public Course Course { get; }
-        public TimeSlot TimeSlot { get; }
+        [Required]
+        public Course Course { get; set; }
+        [Required]
+        public TimeSlot TimeSlot { get;  set; }
         public TimetableSlot(Course course, TimeSlot timeSlot)
         {
             Course = course;
             TimeSlot = timeSlot;
+            Day = timeSlot.Day;
+            Start = timeSlot.StartBlock;
+            End = timeSlot.StartBlock + course.DurationBlocks;
         }
 
-        public TimetableDay Day => TimeSlot.Day;
+        [Required]
+        public TimetableDay Day;
 
-        public int Start => TimeSlot.StartBlock;
-        public int End => TimeSlot.StartBlock + Course.DurationBlocks;
+        [Required]
+        public int Start;
+        [Required]
+        public int End;
     }
 }

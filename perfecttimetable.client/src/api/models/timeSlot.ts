@@ -4,8 +4,7 @@
  * PerfectTimetable.Server | v1
  * OpenAPI spec version: 1.0.0
  */
-
-import { TimetableDay } from './timetableDay';
+import type { TimetableDay } from './timetableDay';
 
 export interface TimeSlot {
   day: TimetableDay;

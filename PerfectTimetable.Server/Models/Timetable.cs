@@ -6,11 +6,11 @@ namespace PerfectTimetable.Server.Models
     public class Timetable
     {
         [Required]
-        public HashSet<int> CourseIds { get; private set; } = [];
+        public HashSet<int> CourseIds { get; set; } = [];
         [Required]
-        public List<TimetableSlot> Slots { get; private set; } = [];
+        public List<TimetableSlot> Slots { get; set; } = [];
         [Required]
-        public TimetableSlot LastSlot { get; private set; }
+        public TimetableSlot LastSlot { get; set; }
         public Timetable(Timetable table)
         {
             CourseIds = [.. table.CourseIds];
