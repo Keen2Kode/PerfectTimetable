@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import axios from 'axios';
 import type { CourseModel, TimeSlot } from '../api/models';
 import { Slot } from '../api/slot';
+import { saveSelectionsWithSummary } from '../api/timetableApi';
 
 type SaveStatus = 'idle' | 'saving' | 'success' | 'error';
 
@@ -25,10 +25,8 @@ export function SaveSelectionsButton({ model, selections }: SaveSelectionsButton
             payload[course.id] = (selections[course.id] ?? []).map((slot) => slot.toTimeSlot());
         }
 
-        axios
-            .post('/selections', payload)
-            .then(() => axios.get<{ count?: number }>('/selections/summary'))
-            .then(({ data }) => {
+        saveSelectionsWithSummary(payload)
+            .then((data) => {
                 const summaryMessage =
                     typeof data?.count === 'number'
                         ? `Selections saved (${data.count} total slots).`

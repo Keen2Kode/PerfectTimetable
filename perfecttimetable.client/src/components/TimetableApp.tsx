@@ -10,6 +10,7 @@ import type { CourseModel } from '../api/models';
 import { Slot } from '../api/slot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
+import { fetchTimetable } from '../api/timetableApi';
 
 dayjs.extend(customParseFormat);
 
@@ -68,12 +69,7 @@ export function TimetableApp() {
 
     async function loadTimetable() {
         try {
-            const response = await fetch('/timetable');
-            if (!response.ok) {
-                throw new Error(`${response.status} ${response.statusText}`);
-            }
-
-            const model: CourseModel = await response.json();
+            const model = await fetchTimetable();
             setModel(model);
 
             const slotsByCourse: Record<number, Slot[]> = {};
