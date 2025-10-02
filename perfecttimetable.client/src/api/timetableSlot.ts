@@ -1,6 +1,6 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { type TimetableSlot as TimetableSlotDto, type Course, type TimeSlot, type CourseModel } from './models';
+import { type Course, type TimeSlot, type CourseModel } from './models';
 import { DayWeek, parseDayWeek, dayWeekToTimetableDay } from './models/dayWeek';
 import { Slot } from './slot';
 import { parseTime, buildDayStarts, parseMinutes } from '../utils/timetableTime';
@@ -82,34 +82,11 @@ export class TimetableSlot {
         return startBlock >= 1 && startBlock <= totalBlocks - (span - 1);
     }
 
-  static fromDto(dto: TimetableSlotDto): TimetableSlot {
-    return new TimetableSlot(dto.course, dto.timeSlot);
-  }
-
-  static from(course: Course, timeSlot: TimeSlot): TimetableSlot {
-    return new TimetableSlot(course, timeSlot);
-  }
-
-  toDto(): TimetableSlotDto {
-    return {
-      course: this.course,
-      timeSlot: this.timeSlot,
-    };
-  }
 
   overlaps(other: TimetableSlot): boolean {
     return this.day === other.day && this.start < other.end && other.start < this.end;
   }
 
-  equals(other: TimetableSlot | TimetableSlotDto | null | undefined): boolean {
-    if (!other) return false;
-    const candidate = other instanceof TimetableSlot ? other : TimetableSlot.fromDto(other);
-    return (
-      this.course.id === candidate.course.id &&
-      this.day === candidate.day &&
-      this.start === candidate.start
-    );
-    }
 
     key(): string {
         return `${this.day}-${this.start}`;
