@@ -1,8 +1,9 @@
-import type { Slot } from '../api/slot';
+import { DayWeek } from '../api/models/dayWeek';
+import type { TimetableSlot } from '../api/timetableSlot';
 
 interface SelectionSummaryProps {
     courseName: string;
-    selections: Slot[];
+    selections: TimetableSlot[];
 }
 
 export function SelectionSummary({ courseName, selections }: SelectionSummaryProps) {
@@ -19,9 +20,9 @@ export function SelectionSummary({ courseName, selections }: SelectionSummaryPro
             <h3 className="timetable__selection-title">Selected timeslots</h3>
             <ul className="timetable__selection-list">
                 {selections.map((slot, index) => (
-                    <li key={`${slot.day}-${slot.startBlock}-${index}`}>
-                        <span className="timetable__selection-day">{slot.day}</span>
-                        <span className="timetable__selection-block">Block {slot.startBlock}</span>
+                    <li key={`${slot.day}-${slot.start}-${index}`}>
+                        <span className="timetable__selection-day">{DayWeek[slot.day]}</span>
+                        <span className="timetable__selection-block">Block {slot.start}</span>
                     </li>
                 ))}
             </ul>

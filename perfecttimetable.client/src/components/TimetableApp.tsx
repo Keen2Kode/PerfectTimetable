@@ -12,6 +12,7 @@ import { TimetableSlot } from '../api/timetableSlot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
+import SelectionSummary from './SelectionSummary';
 
 dayjs.extend(customParseFormat);
 
@@ -59,7 +60,7 @@ export function TimetableApp() {
                                 timetableSlots={selections}
                                 singleCourse={course}
                             />
-                            {/*<SelectionSummary courseName={course.name} selections={selections} />*/}
+                            <SelectionSummary courseName={course.name} selections={selections} />
                         </div>
                     );
                 })}
