@@ -1,4 +1,6 @@
-export declare const enum DayWeek {
+import type { TimetableDay } from './timetableDay';
+
+export enum DayWeek {
   Monday = 0,
   Tuesday = 1,
   Wednesday = 2,
@@ -8,3 +10,16 @@ export declare const enum DayWeek {
   Sunday = 6,
 }
 
+export function parseDayWeek(value: TimetableDay | string): DayWeek {
+  const key = value as keyof typeof DayWeek;
+  const numeric = DayWeek[key];
+  if (typeof numeric === 'number') {
+    return numeric;
+  }
+
+  throw new Error(`Invalid day: ${value}`);
+}
+
+export function dayWeekToTimetableDay(day: DayWeek): TimetableDay {
+  return DayWeek[day] as TimetableDay;
+}
