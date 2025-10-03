@@ -1,10 +1,10 @@
-﻿.timetable {
+.timetable {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.timetable header {
+\.timetable > header {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
