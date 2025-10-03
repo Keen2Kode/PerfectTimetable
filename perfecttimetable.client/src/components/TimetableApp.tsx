@@ -4,6 +4,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
 import { SingleCourseTimetable } from './MultiCourseTimetable';
+import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 //import { SelectionSummary } from './SelectionSummary';
 
 import type { CourseModel } from '../api/models';
@@ -67,6 +68,8 @@ export function TimetableApp() {
             </section>
 
             <SaveSelectionsButton model={model} />
+
+            <GeneratedTimetableCarousel model={model} />
         </div>
     );
 

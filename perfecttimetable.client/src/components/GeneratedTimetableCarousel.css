@@ -1,0 +1,135 @@
+﻿.generated-timetable {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0 0 0 1px rgba(100, 108, 255, 0.12);
+}
+
+.generated-timetable__header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.generated-timetable__nav {
+    --size: 4.25rem;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    border: none;
+    background: rgba(99, 108, 255, 0.16);
+    color: #3f47ff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.18s ease, color 0.18s ease;
+}
+
+.generated-timetable__nav:hover:not(:disabled) {
+    background: rgba(99, 108, 255, 0.28);
+    transform: translateY(-1px);
+}
+
+.generated-timetable__nav:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 108, 255, 0.28);
+}
+
+.generated-timetable__nav:disabled {
+    cursor: default;
+    color: rgba(63, 71, 255, 0.35);
+    background: rgba(99, 108, 255, 0.12);
+}
+
+.generated-timetable__icon {
+    width: 28px;
+    height: 28px;
+    color: inherit;
+}
+
+.generated-timetable__summary {
+    position: relative;
+    text-align: center;
+    padding: 1.25rem 0;
+}
+
+.generated-timetable__summary::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    bottom: 20%;
+    width: 1px;
+    transform: translateX(-50%);
+    background: rgba(63, 71, 255, 0.16);
+}
+
+.generated-timetable__title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1a1c2d;
+}
+
+.generated-timetable__meta {
+    margin: 0;
+    color: rgba(26, 28, 45, 0.62);
+    font-size: 0.95rem;
+}
+
+.generated-timetable__calendar {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.generated-timetable__courses {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.95rem;
+}
+
+.generated-timetable__course-name {
+    display: block;
+    font-weight: 600;
+    color: #1a1c2d;
+}
+
+.generated-timetable__course-block {
+    color: rgba(26, 28, 45, 0.6);
+}
+
+.generated-timetable__placeholder {
+    margin: 0;
+    color: rgba(26, 28, 45, 0.62);
+}
+
+@media (max-width: 768px) {
+    .generated-timetable__nav {
+        --size: 3.75rem;
+    }
+
+    .generated-timetable__summary::before {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .generated-timetable {
+        padding: 1.25rem;
+    }
+
+    .generated-timetable__courses {
+        grid-template-columns: 1fr;
+    }
+}
