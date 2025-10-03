@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import type { CourseModel} from '../api/models';
+ï»¿import { useState } from 'react';
+import type { CourseModel, Timetable as ApiTimetable } from '../api/models';
 import { generateTimetable } from '../api/timetableApi';
 
 type SaveStatus = 'idle' | 'saving' | 'success' | 'error';
 
 interface SaveSelectionsButtonProps {
     model: CourseModel;
+    onGenerate?: (timetables: ApiTimetable[]) => void;
 }
 
-export function SaveSelectionsButton({ model}: SaveSelectionsButtonProps) {
+export function SaveSelectionsButton({ model, onGenerate }: SaveSelectionsButtonProps) {
     const [status, setStatus] = useState<SaveStatus>('idle');
     const [message, setMessage] = useState<string | null>(null);
 
@@ -19,12 +20,12 @@ export function SaveSelectionsButton({ model}: SaveSelectionsButtonProps) {
         setMessage(null);
 
         generateTimetable(model)
-            .then((data) => {
-                console.log(JSON.stringify(data, null, 2));
+            .then((data: ApiTimetable[]) => {
+                onGenerate?.(data);
+
+                const total = Array.isArray(data) ? data.length : undefined;
                 const summaryMessage =
-                    typeof data?.count === 'number'
-                        ? `Selections saved (${data.count} total slots).`
-                        : 'Selections saved.';
+                    typeof total === 'number' ? `Generated ${total} timetable${total === 1 ? '' : 's'}.` : 'Selections saved.';
 
                 setStatus('success');
                 setMessage(summaryMessage);
@@ -49,7 +50,7 @@ export function SaveSelectionsButton({ model}: SaveSelectionsButtonProps) {
                     onClick={handleClick}
                     disabled={status === 'saving'}
                 >
-                    {status === 'saving' ? 'Saving…' : 'Save Selections'}
+                    {status === 'saving' ? 'Saving.' : 'Save Selections'}
                 </button>
             </div>
             {message ? (

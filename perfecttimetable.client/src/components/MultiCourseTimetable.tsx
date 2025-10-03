@@ -27,13 +27,13 @@ export type SlotEvent = { slot: TimetableSlot; start: Date; end: Date };
 type MultiCourseTimetableProps = {
   model: CourseModel;
   timetableSlots: TimetableSlot[];
-  onSelectionChange: (slots: TimetableSlot[]) => void;
+  onSelectionChange: (courseId: number, slots: TimetableSlot[]) => void;
   calendarOverrideProps?: Partial<CalendarProps<SlotEvent>>;
 };
 type SingleCourseTimetableProps = {
     model: CourseModel;
     timetableSlots: TimetableSlot[];
-    onSelectionChange: (slots: TimetableSlot[]) => void;
+    onSelectionChange: (courseId: number, slots: TimetableSlot[]) => void;
     singleCourse: Course;
 };
 
@@ -69,7 +69,7 @@ export function MultiCourseTimetable({
   }
 
   const baseOnSelectEvent: CalendarProps<SlotEvent>['onSelectEvent'] = (event) => {
-    onSelectionChange(toggleTimetableSlots(timetableSlots, [event.slot]));
+        onSelectionChange(event.slot.course.id, toggleTimetableSlots(timetableSlots, [event.slot]));
   };
 
   const baseProps: CalendarProps<SlotEvent> = {
@@ -139,7 +139,7 @@ export function SingleCourseTimetable({
     const newSlotClick = (info: SlotInfo) => {
         const baseSlot = TimetableSlot.parseTime(info.start, model, singleCourse);
         if (!baseSlot) return;
-        onSelectionChange(toggleTimetableSlots(timetableSlots, [baseSlot]));
+        onSelectionChange(singleCourse.id, toggleTimetableSlots(timetableSlots, [baseSlot]));
     };
 
     return (

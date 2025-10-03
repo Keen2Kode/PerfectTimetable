@@ -1,26 +1,30 @@
-﻿import { useMemo, useState } from 'react';
-import type { CourseModel } from '../api/models';
+﻿import { useEffect, useMemo, useState } from 'react';
+import type { CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from '../api/models';
 import { TimetableSlot } from '../api/timetableSlot';
 import { MultiCourseTimetable } from './MultiCourseTimetable';
 import './GeneratedTimetableCarousel.css';
 import { ArrowLeftIcon, ArrowRightIcon } from './icons/ArrowIcons';
 
-const noopSelectionChange: (slots: TimetableSlot[]) => void = () => {};
-
-type GeneratedTimetable = {
-    id: string;
-    slots: TimetableSlot[];
+type GeneratedTimetableCarouselProps = {
+    model: CourseModel;
+    timetables: ApiTimetable[];
 };
 
-interface GeneratedTimetableCarouselProps {
-    model: CourseModel;
-}
-
-export function GeneratedTimetableCarousel({ model }: GeneratedTimetableCarouselProps) {
-    const timetables = useMemo(() => buildDummyTimetables(model), [model]);
+export function GeneratedTimetableCarousel({ model, timetables }: GeneratedTimetableCarouselProps) {
     const [index, setIndex] = useState(0);
 
-    const total = timetables.length;
+    const normalizedTimetables = useMemo(
+        () => timetables.map((timetable) => timetable.slots?.map(toTimetableSlot) ?? []),
+        [timetables],
+    );
+
+    const total = normalizedTimetables.length;
+
+    useEffect(() => {
+        if (total > 0) {
+            setIndex(0);
+        }
+    }, [total]);
 
     if (total === 0) {
         return (
@@ -35,7 +39,7 @@ export function GeneratedTimetableCarousel({ model }: GeneratedTimetableCarousel
 
     const disableNav = total <= 1;
     const activeIndex = ((index % total) + total) % total;
-    const current = timetables[activeIndex];
+    const current = normalizedTimetables[activeIndex];
 
     const showPrevious = () => {
         if (disableNav) return;
@@ -84,43 +88,16 @@ export function GeneratedTimetableCarousel({ model }: GeneratedTimetableCarousel
             <div className="generated-timetable__calendar">
                 <MultiCourseTimetable
                     model={model}
-                    timetableSlots={current.slots}
-                    onSelectionChange={noopSelectionChange}
+                    timetableSlots={current}
+                    onSelectionChange={() => { }}
                 />
             </div>
         </section>
     );
 }
 
-function buildDummyTimetables(model: CourseModel): GeneratedTimetable[] {
-    const courses = model.courses ?? [];
-    if (courses.length === 0) {
-        return [];
-    }
-
-    const maxOptions = courses.reduce((max, course) => Math.max(max, course.timeslots?.length ?? 0), 0);
-    if (maxOptions === 0) {
-        return [];
-    }
-
-    const variationCount = Math.min(3, maxOptions);
-
-    return Array.from({ length: variationCount }, (_, planIndex) => ({
-        id: `dummy-${planIndex}`,
-        slots: courses.reduce<TimetableSlot[]>((acc, course, courseIndex) => {
-            const options = course.timeslots ?? [];
-            if (options.length === 0) {
-                return acc;
-            }
-
-            const slotIndex = (courseIndex + planIndex) % options.length;
-            acc.push(new TimetableSlot(course, options[slotIndex]));
-            return acc;
-        }, []),
-    }));
+function toTimetableSlot(slot: ApiTimetableSlot): TimetableSlot {
+    return new TimetableSlot(slot.course, slot.timeSlot);
 }
 
 export default GeneratedTimetableCarousel;
-
-
-
