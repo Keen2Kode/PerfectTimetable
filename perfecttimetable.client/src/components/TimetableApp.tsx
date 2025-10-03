@@ -7,7 +7,7 @@ import { SingleCourseTimetable } from './MultiCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 
 import type { CourseModel, Timetable as ApiTimetable } from '../api/models';
-import { TimetableSlot } from '../api/timetableSlot';
+import { TimetableSlotView } from '../api/timetableSlot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
@@ -18,7 +18,7 @@ dayjs.extend(customParseFormat);
 export function TimetableApp() {
     const [model, setModel] = useState<CourseModel | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [selectedSlotsByCourse, setSelectedSlotsByCourse] = useState<Record<number, TimetableSlot[]>>({});
+    const [selectedSlotsByCourse, setSelectedSlotsByCourse] = useState<Record<number, TimetableSlotView[]>>({});
     const [generatedTimetables, setGeneratedTimetables] = useState<ApiTimetable[]>([]);
 
     useEffect(() => {
@@ -77,9 +77,9 @@ export function TimetableApp() {
             const modelResponse = await fetchTimetable();
             setModel(modelResponse);
 
-            const slotsByCourse: Record<number, TimetableSlot[]> = {};
+            const slotsByCourse: Record<number, TimetableSlotView[]> = {};
             for (const course of modelResponse.courses) {
-                slotsByCourse[course.id] = course.timeslots.map((timeSlot) => new TimetableSlot(course, timeSlot));
+                slotsByCourse[course.id] = course.timeslots.map((timeSlot) => new TimetableSlotView(course, timeSlot));
             }
             setSelectedSlotsByCourse(slotsByCourse);
         } catch (err) {
@@ -87,7 +87,7 @@ export function TimetableApp() {
         }
     }
 
-    function handleSelectionChange(courseId: number, slots: TimetableSlot[]) {
+    function handleSelectionChange(courseId: number, slots: TimetableSlotView[]) {
         setSelectedSlotsByCourse((prev) => ({ ...prev, [courseId]: slots }));
     }
 

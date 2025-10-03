@@ -1,5 +1,5 @@
 ﻿import type { CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from '../api/models';
-import { TimetableSlot} from '../api/timetableSlot';
+import { TimetableSlotView} from '../api/timetableSlot';
 import { CourseView } from '../api/courseView';
 
 export class ModelView {
@@ -21,7 +21,7 @@ export class ModelView {
         return this.courses.find((course) => course.id === id);
     }
 
-    updateCourseSlots(courseId: number, slots: TimetableSlot[]): void {
+    updateCourseSlots(courseId: number, slots: TimetableSlotView[]): void {
         this.getCourse(courseId)?.setSlots(slots);
     }
 
@@ -35,14 +35,14 @@ export class ModelView {
         };
     }
 
-    static fromApiTimetables(timetables: ApiTimetable[]): TimetableSlot[][] {
+    static fromApiTimetables(timetables: ApiTimetable[]): TimetableSlotView[][] {
         return timetables
             .map((timetable) => timetable.slots?.map(ModelView.toSlot) ?? [])
             .filter((slots) => slots.length > 0);
     }
 
-    private static toSlot(slot: ApiTimetableSlot): TimetableSlot {
-        return new TimetableSlot(slot.course, slot.timeSlot);
+    private static toSlot(slot: ApiTimetableSlot): TimetableSlotView {
+        return new TimetableSlotView(slot.course, slot.timeSlot);
     }
 }
 

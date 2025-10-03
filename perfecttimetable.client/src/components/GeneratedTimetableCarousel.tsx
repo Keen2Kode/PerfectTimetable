@@ -1,6 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
 import type { CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from '../api/models';
-import { TimetableSlot } from '../api/timetableSlot';
+import { TimetableSlotView } from '../api/timetableSlot';
 import { MultiCourseTimetable } from './MultiCourseTimetable';
 import './GeneratedTimetableCarousel.css';
 import { ArrowLeftIcon, ArrowRightIcon } from './icons/ArrowIcons';
@@ -96,8 +96,8 @@ export function GeneratedTimetableCarousel({ model, timetables }: GeneratedTimet
     );
 }
 
-function toTimetableSlot(slot: ApiTimetableSlot): TimetableSlot {
-    return new TimetableSlot(slot.course, slot.timeSlot);
+function toTimetableSlot(slot: ApiTimetableSlot): TimetableSlotView {
+    return new TimetableSlotView(slot.course, slot.timeSlot);
 }
 
 export default GeneratedTimetableCarousel;
