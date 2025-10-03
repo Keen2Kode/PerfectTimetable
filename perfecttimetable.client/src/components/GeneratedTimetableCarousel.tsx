@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react';
+﻿import { useMemo, useState } from 'react';
 import type { CourseModel } from '../api/models';
-import { DayWeek } from '../api/models/dayWeek';
 import { TimetableSlot } from '../api/timetableSlot';
 import { MultiCourseTimetable } from './MultiCourseTimetable';
 import './GeneratedTimetableCarousel.css';
@@ -10,7 +9,6 @@ const noopSelectionChange: (slots: TimetableSlot[]) => void = () => {};
 
 type GeneratedTimetable = {
     id: string;
-    label: string;
     slots: TimetableSlot[];
 };
 
@@ -52,30 +50,35 @@ export function GeneratedTimetableCarousel({ model }: GeneratedTimetableCarousel
     return (
         <section className="generated-timetable" aria-label="Generated timetables">
             <header className="generated-timetable__header">
-                <button
-                    type="button"
-                    className="generated-timetable__nav"
-                    aria-label="Show previous timetable"
-                    onClick={showPrevious}
-                    disabled={disableNav}
-                >
-                    <ArrowLeftIcon aria-hidden className="generated-timetable__icon" />
-                </button>
-                <div className="generated-timetable__summary">
-                    <h2 className="generated-timetable__title">{current.label}</h2>
-                    <p className="generated-timetable__meta">
-                        Timetable {activeIndex + 1} of {total}
-                    </p>
+                <div className="generated-timetable__rail">
+                    <button
+                        type="button"
+                        className="generated-timetable__nav generated-timetable__nav--prev"
+                        aria-label="Show previous timetable"
+                        onClick={showPrevious}
+                        disabled={disableNav}
+                    >
+                        <ArrowLeftIcon aria-hidden className="generated-timetable__icon" />
+                    </button>
+                    <div className="generated-timetable__rail-divider" />
+                    <button
+                        type="button"
+                        className="generated-timetable__nav generated-timetable__nav--next"
+                        aria-label="Show next timetable"
+                        onClick={showNext}
+                        disabled={disableNav}
+                    >
+                        <ArrowRightIcon aria-hidden className="generated-timetable__icon" />
+                    </button>
                 </div>
-                <button
-                    type="button"
-                    className="generated-timetable__nav"
-                    aria-label="Show next timetable"
-                    onClick={showNext}
-                    disabled={disableNav}
-                >
-                    <ArrowRightIcon aria-hidden className="generated-timetable__icon" />
-                </button>
+
+                <div className="generated-timetable__summary-shell">
+                    <div className="generated-timetable__summary">
+                        <p className="generated-timetable__meta">
+                            Timetable {activeIndex + 1} of {total}
+                        </p>
+                    </div>
+                </div>
             </header>
 
             <div className="generated-timetable__calendar">
@@ -85,17 +88,6 @@ export function GeneratedTimetableCarousel({ model }: GeneratedTimetableCarousel
                     onSelectionChange={noopSelectionChange}
                 />
             </div>
-
-            <ul className="generated-timetable__courses">
-                {current.slots.map((slot) => (
-                    <li key={slot.key()}>
-                        <span className="generated-timetable__course-name">{slot.course.name}</span>
-                        <span className="generated-timetable__course-block">
-                            {DayWeek[slot.day]} - Block {slot.start}
-                        </span>
-                    </li>
-                ))}
-            </ul>
         </section>
     );
 }
@@ -115,7 +107,6 @@ function buildDummyTimetables(model: CourseModel): GeneratedTimetable[] {
 
     return Array.from({ length: variationCount }, (_, planIndex) => ({
         id: `dummy-${planIndex}`,
-        label: `Preview Plan ${String.fromCharCode(65 + planIndex)}`,
         slots: courses.reduce<TimetableSlot[]>((acc, course, courseIndex) => {
             const options = course.timeslots ?? [];
             if (options.length === 0) {
@@ -130,3 +121,6 @@ function buildDummyTimetables(model: CourseModel): GeneratedTimetable[] {
 }
 
 export default GeneratedTimetableCarousel;
+
+
+
