@@ -11,8 +11,6 @@ import { TimetableDay } from '../api/models';
 import { TimetableSlot } from '../api/timetableSlot';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
 import './CourseTimetable.css';
-import { CourseView } from '../api/courseView';
-
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
@@ -27,14 +25,12 @@ export type SlotEvent = { slot: TimetableSlot; start: Date; end: Date };
 export type MultiCourseTimetableProps = {
   model: CourseModel;
   timetableSlots: TimetableSlot[];
-  onSelectionChange?: (courseId: number, slots: TimetableSlot[]) => void;
   calendarOverrideProps?: Partial<CalendarProps<SlotEvent>>;
 };
 
 export function MultiCourseTimetable({
   model,
   timetableSlots,
-  onSelectionChange,
   calendarOverrideProps,
 }: MultiCourseTimetableProps) {
   const blockDuration = parseMinutes(model.blockDuration);
@@ -50,25 +46,12 @@ export function MultiCourseTimetable({
   const min = anchorDate.toDate();
   const max = anchorDate.add(blockDuration * model.blocks, 'minute').toDate();
 
-  const events: SlotEvent[] = timetableSlots
-    .map((slot) => {
-      const start = slot.StartDate(dayStarts, blockDuration);
-      const end = slot.EndDate(dayStarts, blockDuration);
-      return start && end ? { slot, start, end } : undefined;
-    })
-    .filter((event): event is SlotEvent => Boolean(event));
+    const events = timetableSlots.map((slot) => {
+        const start = slot.StartDate(dayStarts, blockDuration);
+        const end = slot.EndDate(dayStarts, blockDuration);
+        return start && end ? { slot, start, end } : null;
+    }).filter((event) => event != null);
 
-  //  const baseOnSelectEvent: CalendarProps<SlotEvent>['onSelectEvent'] = (event) => {
-  //      if (!onSelectionChange)
-  //          return;
-  //      const singleCourse = new CourseView(event.slot.course);
-  //      onSelectionChange(singleCourse.id, singleCourse.toggleSlots([event.slot]));
-    //};
-
-    const baseOnSelectEvent: CalendarProps<SlotEvent>['onSelectEvent'] = (event) => {
-        if (!onSelectionChange) return;
-        onSelectionChange(event.slot.course.id, toggleTimetableSlots(timetableSlots, [event.slot]));
-    };
 
   const baseProps: CalendarProps<SlotEvent> = {
     localizer,
@@ -82,8 +65,6 @@ export function MultiCourseTimetable({
     timeslots: 1,
     min,
     max,
-    onSelectEvent: baseOnSelectEvent,
-    onSelecting: () => false,
     eventPropGetter: () => ({ className: 'course-timetable__selection' }),
     allDayAccessor: () => false,
     dayLayoutAlgorithm: 'no-overlap',
@@ -98,13 +79,4 @@ export function MultiCourseTimetable({
       />
     </div>
   );
-}
-
-function toggleTimetableSlots(current: TimetableSlot[], toggled: TimetableSlot[]): TimetableSlot[] {
-  const map = new Map(current.map((slot) => [slot.key(), slot]));
-  for (const slot of toggled) {
-    const id = slot.key();
-    if (map.has(id)) { map.delete(id); } else { map.set(id, slot); }
-  }
-  return [...map.values()];
 }

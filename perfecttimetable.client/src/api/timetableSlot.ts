@@ -1,9 +1,9 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import type { Course, TimeSlot, CourseModel, TimetableDay } from './models';
+import type { CourseView } from './courseView';
 import { DayWeek, parseDayWeek, dayWeekToTimetableDay } from './models/dayWeek';
 import { parseTime, buildDayStarts, parseMinutes } from '../utils/timetableTime';
-//import type { CourseView } from './courseView';
 
 export class TimetableSlot {
   readonly course: Course;
@@ -47,8 +47,8 @@ export class TimetableSlot {
     const startBlock = Math.floor(minutes / blockMinutes) + 1;
     if (!TimetableSlot.withinBounds(startBlock, course.durationBlocks, model.blocks)) return null;
 
-      const day = TimetableSlot.toTimetableDay(instant);
-      return new TimetableSlot(course.toCourse(), { day, startBlock });
+    const day = TimetableSlot.toTimetableDay(instant);
+    return new TimetableSlot(course.toCourse(), { day, startBlock });
   }
 
   private static toTimetableDay(value: Dayjs): TimetableDay {
