@@ -1,4 +1,4 @@
-import { Calendar, Views, dayjsLocalizer, type CalendarProps, type SlotInfo, type View } from 'react-big-calendar';
+import { Calendar, Views, dayjsLocalizer, type CalendarProps, type View } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -6,13 +6,12 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import weekday from 'dayjs/plugin/weekday';
 import localeData from 'dayjs/plugin/localeData';
-
-import type { Course, CourseModel } from '../api/models';
+import type { CourseModel } from '../api/models';
 import { TimetableDay } from '../api/models';
-import { TimetableSlotView } from '../api/timetableSlot';
+import { TimetableSlot } from '../api/timetableSlot';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
 import './CourseTimetable.css';
-import type { ReactNode, ComponentType } from 'react';
+
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
@@ -22,22 +21,14 @@ dayjs.extend(localeData);
 
 const localizer = dayjsLocalizer(dayjs);
 
-export type SlotEvent = { slot: TimetableSlotView; start: Date; end: Date };
+export type SlotEvent = { slot: TimetableSlot; start: Date; end: Date };
 
-type MultiCourseTimetableProps = {
+export type MultiCourseTimetableProps = {
   model: CourseModel;
-  timetableSlots: TimetableSlotView[];
-  onSelectionChange: (courseId: number, slots: TimetableSlotView[]) => void;
+  timetableSlots: TimetableSlot[];
+  onSelectionChange: (courseId: number, slots: TimetableSlot[]) => void;
   calendarOverrideProps?: Partial<CalendarProps<SlotEvent>>;
 };
-type SingleCourseTimetableProps = {
-    model: CourseModel;
-    timetableSlots: TimetableSlotView[];
-    onSelectionChange: (courseId: number, slots: TimetableSlotView[]) => void;
-    singleCourse: Course;
-};
-
-
 
 export function MultiCourseTimetable({
   model,
@@ -58,18 +49,16 @@ export function MultiCourseTimetable({
   const min = anchorDate.toDate();
   const max = anchorDate.add(blockDuration * model.blocks, 'minute').toDate();
 
-  const events: SlotEvent[] = [];
-
-  for (const slot of timetableSlots) {
-    const start = slot.StartDate(dayStarts, blockDuration);
-    const end = slot.EndDate(dayStarts, blockDuration);
-    if (start && end) {
-      events.push({ slot, start, end });
-    }
-  }
+  const events: SlotEvent[] = timetableSlots
+    .map((slot) => {
+      const start = slot.StartDate(dayStarts, blockDuration);
+      const end = slot.EndDate(dayStarts, blockDuration);
+      return start && end ? { slot, start, end } : undefined;
+    })
+    .filter((event): event is SlotEvent => Boolean(event));
 
   const baseOnSelectEvent: CalendarProps<SlotEvent>['onSelectEvent'] = (event) => {
-        onSelectionChange(event.slot.course.id, toggleTimetableSlots(timetableSlots, [event.slot]));
+    onSelectionChange(event.slot.course.id, toggleTimetableSlots(timetableSlots, [event.slot]));
   };
 
   const baseProps: CalendarProps<SlotEvent> = {
@@ -102,56 +91,11 @@ export function MultiCourseTimetable({
   );
 }
 
-function toggleTimetableSlots(current: TimetableSlotView[], toggled: TimetableSlotView[]) {
+function toggleTimetableSlots(current: TimetableSlot[], toggled: TimetableSlot[]): TimetableSlot[] {
   const map = new Map(current.map((slot) => [slot.key(), slot]));
   for (const slot of toggled) {
     const id = slot.key();
-    if (map.has(id)) map.delete(id);
-    else map.set(id, slot);
+    if (map.has(id)) { map.delete(id); } else { map.set(id, slot); }
   }
   return [...map.values()];
-}
-
-export function SingleCourseTimetable({
-    model,
-    timetableSlots,
-    onSelectionChange,
-    singleCourse,
-}: SingleCourseTimetableProps) {
-    const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
-        const slot = TimetableSlotView.parseTime(value, model, singleCourse);
-        const disabled = slot == null;
-        return (
-            <div
-                className={disabled ? 'course-timetable__slot--disabled' : undefined}
-                style={disabled ? { pointerEvents: 'none' } : undefined}
-            >
-                {children}
-            </div>
-        );
-    };
-
-    const components = {
-        timeSlotWrapper: slotWrapper as ComponentType,
-        allDay: () => null,
-    } as CalendarProps<SlotEvent>['components'];
-
-    const newSlotClick = (info: SlotInfo) => {
-        const baseSlot = TimetableSlotView.parseTime(info.start, model, singleCourse);
-        if (!baseSlot) return;
-        onSelectionChange(singleCourse.id, toggleTimetableSlots(timetableSlots, [baseSlot]));
-    };
-
-    return (
-        <MultiCourseTimetable
-            model={model}
-            timetableSlots={timetableSlots}
-            onSelectionChange={onSelectionChange}
-            calendarOverrideProps={{
-                selectable: true,
-                onSelectSlot: newSlotClick,
-                components,
-            }}
-        />
-    );
 }

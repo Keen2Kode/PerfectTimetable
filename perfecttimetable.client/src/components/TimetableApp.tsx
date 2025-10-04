@@ -1,13 +1,14 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
-import { SingleCourseTimetable } from './MultiCourseTimetable';
+import SingleCourseTimetable from './SingleCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 
-import type { CourseModel, Timetable as ApiTimetable } from '../api/models';
-import { TimetableSlotView } from '../api/timetableSlot';
+import type { Timetable as ApiTimetable } from '../api/models';
+import { ModelView } from '../api/modelView';
+import { TimetableSlot } from '../api/timetableSlot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
@@ -16,9 +17,8 @@ import SelectionSummary from './SelectionSummary';
 dayjs.extend(customParseFormat);
 
 export function TimetableApp() {
-    const [model, setModel] = useState<CourseModel | null>(null);
+    const [view, setView] = useState<ModelView | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [selectedSlotsByCourse, setSelectedSlotsByCourse] = useState<Record<number, TimetableSlotView[]>>({});
     const [generatedTimetables, setGeneratedTimetables] = useState<ApiTimetable[]>([]);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export function TimetableApp() {
         return <p role="alert">Failed to load timetable: {error}</p>;
     }
 
-    if (!model) {
+    if (!view) {
         return <p>Loading timetable...</p>;
     }
 
@@ -37,36 +37,32 @@ export function TimetableApp() {
         <div className="timetable">
             <header>
                 <h1>Perfect Timetable</h1>
-                <p>Starting {formatTime(model.startTime)}</p>
-                <p>{parseMinutes(model.blockDuration)}-minute blocks</p>
-                <p>{model.blocks} blocks per day</p>
+                <p>Starting {formatTime(view.startTime)}</p>
+                <p>{parseMinutes(view.blockDuration)}-minute blocks</p>
+                <p>{view.blocks} blocks per day</p>
             </header>
 
             <section className="timetable__grid">
-                {model.courses.map((course) => {
-                    const selections = selectedSlotsByCourse[course.id] ?? [];
-                    return (
-                        <div key={course.id} className="timetable__course">
-                            <CourseCard course={course} friendlyDays={model.days} />
-                            <SingleCourseTimetable
-                                model={model}
-                                onSelectionChange={handleSelectionChange}
-                                timetableSlots={selections}
-                                singleCourse={course}
-                            />
-                            <SelectionSummary courseName={course.name} selections={selections} />
-                        </div>
-                    );
-                })}
+                {view.getCourses().map((courseView) => (
+                    <div key={courseView.id} className="timetable__course">
+                        <CourseCard course={courseView.toCourse()} friendlyDays={view.days} />
+                        <SingleCourseTimetable
+                            modelView={view}
+                            courseView={courseView}
+                            onChange={(slots) => updateCourseSlots(courseView.id, slots)}
+                        />
+                        <SelectionSummary courseName={courseView.name} selections={courseView.getSlots()} />
+                    </div>
+                ))}
             </section>
 
             <SaveSelectionsButton
-                model={model}
-                onGenerate={handleGeneratedTimetables}
+                modelView={view}
+                onGenerate={setGeneratedTimetables}
             />
 
             <GeneratedTimetableCarousel
-                model={model}
+                model={view.toCourseModel()}
                 timetables={generatedTimetables}
             />
         </div>
@@ -74,25 +70,18 @@ export function TimetableApp() {
 
     async function loadTimetable() {
         try {
-            const modelResponse = await fetchTimetable();
-            setModel(modelResponse);
-
-            const slotsByCourse: Record<number, TimetableSlotView[]> = {};
-            for (const course of modelResponse.courses) {
-                slotsByCourse[course.id] = course.timeslots.map((timeSlot) => new TimetableSlotView(course, timeSlot));
-            }
-            setSelectedSlotsByCourse(slotsByCourse);
+            const model = await fetchTimetable();
+            setView(new ModelView(model));
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         }
     }
 
-    function handleSelectionChange(courseId: number, slots: TimetableSlotView[]) {
-        setSelectedSlotsByCourse((prev) => ({ ...prev, [courseId]: slots }));
-    }
-
-    function handleGeneratedTimetables(timetables: ApiTimetable[]) {
-        setGeneratedTimetables(timetables.filter((timetable) => timetable.slots?.length));
+    function updateCourseSlots(courseId: number, slots: TimetableSlot[]) {
+        setView((previous) => {
+            if (!previous) return previous;
+            return previous.withUpdatedCourse(courseId, slots);
+        });
     }
 }
 

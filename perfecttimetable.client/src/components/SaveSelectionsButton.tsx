@@ -1,15 +1,16 @@
-﻿import { useState } from 'react';
-import type { CourseModel, Timetable as ApiTimetable } from '../api/models';
+import { useState } from 'react';
+import type { Timetable as ApiTimetable } from '../api/models';
+import { ModelView } from '../api/modelView';
 import { generateTimetable } from '../api/timetableApi';
 
 type SaveStatus = 'idle' | 'saving' | 'success' | 'error';
 
 interface SaveSelectionsButtonProps {
-    model: CourseModel;
+    modelView: ModelView;
     onGenerate?: (timetables: ApiTimetable[]) => void;
 }
 
-export function SaveSelectionsButton({ model, onGenerate }: SaveSelectionsButtonProps) {
+export function SaveSelectionsButton({ modelView, onGenerate }: SaveSelectionsButtonProps) {
     const [status, setStatus] = useState<SaveStatus>('idle');
     const [message, setMessage] = useState<string | null>(null);
 
@@ -19,7 +20,9 @@ export function SaveSelectionsButton({ model, onGenerate }: SaveSelectionsButton
         setStatus('saving');
         setMessage(null);
 
-        generateTimetable(model)
+        const payload = modelView.toCourseModel();
+
+        generateTimetable(payload)
             .then((data: ApiTimetable[]) => {
                 onGenerate?.(data);
 

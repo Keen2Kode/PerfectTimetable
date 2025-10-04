@@ -1,9 +1,9 @@
 import { DayWeek } from '../api/models/dayWeek';
-import type { TimetableSlotView } from '../api/timetableSlot';
+import type { TimetableSlot } from '../api/timetableSlot';
 
 interface SelectionSummaryProps {
     courseName: string;
-    selections: TimetableSlotView[];
+    selections: TimetableSlot[];
 }
 
 export function SelectionSummary({ courseName, selections }: SelectionSummaryProps) {
