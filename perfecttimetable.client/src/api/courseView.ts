@@ -33,6 +33,7 @@ export class CourseView {
         return this.slots;
     }
 
+
     toCourse(): Course {
         return {
             id: this.id,

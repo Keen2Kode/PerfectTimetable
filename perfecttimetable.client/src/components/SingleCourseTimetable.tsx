@@ -14,11 +14,10 @@ export type SingleCourseTimetableProps = {
 
 export default function SingleCourseTimetable({ modelView, courseView, onChange }: SingleCourseTimetableProps) {
   const model = modelView.toCourseModel();
-  const course = courseView.toCourse();
   const slots = courseView.getSlots();
 
   const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
-    const parsed = TimetableSlot.parseTime(value, model, course);
+    const parsed = TimetableSlot.parseTime(value, model, courseView);
     const disabled = parsed == null;
     return (
       <div
@@ -36,7 +35,7 @@ export default function SingleCourseTimetable({ modelView, courseView, onChange 
   } as CalendarProps<SlotEvent>['components'];
 
   const handleSelectSlot = (info: SlotInfo) => {
-    const baseSlot = TimetableSlot.parseTime(info.start, model, course);
+    const baseSlot = TimetableSlot.parseTime(info.start, model, courseView);
     if (!baseSlot) return;
     onChange(courseView.toggleSlots([baseSlot]));
   };
@@ -46,9 +45,8 @@ export default function SingleCourseTimetable({ modelView, courseView, onChange 
       model={model}
       timetableSlots={slots}
       onSelectionChange={(courseId, updated) => {
-        if (courseId !== course.id) return;
-        const next = courseView.setSlots(updated);
-        onChange(next);
+        if (courseId !== courseView.id) return;
+          onChange(courseView.setSlots(updated));
       }}
       calendarOverrideProps={{
         selectable: true,

@@ -11,6 +11,7 @@ import { TimetableDay } from '../api/models';
 import { TimetableSlot } from '../api/timetableSlot';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
 import './CourseTimetable.css';
+import { CourseView } from '../api/courseView';
 
 
 dayjs.extend(customParseFormat);
@@ -26,7 +27,7 @@ export type SlotEvent = { slot: TimetableSlot; start: Date; end: Date };
 export type MultiCourseTimetableProps = {
   model: CourseModel;
   timetableSlots: TimetableSlot[];
-  onSelectionChange: (courseId: number, slots: TimetableSlot[]) => void;
+  onSelectionChange?: (courseId: number, slots: TimetableSlot[]) => void;
   calendarOverrideProps?: Partial<CalendarProps<SlotEvent>>;
 };
 
@@ -57,9 +58,17 @@ export function MultiCourseTimetable({
     })
     .filter((event): event is SlotEvent => Boolean(event));
 
-  const baseOnSelectEvent: CalendarProps<SlotEvent>['onSelectEvent'] = (event) => {
-    onSelectionChange(event.slot.course.id, toggleTimetableSlots(timetableSlots, [event.slot]));
-  };
+  //  const baseOnSelectEvent: CalendarProps<SlotEvent>['onSelectEvent'] = (event) => {
+  //      if (!onSelectionChange)
+  //          return;
+  //      const singleCourse = new CourseView(event.slot.course);
+  //      onSelectionChange(singleCourse.id, singleCourse.toggleSlots([event.slot]));
+    //};
+
+    const baseOnSelectEvent: CalendarProps<SlotEvent>['onSelectEvent'] = (event) => {
+        if (!onSelectionChange) return;
+        onSelectionChange(event.slot.course.id, toggleTimetableSlots(timetableSlots, [event.slot]));
+    };
 
   const baseProps: CalendarProps<SlotEvent> = {
     localizer,

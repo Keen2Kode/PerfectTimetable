@@ -89,7 +89,6 @@ export function GeneratedTimetableCarousel({ model, timetables }: GeneratedTimet
                 <MultiCourseTimetable
                     model={model}
                     timetableSlots={current}
-                    onSelectionChange={() => { }}
                 />
             </div>
         </section>
