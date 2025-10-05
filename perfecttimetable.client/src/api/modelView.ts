@@ -1,6 +1,7 @@
 import type { CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from './models';
 import { TimetableSlotView } from './timetableSlot';
 import { CourseView } from './courseView';
+import { CourseColours } from './courseColours';
 
 export class ModelView {
     readonly startTime: string;
@@ -8,13 +9,17 @@ export class ModelView {
     readonly blocks: number;
     readonly days: CourseModel['days'];
     readonly courses: CourseView[];
+    readonly colours: CourseColours;
 
     constructor(source: CourseModel) {
         this.startTime = source.startTime;
         this.blockDuration = source.blockDuration;
         this.blocks = source.blocks;
         this.days = source.days;
-        this.courses = source.courses.map((course) => new CourseView(course));
+        this.colours = new CourseColours();
+        this.courses = source.courses.map((course) =>new CourseView(course, this.colours.getColour()));
+       
+
     }
 
     getCourses(): CourseView[] {
