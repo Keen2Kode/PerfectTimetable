@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { CourseModel, Timetable as ApiTimetable } from '../api/models';
+import type { Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
 import { MultiCourseTimetable } from './MultiCourseTimetable';
 import './GeneratedTimetableCarousel.css';
 import { ArrowLeftIcon, ArrowRightIcon } from './icons/ArrowIcons';
 
 type GeneratedTimetableCarouselProps = {
-    model: CourseModel;
+    modelView: ModelView;
     timetables: ApiTimetable[];
 };
 
-export function GeneratedTimetableCarousel({ model, timetables }: GeneratedTimetableCarouselProps) {
+export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedTimetableCarouselProps) {
     const [index, setIndex] = useState(0);
 
     const normalizedTimetables = useMemo(
@@ -87,7 +87,7 @@ export function GeneratedTimetableCarousel({ model, timetables }: GeneratedTimet
 
             <div className="generated-timetable__calendar">
                 <MultiCourseTimetable
-                    model={model}
+                    modelView={modelView}
                     timetableSlots={current}
                 />
             </div>

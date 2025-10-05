@@ -14,14 +14,28 @@ export class CourseColours {
             '#A832EA',
         ];
         for (const courseView of courseViews) {
-            this.setColour(courseView.id);
+            this.assignColour(courseView.id);
         }
 
     }
 
-    private setColour(courseId: number): void {
+    getColour(courseId: number): string {
+        const existing = this.map.get(courseId);
+        if (existing) {
+            return existing;
+        }
+
+        return this.assignColour(courseId);
+    }
+
+    asMap(): ReadonlyMap<number, string> {
+        return this.map;
+    }
+
+    private assignColour(courseId: number): string {
         const colour:string = this.colours[this.i];
         this.i = (this.i + 1) % this.colours.length;
         this.map.set(courseId, colour);
+        return colour;
     }
 }

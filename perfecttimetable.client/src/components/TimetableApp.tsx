@@ -62,7 +62,7 @@ export function TimetableApp() {
             />
 
             <GeneratedTimetableCarousel
-                model={view.toCourseModel()}
+                modelView={view}
                 timetables={generatedTimetables}
             />
         </div>
@@ -86,3 +86,4 @@ export function TimetableApp() {
 }
 
 export default TimetableApp;
+

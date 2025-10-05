@@ -8,6 +8,7 @@ import weekday from 'dayjs/plugin/weekday';
 import localeData from 'dayjs/plugin/localeData';
 import type { CourseModel } from '../api/models';
 import { TimetableDay } from '../api/models';
+import type { ModelView } from '../api/modelView';
 import { TimetableSlotView } from '../api/timetableSlot';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
 import './CourseTimetable.css';
@@ -23,16 +24,17 @@ const localizer = dayjsLocalizer(dayjs);
 export type SlotEvent = { slot: TimetableSlotView; start: Date; end: Date };
 
 export type MultiCourseTimetableProps = {
-  model: CourseModel;
+  modelView: ModelView;
   timetableSlots: TimetableSlotView[];
   calendarOverrideProps?: Partial<CalendarProps<SlotEvent>>;
 };
 
 export function MultiCourseTimetable({
-  model,
+  modelView,
   timetableSlots,
   calendarOverrideProps,
 }: MultiCourseTimetableProps) {
+  const model: CourseModel = modelView.toCourseModel();
   const blockDuration = parseMinutes(model.blockDuration);
   const startTime = parseTime(model.startTime);
   const weekStart = dayjs().startOf('week');
@@ -65,7 +67,10 @@ export function MultiCourseTimetable({
     timeslots: 1,
     min,
     max,
-    eventPropGetter: () => ({ className: 'course-timetable__selection' }),
+    eventPropGetter: (event) => ({
+      className: 'course-timetable__selection',
+      style: { backgroundColor: modelView.colours.getColour(event.slot.course.id) },
+    }),
     allDayAccessor: () => false,
     dayLayoutAlgorithm: 'no-overlap',
     longPressThreshold: 1,

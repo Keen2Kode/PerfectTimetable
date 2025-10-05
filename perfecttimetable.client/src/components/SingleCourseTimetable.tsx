@@ -49,7 +49,7 @@ export default function SingleCourseTimetable({ modelView, courseView, onChange 
 
   return (
     <MultiCourseTimetable
-      model={model}
+      modelView={modelView}
       timetableSlots={slots}
       calendarOverrideProps={{
         selectable: true,
@@ -60,3 +60,4 @@ export default function SingleCourseTimetable({ modelView, courseView, onChange 
     />
   );
 }
+
