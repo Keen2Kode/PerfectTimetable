@@ -1,29 +1,29 @@
 import type { Course } from './models';
-import { TimetableSlot } from './timetableSlot';
+import { TimetableSlotView } from './timetableSlot';
 
 export class CourseView {
     readonly id: number;
     readonly name: string;
     readonly durationBlocks: number;
-    private slots: TimetableSlot[];
+    private slots: TimetableSlotView[];
 
     constructor(course: Course) {
         this.id = course.id;
         this.name = course.name;
         this.durationBlocks = course.durationBlocks;
-        this.slots = course.timeslots.map((slot) => new TimetableSlot(course, slot));
+        this.slots = course.timeslots.map((slot) => new TimetableSlotView(course, slot));
     }
 
-    getSlots(): TimetableSlot[] {
+    getSlots(): TimetableSlotView[] {
         return this.slots;
     }
 
-    setSlots(slots: TimetableSlot[]): TimetableSlot[] {
+    setSlots(slots: TimetableSlotView[]) {
         this.slots = slots;
         return this.slots;
     }
 
-    toggleSlots(toggled: TimetableSlot[]): TimetableSlot[] {
+    toggleSlots(toggled: TimetableSlotView[]) {
         const current = new Map(this.slots.map((slot) => [slot.key(), slot]));
         for (const slot of toggled) {
             const key = slot.key();

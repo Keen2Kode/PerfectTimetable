@@ -2,13 +2,13 @@ import type { ComponentType, ReactNode } from 'react';
 import type { CalendarProps, SlotInfo } from 'react-big-calendar';
 import type { ModelView } from '../api/modelView';
 import type { CourseView } from '../api/courseView';
-import { TimetableSlot } from '../api/timetableSlot';
+import { TimetableSlotView } from '../api/timetableSlot';
 import { MultiCourseTimetable, type SlotEvent } from './MultiCourseTimetable';
 
 export type SingleCourseTimetableProps = {
   modelView: ModelView;
   courseView: CourseView;
-  onChange: (slots: TimetableSlot[]) => void;
+  onChange: (slots: TimetableSlotView[]) => void;
 };
 
 export default function SingleCourseTimetable({ modelView, courseView, onChange }: SingleCourseTimetableProps) {
@@ -17,7 +17,7 @@ export default function SingleCourseTimetable({ modelView, courseView, onChange 
   const slots = courseView.getSlots();
 
   const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
-    const parsed = TimetableSlot.parseTime(value, model, courseView);
+    const parsed = TimetableSlotView.parseTime(value, model, courseView);
     const disabled = parsed == null;
     return (
       <div
@@ -35,7 +35,7 @@ export default function SingleCourseTimetable({ modelView, courseView, onChange 
   } as CalendarProps<SlotEvent>['components'];
 
   const handleSelectSlot = (info: SlotInfo) => {
-    const baseSlot = TimetableSlot.parseTime(info.start, model, courseView);
+    const baseSlot = TimetableSlotView.parseTime(info.start, model, courseView);
     if (!baseSlot) return;
     courseView.toggleSlots([baseSlot]);
     onChange(courseView.getSlots());

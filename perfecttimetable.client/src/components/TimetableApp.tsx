@@ -8,7 +8,7 @@ import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 
 import type { Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
-import { TimetableSlot } from '../api/timetableSlot';
+import { TimetableSlotView } from '../api/timetableSlot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
@@ -77,7 +77,7 @@ export function TimetableApp() {
         }
     }
 
-    function updateCourseSlots(courseId: number, slots: TimetableSlot[]) {
+    function updateCourseSlots(courseId: number, slots: TimetableSlotView[]) {
         setView((previous) => {
             if (!previous) return previous;
             return previous.withUpdatedCourse(courseId, slots);

@@ -5,7 +5,7 @@ import type { CourseView } from './courseView';
 import { DayWeek, parseDayWeek, dayWeekToTimetableDay } from './models/dayWeek';
 import { parseTime, buildDayStarts, parseMinutes } from '../utils/timetableTime';
 
-export class TimetableSlot {
+export class TimetableSlotView {
   readonly course: Course;
   readonly timeSlot: TimeSlot;
   readonly day: DayWeek;
@@ -30,7 +30,7 @@ export class TimetableSlot {
     return instant.toDate();
   }
 
-  static parseTime(value: Date | string | Dayjs, model: CourseModel, course: CourseView): TimetableSlot | null {
+  static parseTime(value: Date | string | Dayjs, model: CourseModel, course: CourseView): TimetableSlotView | null {
     if (!course) return null;
 
     const instant = dayjs.isDayjs(value) ? value : dayjs(value);
@@ -45,10 +45,10 @@ export class TimetableSlot {
 
     const minutes = instant.diff(dayStarts[column], 'minute');
     const startBlock = Math.floor(minutes / blockMinutes) + 1;
-    if (!TimetableSlot.withinBounds(startBlock, course.durationBlocks, model.blocks)) return null;
+    if (!TimetableSlotView.withinBounds(startBlock, course.durationBlocks, model.blocks)) return null;
 
-    const day = TimetableSlot.toTimetableDay(instant);
-    return new TimetableSlot(course.toCourse(), { day, startBlock });
+    const day = TimetableSlotView.toTimetableDay(instant);
+    return new TimetableSlotView(course.toCourse(), { day, startBlock });
   }
 
   private static toTimetableDay(value: Dayjs): TimetableDay {
@@ -60,7 +60,7 @@ export class TimetableSlot {
     return startBlock >= 1 && startBlock <= totalBlocks - (span - 1);
   }
 
-  overlaps(other: TimetableSlot): boolean {
+  overlaps(other: TimetableSlotView): boolean {
     return this.day === other.day && this.start < other.end && other.start < this.end;
   }
 

@@ -8,7 +8,7 @@ import weekday from 'dayjs/plugin/weekday';
 import localeData from 'dayjs/plugin/localeData';
 import type { CourseModel } from '../api/models';
 import { TimetableDay } from '../api/models';
-import { TimetableSlot } from '../api/timetableSlot';
+import { TimetableSlotView } from '../api/timetableSlot';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
 import './CourseTimetable.css';
 
@@ -20,11 +20,11 @@ dayjs.extend(localeData);
 
 const localizer = dayjsLocalizer(dayjs);
 
-export type SlotEvent = { slot: TimetableSlot; start: Date; end: Date };
+export type SlotEvent = { slot: TimetableSlotView; start: Date; end: Date };
 
 export type MultiCourseTimetableProps = {
   model: CourseModel;
-  timetableSlots: TimetableSlot[];
+  timetableSlots: TimetableSlotView[];
   calendarOverrideProps?: Partial<CalendarProps<SlotEvent>>;
 };
 
