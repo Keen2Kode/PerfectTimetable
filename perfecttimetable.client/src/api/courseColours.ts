@@ -1,8 +1,11 @@
+import type { CourseView } from "./courseView";
+
 export class CourseColours {
 
     private colours: string[];
     private i: number = 0;
-    constructor() {
+    private map: Map<number, string> = new Map<number, string>();
+    constructor(courseViews: CourseView[]) {
         this.colours = [
 
             '#D38FFF',
@@ -10,12 +13,15 @@ export class CourseColours {
             '#B649FA',
             '#A832EA',
         ];
+        for (const courseView of courseViews) {
+            this.setColour(courseView.id);
+        }
 
     }
 
-    getColour(): string {
+    private setColour(courseId: number): void {
         const colour:string = this.colours[this.i];
         this.i = (this.i + 1) % this.colours.length;
-        return colour;
+        this.map.set(courseId, colour);
     }
 }

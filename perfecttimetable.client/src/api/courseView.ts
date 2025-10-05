@@ -6,14 +6,12 @@ export class CourseView {
     readonly name: string;
     readonly durationBlocks: number;
     private slots: TimetableSlotView[];
-    readonly colour: string;
 
-    constructor(course: Course, colour: string) {
+    constructor(course: Course) {
         this.id = course.id;
         this.name = course.name;
         this.durationBlocks = course.durationBlocks;
         this.slots = course.timeslots.map((slot) => new TimetableSlotView(course, slot));
-        this.colour = colour;
     }
 
     getSlots(): TimetableSlotView[] {

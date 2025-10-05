@@ -16,8 +16,9 @@ export class ModelView {
         this.blockDuration = source.blockDuration;
         this.blocks = source.blocks;
         this.days = source.days;
-        this.colours = new CourseColours();
-        this.courses = source.courses.map((course) =>new CourseView(course, this.colours.getColour()));
+        
+        this.courses = source.courses.map((course) => new CourseView(course));
+        this.colours = new CourseColours(this.courses);
        
 
     }
