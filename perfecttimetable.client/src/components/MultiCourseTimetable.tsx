@@ -67,10 +67,14 @@ export function MultiCourseTimetable({
     timeslots: 1,
     min,
     max,
-    eventPropGetter: (event) => ({
-      className: 'course-timetable__selection',
-      style: { backgroundColor: modelView.colours.getColour(event.slot.course.id) },
-    }),
+    eventPropGetter: (event) => {
+      const baseColour = modelView.colours.getColour(event.slot.course.id);
+      const background = modelView.colours.getColourWithAlpha(event.slot.course.id, 0.65);
+      return {
+        className: 'course-timetable__selection',
+        style: { backgroundColor: background, borderColor: baseColour },
+      };
+    },
     allDayAccessor: () => false,
     dayLayoutAlgorithm: 'no-overlap',
     longPressThreshold: 1,

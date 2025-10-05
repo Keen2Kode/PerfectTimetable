@@ -32,10 +32,27 @@ export class CourseColours {
         return this.map;
     }
 
+    getColourWithAlpha(courseId: number, alpha: number): string {
+        const clamped = Math.max(0, Math.min(1, alpha));
+        const hex = this.getColour(courseId);
+        const { r, g, b } = CourseColours.hexToRgb(hex);
+        return `rgba(${r}, ${g}, ${b}, ${clamped})`;
+    }
+
     private assignColour(courseId: number): string {
         const colour:string = this.colours[this.i];
         this.i = (this.i + 1) % this.colours.length;
         this.map.set(courseId, colour);
         return colour;
+    }
+
+    private static hexToRgb(hex: string): { r: number; g: number; b: number } {
+        const value = hex.startsWith('#') ? hex.slice(1) : hex;
+        const normalized = value.length === 3 ? value.split('').map((ch) => ch + ch).join('') : value;
+        const num = parseInt(normalized, 16);
+        const r = (num >> 16) & 0xff;
+        const g = (num >> 8) & 0xff;
+        const b = num & 0xff;
+        return { r, g, b };
     }
 }
