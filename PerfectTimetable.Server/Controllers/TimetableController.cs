@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Mvc;
 using PerfectTimetable.Server.Models;
+using PerfectTimetable.Server.Models.Scoring;
 
 namespace PerfectTimetable.Server.Controllers;
 
@@ -28,18 +29,12 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
         return model ?? new CourseModel();
     }
 
+    // acts as both a post and a get to avoid 2 requests
     [HttpPost("generate")]
     public ActionResult<List<Timetable>> PostTimetable([FromBody] CourseModel model)
     {
         //var result = await _service.GenerateAsync(model);
-        Console.WriteLine("REACHED -1");
-        return new TimetableFactory(model).GenerateTimetables();
+        IScoring scoring = new DistanceScoring();
+        return new TimetableFactory(model).GenerateTimetables(scoring);
     }
 
-    //[HttpGet("generate")]
-    //public int? GenerateTimetable()
-    //{
-    //    Console.WriteLine("REACHED get");
-    //    return -1;
-    //}
-}

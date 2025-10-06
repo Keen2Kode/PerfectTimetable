@@ -1,4 +1,5 @@
 ﻿
+using PerfectTimetable.Server.Models.Scoring;
 using System.ComponentModel.DataAnnotations;
 
 namespace PerfectTimetable.Server.Models
@@ -21,14 +22,14 @@ namespace PerfectTimetable.Server.Models
             ];
         }
 
-        public List<Timetable> GenerateTimetables()
+        public List<Timetable> GenerateTimetables(IScoring score)
         {
             if (slots.Count == 0) {
                 return [];
              }
             List<Timetable> timetables = [];
             GenerateTimetables(0, new Timetable());
-            return timetables;
+            return score.Score(timetables); 
 
             void GenerateTimetables(int slotIndex, Timetable table)
             {
@@ -53,5 +54,8 @@ namespace PerfectTimetable.Server.Models
             }
 
         }
+
+
+
     }
 }
