@@ -6,7 +6,7 @@ namespace PerfectTimetable.Server.Models.Scoring
     {
         private readonly int _differentDayScore;
         private readonly int _slotDistanceMultiplier;
-        public DistanceScoring(int differentDayScore = 4, int slotDistanceMultiplier = 2) { 
+        public DistanceScoring(int differentDayScore = 8, int slotDistanceMultiplier = 2) { 
             _differentDayScore = differentDayScore;
             _slotDistanceMultiplier = slotDistanceMultiplier;
         }
@@ -26,6 +26,10 @@ namespace PerfectTimetable.Server.Models.Scoring
                 else
                 {
                     int distance = slot2.Start - slot1.End;
+                    if (distance < 0)
+                        throw new ArgumentOutOfRangeException($"Slot not ordered correctly. " +
+                            $"Slot 2 {slot2.Start}, {slot2.Day} is before " +
+                            $"Slot 1 {slot1.Start}, {slot1.Day}");
                     score += distance * _slotDistanceMultiplier;
                 }
             }
