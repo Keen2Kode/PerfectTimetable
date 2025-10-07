@@ -4,6 +4,7 @@ import { ModelView } from '../api/modelView';
 import { MultiCourseTimetable } from './MultiCourseTimetable';
 import './GeneratedTimetableCarousel.css';
 import { ArrowLeftIcon, ArrowRightIcon } from './icons/ArrowIcons';
+import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 
 type GeneratedTimetableCarouselProps = {
     modelView: ModelView;
@@ -12,6 +13,7 @@ type GeneratedTimetableCarouselProps = {
 
 export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedTimetableCarouselProps) {
     const [index, setIndex] = useState(0);
+    const [optionsOpen, setOptionsOpen] = useState(false);
 
     const normalizedTimetables = useMemo(
         () => ModelView.fromApiTimetables(timetables),
@@ -74,6 +76,15 @@ export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedT
                         <p className="generated-timetable__meta">
                             Timetable {activeIndex + 1} of {total}
                         </p>
+                        <button
+                            type="button"
+                            className="generated-timetable__options-button"
+                            onClick={() => setOptionsOpen(true)}
+                            aria-haspopup="dialog"
+                            aria-expanded={optionsOpen}
+                        >
+                            Options
+                        </button>
                     </div>
                 </div>
             </header>
@@ -84,6 +95,11 @@ export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedT
                     timetableSlots={current}
                 />
             </div>
+
+            <TimetableOptionsDialog
+                open={optionsOpen}
+                onClose={() => setOptionsOpen(false)}
+            />
         </section>
     );
 }
