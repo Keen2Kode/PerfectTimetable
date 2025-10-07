@@ -1,63 +1,43 @@
-import {  useState } from 'react';
+import { useEffect, useState } from 'react';
 import './TimetableOptionsDialog.css';
-
-type ScoringOption = 'slotDistance';
-
-export type TimetableOptions = {
-    scoring: {
-        option: ScoringOption;
-        slotSpacing: number;
-        dayBalance: number;
-    };
-    filters: {
-        blockLength: boolean;
-    };
-};
+import { type TimetableOptions } from '../api/timetableOptions';
 
 type TimetableOptionsDialogProps = {
     open: boolean;
+    oldOptions: TimetableOptions;
     onClose: () => void;
-    onOptionsChange?: (options: TimetableOptions) => void;
+    onOptionsChange: (options: TimetableOptions) => void;
 };
 
-const defaultOptions: TimetableOptions = {
-    scoring: {
-        option: 'slotDistance',
-        slotSpacing: 2,
-        dayBalance: 2,
-    },
-    filters: {
-        blockLength: false,
-    },
-};
+export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsChange }: TimetableOptionsDialogProps) {
+    const [options, setOptions] = useState<TimetableOptions>(oldOptions);
 
-export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: TimetableOptionsDialogProps) {
-    const [options, setOptions] = useState<TimetableOptions>(defaultOptions);
-
+    useEffect(() => {
+        if (open) {
+            setOptions(oldOptions);
+        }
+    }, [open, oldOptions]);
 
     if (!open) {
         return null;
     }
 
     const updateScoring = (partial: Partial<TimetableOptions['scoring']>) => {
-        setOptions((prev) => ({
-            ...prev,
-            scoring: { ...prev.scoring, ...partial },
+        setOptions((previous) => ({
+            ...previous,
+            scoring: { ...previous.scoring, ...partial },
         }));
     };
 
     const toggleFilter = (filter: keyof TimetableOptions['filters']) => {
-        setOptions((prev) => ({
-            ...prev,
+        setOptions((previous) => ({
+            ...previous,
             filters: {
-                ...prev.filters,
-                [filter]: !prev.filters[filter],
+                ...previous.filters,
+                [filter]: !previous.filters[filter],
             },
         }));
     };
-
-
-
     return (
         <div
             className="timetable-options__overlay"
@@ -86,6 +66,13 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
 
                     {options.scoring.option === 'slotDistance' && (
                         <>
+                            <label
+                                className="timetable-options__slider-label"
+                                id="slot-spacing-label"
+                                htmlFor="slot-spacing-slider"
+                            >
+                                Slot spacing
+                            </label>
                             <input
                                 id="slot-spacing-slider"
                                 type="range"
@@ -95,13 +82,20 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
                                 value={options.scoring.slotSpacing}
                                 onChange={(event) => updateScoring({ slotSpacing: Number(event.target.value) })}
                                 className="timetable-options__slider"
-                                aria-describedby="slot-spacing-caption"
+                                aria-labelledby="slot-spacing-label slot-spacing-caption"
                             />
                             <div className="timetable-options__slider-caption" id="slot-spacing-caption">
                                 <span>Spread out slots</span>
                                 <span>Packed slots</span>
                             </div>
 
+                            <label
+                                className="timetable-options__slider-label"
+                                id="day-balance-label"
+                                htmlFor="day-balance-slider"
+                            >
+                                Day balance
+                            </label>
                             <input
                                 id="day-balance-slider"
                                 type="range"
@@ -111,7 +105,7 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
                                 value={options.scoring.dayBalance}
                                 onChange={(event) => updateScoring({ dayBalance: Number(event.target.value) })}
                                 className="timetable-options__slider"
-                                aria-describedby="day-balance-caption"
+                                aria-labelledby="day-balance-label day-balance-caption"
                             />
                             <div className="timetable-options__slider-caption" id="day-balance-caption">
                                 <span>More days</span>
@@ -145,7 +139,7 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
                         type="button"
                         className="timetable-options__button timetable-options__button--primary"
                         onClick={() => {
-                            onOptionsChange?.(options);
+                            onOptionsChange(options);
                             onClose();
                         }}
                     >

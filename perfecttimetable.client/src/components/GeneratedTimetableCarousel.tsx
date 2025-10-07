@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Timetable as ApiTimetable } from '../api/models';
+import type { TimetableOptions } from '../api/timetableOptions';
 import { ModelView } from '../api/modelView';
 import { MultiCourseTimetable } from './MultiCourseTimetable';
 import './GeneratedTimetableCarousel.css';
@@ -9,9 +10,11 @@ import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 type GeneratedTimetableCarouselProps = {
     modelView: ModelView;
     timetables: ApiTimetable[];
+    options: TimetableOptions;
+    onOptionsChange: (options: TimetableOptions) => void;
 };
 
-export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedTimetableCarouselProps) {
+export function GeneratedTimetableCarousel({ modelView, timetables, options, onOptionsChange }: GeneratedTimetableCarouselProps) {
     const [index, setIndex] = useState(0);
     const [optionsOpen, setOptionsOpen] = useState(false);
 
@@ -88,7 +91,9 @@ export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedT
 
                         <TimetableOptionsDialog
                             open={optionsOpen}
+                            oldOptions={options}
                             onClose={() => setOptionsOpen(false)}
+                            onOptionsChange={onOptionsChange}
                         />
                     </div>
                 </div>

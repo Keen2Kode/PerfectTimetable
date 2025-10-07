@@ -13,6 +13,7 @@ import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
 import SelectionSummary from './SelectionSummary';
+import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
 
 dayjs.extend(customParseFormat);
 
@@ -20,6 +21,7 @@ export function TimetableApp() {
     const [view, setView] = useState<ModelView | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [generatedTimetables, setGeneratedTimetables] = useState<ApiTimetable[]>([]);
+    const [timetableOptions, setTimetableOptions] = useState<TimetableOptions>(defaultTimetableOptions);
 
     useEffect(() => {
         void loadTimetable();
@@ -58,12 +60,15 @@ export function TimetableApp() {
 
             <SaveSelectionsButton
                 modelView={view}
+                options={timetableOptions}
                 onGenerate={setGeneratedTimetables}
             />
 
             <GeneratedTimetableCarousel
                 modelView={view}
                 timetables={generatedTimetables}
+                options={timetableOptions}
+                onOptionsChange={setTimetableOptions}
             />
         </div>
     );
@@ -86,4 +91,3 @@ export function TimetableApp() {
 }
 
 export default TimetableApp;
-
