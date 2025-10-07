@@ -53,7 +53,7 @@ export function SaveSelectionsButton({ modelView, onGenerate }: SaveSelectionsBu
                     onClick={handleClick}
                     disabled={status === 'saving'}
                 >
-                    {status === 'saving' ? 'Saving.' : 'Save Selections'}
+                    {status === 'saving' ? 'Generating' : 'Generate Timetables'}
                 </button>
             </div>
             {message ? (
