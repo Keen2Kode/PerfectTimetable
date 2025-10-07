@@ -56,20 +56,13 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
         }));
     };
 
-    const handleClose = () => {
-        onClose();
-    };
 
-    const handleApply = () => {
-        onOptionsChange?.(options);
-        onClose();
-    };
 
     return (
         <div
             className="timetable-options__overlay"
             role="presentation"
-            onClick={handleClose}
+            onClick={onClose}
         >
             <div
                 className="timetable-options__dialog"
@@ -93,9 +86,6 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
 
                     {options.scoring.option === 'slotDistance' && (
                         <>
-                            <label className="timetable-options__slider-label" htmlFor="slot-spacing-slider">
-                                Slot spacing
-                            </label>
                             <input
                                 id="slot-spacing-slider"
                                 type="range"
@@ -112,9 +102,6 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
                                 <span>Packed slots</span>
                             </div>
 
-                            <label className="timetable-options__slider-label" htmlFor="day-balance-slider">
-                                Day balance
-                            </label>
                             <input
                                 id="day-balance-slider"
                                 type="range"
@@ -150,14 +137,17 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
                     <button
                         type="button"
                         className="timetable-options__button timetable-options__button--secondary"
-                        onClick={handleClose}
+                        onClick={onClose}
                     >
                         Close
                     </button>
                     <button
                         type="button"
                         className="timetable-options__button timetable-options__button--primary"
-                        onClick={handleApply}
+                        onClick={() => {
+                            onOptionsChange?.(options);
+                            onClose();
+                        }}
                     >
                         Apply
                     </button>

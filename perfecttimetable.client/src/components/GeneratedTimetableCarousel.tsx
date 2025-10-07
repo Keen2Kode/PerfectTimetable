@@ -85,6 +85,11 @@ export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedT
                         >
                             Options
                         </button>
+
+                        <TimetableOptionsDialog
+                            open={optionsOpen}
+                            onClose={() => setOptionsOpen(false)}
+                        />
                     </div>
                 </div>
             </header>
@@ -96,10 +101,6 @@ export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedT
                 />
             </div>
 
-            <TimetableOptionsDialog
-                open={optionsOpen}
-                onClose={() => setOptionsOpen(false)}
-            />
         </section>
     );
 }
