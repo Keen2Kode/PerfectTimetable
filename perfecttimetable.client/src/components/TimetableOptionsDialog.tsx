@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import './TimetableOptionsDialog.css';
 
 type ScoringOption = 'slotDistance';
@@ -34,10 +34,6 @@ const defaultOptions: TimetableOptions = {
 export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: TimetableOptionsDialogProps) {
     const [options, setOptions] = useState<TimetableOptions>(defaultOptions);
 
-    useEffect(() => {
-        onOptionsChange?.(options);
-    }, [options, onOptionsChange]);
-
 
     if (!open) {
         return null;
@@ -60,11 +56,20 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
         }));
     };
 
+    const handleClose = () => {
+        onClose();
+    };
+
+    const handleApply = () => {
+        onOptionsChange?.(options);
+        onClose();
+    };
+
     return (
         <div
             className="timetable-options__overlay"
             role="presentation"
-            onClick={onClose}
+            onClick={handleClose}
         >
             <div
                 className="timetable-options__dialog"
@@ -73,15 +78,6 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
                 aria-label="Timetable options"
                 onClick={(event) => event.stopPropagation()}
             >
-                <button
-                    type="button"
-                    className="timetable-options__close"
-                    onClick={onClose}
-                    aria-label="Close options"
-                >
-                    Close
-                </button>
-
                 <section className="timetable-options__section">
                     <h2 className="timetable-options__heading">Scoring</h2>
                     <label className="timetable-options__field">
@@ -149,6 +145,23 @@ export function TimetableOptionsDialog({ open, onClose, onOptionsChange }: Timet
                         Block Length
                     </label>
                 </section>
+
+                <div className="timetable-options__actions">
+                    <button
+                        type="button"
+                        className="timetable-options__button timetable-options__button--secondary"
+                        onClick={handleClose}
+                    >
+                        Close
+                    </button>
+                    <button
+                        type="button"
+                        className="timetable-options__button timetable-options__button--primary"
+                        onClick={handleApply}
+                    >
+                        Apply
+                    </button>
+                </div>
             </div>
         </div>
     );
