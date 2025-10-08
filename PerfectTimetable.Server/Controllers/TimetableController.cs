@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Mvc;
 using PerfectTimetable.Server.Models;
+using PerfectTimetable.Server.Models.DTOs;
 using PerfectTimetable.Server.Models.Filter;
 using PerfectTimetable.Server.Models.Scoring;
 
@@ -36,53 +37,23 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     [HttpPost("generate")]
     public ActionResult<List<Timetable>> PostTimetable([FromBody] GenerateTimetableRequest request)
     {
-        if (request?.Model is null)
+        if (request == null) {
+            return BadRequest("Missing request");
+        }
+
+        if (request.Model is null)
         {
             return BadRequest("Model is required.");
         }
+        List<IScoring> scorers = [];
+        List<IFilter> filters = [];
 
-        var options = request.Options ?? TimetableOptions.Default;
-        var scoring = CreateScoring(options.Scoring);
-        var filters = CreateFilters(options.Filters);
+        if (request.Scoring != null)
+                scorers.Add(request.Scoring);
+        if (request.Filter != null)
+            filters.Add(request.Filter);
 
-        return new TimetableFactory(request.Model).GenerateTimetables([scoring], filters);
+        return new TimetableFactory(request.Model).GenerateTimetables(scorers, filters);
     }
 
-    private static DistanceScoring CreateScoring(ScoringOptions? scoring)
-    {
-        if (scoring is null)
-        {
-            return new DistanceScoring();
-        }
-
-        var slotMultiplier = scoring.SlotSpacing switch
-        {
-            <= 0 => 4,
-            1 => 3,
-            2 => 2,
-            3 => 1,
-            _ => 0,
-        };
-
-        var dayScore = scoring.DayBalance switch
-        {
-            <= 0 => 12,
-            1 => 10,
-            2 => 8,
-            3 => 6,
-            _ => 4,
-        };
-
-        return new DistanceScoring(differentDayScore: dayScore, slotDistanceMultiplier: slotMultiplier);
-    }
-
-    private static IFilter[] CreateFilters(FilterOptions? filters)
-    {
-        if (filters?.BlockLength == true)
-        {
-            return [new BlockLengthFilter(6)];
-        }
-
-        return Array.Empty<IFilter>();
-    }
 }

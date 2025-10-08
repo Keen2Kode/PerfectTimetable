@@ -23,7 +23,7 @@ namespace PerfectTimetable.Server.Models
             ];
         }
 
-        public List<Timetable> GenerateTimetables(IScoring[] scorers, params IFilter[] filters)
+        public List<Timetable> GenerateTimetables(List<IScoring> scorers, List<IFilter> filters)
         {
             if (slots.Count == 0) {
                 return [];

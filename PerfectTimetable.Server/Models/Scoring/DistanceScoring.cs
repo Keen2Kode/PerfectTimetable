@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models.Scoring
 {
@@ -6,6 +7,8 @@ namespace PerfectTimetable.Server.Models.Scoring
     {
         private readonly int _differentDayScore;
         private readonly int _slotDistanceMultiplier;
+
+        [JsonConstructor]
         public DistanceScoring(int differentDayScore = 8, int slotDistanceMultiplier = 2) { 
             _differentDayScore = differentDayScore;
             _slotDistanceMultiplier = slotDistanceMultiplier;

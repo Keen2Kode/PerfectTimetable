@@ -76,9 +76,9 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                             <input
                                 id="slot-spacing-slider"
                                 type="range"
-                                min={0}
-                                max={4}
-                                step={1}
+                                min={-10}
+                                max={10}
+                                step={5}
                                 value={options.scoring.slotSpacing}
                                 onChange={(event) => updateScoring({ slotSpacing: Number(event.target.value) })}
                                 className="timetable-options__slider"
@@ -99,9 +99,9 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                             <input
                                 id="day-balance-slider"
                                 type="range"
-                                min={0}
-                                max={4}
-                                step={1}
+                                min={-10}
+                                max={10}
+                                step={5}
                                 value={options.scoring.dayBalance}
                                 onChange={(event) => updateScoring({ dayBalance: Number(event.target.value) })}
                                 className="timetable-options__slider"
