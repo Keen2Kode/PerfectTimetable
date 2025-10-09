@@ -5,9 +5,12 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from './blockLengthFilter';
 export * from './course';
 export * from './courseModel';
 export * from './dayOfWeek';
+export * from './distanceScoring';
+export * from './generateTimetableRequest';
 export * from './timeSlot';
 export * from './timetable';
 export * from './timetableDay';

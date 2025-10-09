@@ -6,6 +6,7 @@
  */
 import type {
   CourseModel,
+  GenerateTimetableRequest,
   Timetable,
   WeatherForecast
 } from './models';
@@ -69,7 +70,7 @@ export const getPostTimetableGenerateUrl = () => {
   return `/timetable/generate`
 }
 
-export const postTimetableGenerate = async (courseModel: CourseModel, options?: RequestInit): Promise<postTimetableGenerateResponse> => {
+export const postTimetableGenerate = async (generateTimetableRequest: GenerateTimetableRequest, options?: RequestInit): Promise<postTimetableGenerateResponse> => {
   
   const res = await fetch(getPostTimetableGenerateUrl(),
   {      
@@ -77,7 +78,7 @@ export const postTimetableGenerate = async (courseModel: CourseModel, options?: 
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      courseModel,)
+      generateTimetableRequest,)
   }
 )
 

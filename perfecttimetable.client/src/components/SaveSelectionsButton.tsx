@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Timetable as ApiTimetable } from '../api/models';
+import type { Timetable as ApiTimetable, GenerateTimetableRequest } from '../api/models';
 import { ModelView } from '../api/modelView';
 import { generateTimetable } from '../api/timetableApi';
 import type { TimetableOptions } from '../api/timetableOptions';
@@ -22,7 +22,7 @@ export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSel
         setStatus('saving');
         setMessage(null);
 
-        const payload = {
+        const payload: GenerateTimetableRequest = {
             model: modelView.toCourseModel(),
             options,
         };
