@@ -1,12 +1,16 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models.Filter
 {
     public class BlockLengthFilter : IFilter
     {
-        private readonly int _maxBlockLength;
-        public BlockLengthFilter(int maxBlockLength) {
-            _maxBlockLength = maxBlockLength;
+        [JsonInclude]
+        private int MaxBlockLength;
+
+        [JsonConstructor]
+        public BlockLengthFilter(int MaxBlockLength) {
+            this.MaxBlockLength = MaxBlockLength;
         }
 
         public bool Filter(Timetable table)
@@ -24,7 +28,7 @@ namespace PerfectTimetable.Server.Models.Filter
                     length += slots[i].Course.DurationBlocks;
                 else length = slots[i].Course.DurationBlocks;
 
-                if (length > _maxBlockLength)
+                if (length > MaxBlockLength)
                     return false;
             }
             return true;

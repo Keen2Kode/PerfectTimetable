@@ -4,7 +4,7 @@ namespace PerfectTimetable.Server.Models.DTOs;
 
 public sealed class GenerateTimetableRequest
 {
-    public CourseModel Model = new();
-    public Scoring.DistanceScoring? Scoring = null;
-    public BlockLengthFilter? Filter = null;
+    public CourseModel Model { get; set; } = new();
+    public Scoring.DistanceScoring? Scoring { get; set; } = null;
+    public BlockLengthFilter? Filter { get; set; } = null;
 }
