@@ -24,7 +24,8 @@ export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSel
 
         const payload: GenerateTimetableRequest = {
             model: modelView.toCourseModel(),
-            options,
+            scoring: options.scoring,
+            filter: options.filter,
         };
 
         generateTimetable(payload)

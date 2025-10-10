@@ -1,23 +1,14 @@
-﻿export type ScoringOption = 'slotDistance';
+import type { BlockLengthFilter, DistanceScoring } from './models';
 
 export type TimetableOptions = {
-    scoring: {
-        option: ScoringOption;
-        slotSpacing: number;
-        dayBalance: number;
-    };
-    filters: {
-        blockLength: boolean;
-    };
+    scoring?: DistanceScoring;
+    filter?: BlockLengthFilter;
 };
 
 export const defaultTimetableOptions: TimetableOptions = {
     scoring: {
-        option: 'slotDistance',
-        slotSpacing: 2,
-        dayBalance: 2,
+        slotDistanceMultiplier: 2,
+        differentDayScore: 2,
     },
-    filters: {
-        blockLength: false,
-    },
+    filter: null,
 };

@@ -1,29 +1,24 @@
 import { useEffect, useState } from 'react';
 import { produce } from 'immer';
+import type { TimetableOptions } from '../api/timetableOptions';
 import './TimetableOptionsDialog.css';
 
-type TimetableOptionsState = {
-    distanceScore: number | null;
-    differentDayScore: number | null;
-    blockLengthFilter: number | null;
-};
 
 type TimetableOptionsDialogProps = {
     open: boolean;
-    oldOptions: TimetableOptionsState;
+    oldOptions: TimetableOptions;
     onClose: () => void;
-    onOptionsChange: (options: TimetableOptionsState) => void;
+    onOptionsChange: (options: TimetableOptions) => void;
 };
 
 
-const normalizeOptions = (options: TimetableOptionsState): TimetableOptionsState => ({
-    distanceScore: options.distanceScore ?? null,
-    differentDayScore: options.differentDayScore ?? null,
-    blockLengthFilter: options.blockLengthFilter ?? null,
+const normalizeOptions = (options: TimetableOptions): TimetableOptions => ({
+    scoring: options.scoring ?? null,
+    filter: options.filter ?? null,
 });
 
 export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsChange }: TimetableOptionsDialogProps) {
-    const [options, setOptions] = useState<TimetableOptionsState>(() => normalizeOptions(oldOptions));
+    const [options, setOptions] = useState<TimetableOptions>(() => normalizeOptions(oldOptions));
 
     useEffect(() => {
         if (open) {
@@ -35,29 +30,35 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
         return null;
     }
 
+    const slotDistanceValue = options.scoring?.slotDistanceMultiplier ?? 0;
+    const differentDayValue = options.scoring?.differentDayScore ?? 0;
+    const blockLengthValue = options.filter?.maxBlockLength ?? null;
+
     const updateDistanceScore = (value: number) => {
         setOptions((previous) => produce(previous, (draft) => {
-            draft.distanceScore = value;
+            (draft.scoring ??= {}).slotDistanceMultiplier = value;
         }));
     };
 
     const updateDifferentDayScore = (value: number) => {
         setOptions((previous) => produce(previous, (draft) => {
-            draft.differentDayScore = value;
+            (draft.scoring ??= {}).differentDayScore = value;
         }));
     };
 
 
     const updateBlockLength = (value: number | null) => {
         setOptions((previous) => produce(previous, (draft) => {
-            draft.blockLengthFilter = value;
+            draft.filter = value === null ? null : { maxBlockLength: value };
         }));
     };
 
 
     const toggleBlockLength = (checked: boolean) => {
         setOptions((previous) => produce(previous, (draft) => {
-            draft.blockLengthFilter = (checked ? (draft.blockLengthFilter ?? 12) : null);
+            draft.filter = checked
+                ? { maxBlockLength: draft.filter?.maxBlockLength ?? 12 }
+                : null;
         }));
     };
 
@@ -74,9 +75,9 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                 aria-label="Timetable options"
                 onClick={(event) => event.stopPropagation()}
             >
-                {renderScoringSection(options.distanceScore, options.differentDayScore, updateDistanceScore, updateDifferentDayScore)}
+                {renderScoringSection(slotDistanceValue, differentDayValue, updateDistanceScore, updateDifferentDayScore)}
 
-                {renderFiltersSection(options.blockLengthFilter, toggleBlockLength, updateBlockLength)}
+                {renderFiltersSection(blockLengthValue, toggleBlockLength, updateBlockLength)}
 
                 <div className="timetable-options__actions">
                     <button
@@ -105,16 +106,36 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
 export default TimetableOptionsDialog;
 
 function renderScoringSection(
-    distanceScore: number | null,
-    differentDayScore: number | null,
+    slotDistance: number,
+    differentDay: number,
     onDistanceChange: (value: number) => void,
     onDifferentDayChange: (value: number) => void
 ) {
     return (
         <section className="timetable-options__section">
             <h2 className="timetable-options__heading">Scoring</h2>
-            {renderSliderField('slot-distance-slider','Slot distance weight', -10, 10, 5, distanceScore ?? 0, 'Lower spread', 'Higher spread', onDistanceChange)}
-            {renderSliderField('different-day-slider', 'Different day weight', -10, 10, 5, differentDayScore ?? 0, 'Lower priority', 'Higher priority', onDifferentDayChange)}
+            {renderSliderField(
+                'slot-distance-slider',
+                'Slot distance weight',
+                0,
+                10,
+                1,
+                slotDistance,
+                'Lower spread',
+                'Higher spread',
+                onDistanceChange,
+            )}
+            {renderSliderField(
+                'different-day-slider',
+                'Different day weight',
+                0,
+                10,
+                1,
+                differentDay,
+                'Lower priority',
+                'Higher priority',
+                onDifferentDayChange,
+            )}
 
         </section>
     );
