@@ -1,20 +1,38 @@
 import { useEffect, useState } from 'react';
 import './TimetableOptionsDialog.css';
-import { type TimetableOptions } from '../api/timetableOptions';
+
+type TimetableOptionsState = {
+    distanceScore: number | null;
+    blockLengthFilter: number | null;
+};
 
 type TimetableOptionsDialogProps = {
     open: boolean;
-    oldOptions: TimetableOptions;
+    oldOptions: TimetableOptionsState;
     onClose: () => void;
-    onOptionsChange: (options: TimetableOptions) => void;
+    onOptionsChange: (options: TimetableOptionsState) => void;
 };
 
+//const defaultScoring: NonNullable<DistanceScoring> = {
+//    slotDistanceMultiplier: 2,
+//    differentDayScore: 8,
+//};
+
+//const defaultFilter: NonNullable<BlockLengthFilter> = {
+//    maxBlockLength: 4,
+//};
+
+const normalizeOptions = (options: TimetableOptionsState): TimetableOptionsState => ({
+    distanceScore: options.distanceScore,
+    blockLengthFilter: options.blockLengthFilter,
+});
+
 export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsChange }: TimetableOptionsDialogProps) {
-    const [options, setOptions] = useState<TimetableOptions>(oldOptions);
+    const [options, setOptions] = useState<TimetableOptionsState>(() => normalizeOptions(oldOptions));
 
     useEffect(() => {
         if (open) {
-            setOptions(oldOptions);
+            setOptions(normalizeOptions(oldOptions));
         }
     }, [open, oldOptions]);
 
@@ -22,22 +40,21 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
         return null;
     }
 
-    const updateScoring = (partial: Partial<TimetableOptions['scoring']>) => {
+    const updateDistanceScore = (value: number) => {
         setOptions((previous) => ({
             ...previous,
-            scoring: { ...previous.scoring, ...partial },
+            distanceScore: value,
         }));
     };
 
-    const toggleFilter = (filter: keyof TimetableOptions['filters']) => {
+
+    const updateBlockLength = (value: number | null) => {
         setOptions((previous) => ({
             ...previous,
-            filters: {
-                ...previous.filters,
-                [filter]: !previous.filters[filter],
-            },
+            blockLengthFilter: value,
         }));
     };
+
     return (
         <div
             className="timetable-options__overlay"
@@ -53,66 +70,29 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
             >
                 <section className="timetable-options__section">
                     <h2 className="timetable-options__heading">Scoring</h2>
-                    <label className="timetable-options__field">
-                        <input
-                            type="radio"
-                            name="scoring-option"
-                            value="slotDistance"
-                            checked={options.scoring.option === 'slotDistance'}
-                            onChange={() => updateScoring({ option: 'slotDistance' })}
-                        />
-                        Slot Distance
+                    <label
+                        className="timetable-options__slider-label"
+                        id="slot-distance-label"
+                        htmlFor="slot-distance-slider"
+                    >
+                        Slot distance weight
                     </label>
+                    <input
+                        id="slot-distance-slider"
+                        type="range"
+                        min={0}
+                        max={10}
+                        step={1}
+                        value={options.distanceScore ?? 0}
+                        onChange={(event) => updateDistanceScore(Number(event.target.value))}
+                        className="timetable-options__slider"
+                        aria-labelledby="slot-distance-label slot-distance-caption"
+                    />
+                    <div className="timetable-options__slider-caption" id="slot-distance-caption">
+                        <span>Lower spread</span>
+                        <span>Higher spread</span>
+                    </div>
 
-                    {options.scoring.option === 'slotDistance' && (
-                        <>
-                            <label
-                                className="timetable-options__slider-label"
-                                id="slot-spacing-label"
-                                htmlFor="slot-spacing-slider"
-                            >
-                                Slot spacing
-                            </label>
-                            <input
-                                id="slot-spacing-slider"
-                                type="range"
-                                min={-10}
-                                max={10}
-                                step={5}
-                                value={options.scoring.slotSpacing}
-                                onChange={(event) => updateScoring({ slotSpacing: Number(event.target.value) })}
-                                className="timetable-options__slider"
-                                aria-labelledby="slot-spacing-label slot-spacing-caption"
-                            />
-                            <div className="timetable-options__slider-caption" id="slot-spacing-caption">
-                                <span>Spread out slots</span>
-                                <span>Packed slots</span>
-                            </div>
-
-                            <label
-                                className="timetable-options__slider-label"
-                                id="day-balance-label"
-                                htmlFor="day-balance-slider"
-                            >
-                                Day balance
-                            </label>
-                            <input
-                                id="day-balance-slider"
-                                type="range"
-                                min={-10}
-                                max={10}
-                                step={5}
-                                value={options.scoring.dayBalance}
-                                onChange={(event) => updateScoring({ dayBalance: Number(event.target.value) })}
-                                className="timetable-options__slider"
-                                aria-labelledby="day-balance-label day-balance-caption"
-                            />
-                            <div className="timetable-options__slider-caption" id="day-balance-caption">
-                                <span>More days</span>
-                                <span>Less days</span>
-                            </div>
-                        </>
-                    )}
                 </section>
 
                 <section className="timetable-options__section">
@@ -120,10 +100,21 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                     <label className="timetable-options__field">
                         <input
                             type="checkbox"
-                            checked={options.filters.blockLength}
-                            onChange={() => toggleFilter('blockLength')}
+                            checked={options.blockLengthFilter !== null}
+                            onChange={(event) => { if (Boolean(event.target.value) === false) updateBlockLength(null) }}
                         />
                         Block Length
+                    </label>
+                    <label className="timetable-options__field">
+                        <span>Max block length</span>
+                        <input
+                            type="number"
+                            min={1}
+                            max={12}
+                            value={options.blockLengthFilter ?? 12}
+                            onChange={(event) => updateBlockLength(Number(event.target.value))}
+                            disabled={options.blockLengthFilter === null}
+                        />
                     </label>
                 </section>
 
