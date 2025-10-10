@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { produce } from 'immer';
 import './TimetableOptionsDialog.css';
 
 type TimetableOptionsState = {
     distanceScore: number | null;
+    differentDayScore: number | null;
     blockLengthFilter: number | null;
 };
 
@@ -23,8 +25,9 @@ type TimetableOptionsDialogProps = {
 //};
 
 const normalizeOptions = (options: TimetableOptionsState): TimetableOptionsState => ({
-    distanceScore: options.distanceScore,
-    blockLengthFilter: options.blockLengthFilter,
+    distanceScore: options.distanceScore ?? null,
+    differentDayScore: options.differentDayScore ?? null,
+    blockLengthFilter: options.blockLengthFilter ?? null,
 });
 
 export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsChange }: TimetableOptionsDialogProps) {
@@ -41,17 +44,27 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
     }
 
     const updateDistanceScore = (value: number) => {
-        setOptions((previous) => ({
-            ...previous,
-            distanceScore: value,
+        setOptions((previous) => produce(previous, (draft) => {
+            draft.distanceScore = value;
+        }));
+    };
+
+    const updateDifferentDayScore = (value: number) => {
+        setOptions((previous) => produce(previous, (draft) => {
+            draft.differentDayScore = value;
         }));
     };
 
 
     const updateBlockLength = (value: number | null) => {
-        setOptions((previous) => ({
-            ...previous,
-            blockLengthFilter: value,
+        setOptions((previous) => produce(previous, (draft) => {
+            draft.blockLengthFilter = value;
+        }));
+    };
+
+    const toggleBlockLength = (checked: boolean) => {
+        setOptions((previous) => produce(previous, (draft) => {
+            draft.blockLengthFilter = checked ? ( draft.blockLengthFilter ?? 0) :null ;
         }));
     };
 
@@ -93,6 +106,29 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                         <span>Higher spread</span>
                     </div>
 
+                    <label
+                        className="timetable-options__slider-label"
+                        id="different-day-label"
+                        htmlFor="different-day-slider"
+                    >
+                        Different day weight
+                    </label>
+                    <input
+                        id="different-day-slider"
+                        type="range"
+                        min={0}
+                        max={10}
+                        step={1}
+                        value={options.differentDayScore ?? 0}
+                        onChange={(event) => updateDifferentDayScore(Number(event.target.value))}
+                        className="timetable-options__slider"
+                        aria-labelledby="different-day-label different-day-caption"
+                    />
+                    <div className="timetable-options__slider-caption" id="different-day-caption">
+                        <span>Lower priority</span>
+                        <span>Higher priority</span>
+                    </div>
+
                 </section>
 
                 <section className="timetable-options__section">
@@ -101,7 +137,9 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                         <input
                             type="checkbox"
                             checked={options.blockLengthFilter !== null}
-                            onChange={(event) => { if (Boolean(event.target.value) === false) updateBlockLength(null) }}
+                            onChange={(event) => {
+                                toggleBlockLength(event.target.checked);
+                            }}
                         />
                         Block Length
                     </label>
