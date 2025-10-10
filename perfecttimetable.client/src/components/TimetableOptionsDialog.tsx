@@ -113,59 +113,18 @@ function renderScoringSection(
     return (
         <section className="timetable-options__section">
             <h2 className="timetable-options__heading">Scoring</h2>
-            <label
-                className="timetable-options__slider-label"
-                id="slot-distance-label"
-                htmlFor="slot-distance-slider"
-            >
-                Slot distance weight
-            </label>
-            <input
-                id="slot-distance-slider"
-                type="range"
-                min={0}
-                max={10}
-                step={1}
-                value={distanceScore ?? 0}
-                onChange={(event) => onDistanceChange(Number(event.target.value))}
-                className="timetable-options__slider"
-                aria-labelledby="slot-distance-label slot-distance-caption"
-            />
-            <div className="timetable-options__slider-caption" id="slot-distance-caption">
-                <span>Lower spread</span>
-                <span>Higher spread</span>
-            </div>
-
-            <label
-                className="timetable-options__slider-label"
-                id="different-day-label"
-                htmlFor="different-day-slider"
-            >
-                Different day weight
-            </label>
-            <input
-                id="different-day-slider"
-                type="range"
-                min={0}
-                max={10}
-                step={1}
-                value={differentDayScore ?? 0}
-                onChange={(event) => onDifferentDayChange(Number(event.target.value))}
-                className="timetable-options__slider"
-                aria-labelledby="different-day-label different-day-caption"
-            />
-            <div className="timetable-options__slider-caption" id="different-day-caption">
-                <span>Lower priority</span>
-                <span>Higher priority</span>
-            </div>
+            {renderSliderField('slot-distance-slider','Slot distance weight', -10, 10, 5, distanceScore ?? 0, 'Lower spread', 'Higher spread', onDistanceChange)}
+            {renderSliderField('different-day-slider', 'Different day weight', -10, 10, 5, differentDayScore ?? 0, 'Lower priority', 'Higher priority', onDifferentDayChange)}
 
         </section>
     );
 }
 
-function renderFiltersSection(blockLengthFilter: number | null,
+function renderFiltersSection(
+    blockLengthFilter: number | null,
     onToggleBlockLength: (checked: boolean) => void,
-    onBlockLengthChange: (value: number | null) => void) {
+    onBlockLengthChange: (value: number | null) => void
+) {
     return (
         <section className="timetable-options__section">
             <h2 className="timetable-options__heading">Filters</h2>
@@ -191,5 +150,47 @@ function renderFiltersSection(blockLengthFilter: number | null,
                 />
             </label>
         </section>
+    );
+}
+
+function renderSliderField(
+    id: string,
+    label: string,
+    min: number,
+    max: number,
+    step: number,
+    value: number,
+    lowerLabel: string,
+    upperLabel: string,
+    onChange: (value: number) => void,
+) {
+    const labelId = `${id}-label`;
+    const captionId = `${id}-caption`;
+
+    return (
+        <>
+            <label
+                className="timetable-options__slider-label"
+                id={labelId}
+                htmlFor={id}
+            >
+                {label}
+            </label>
+            <input
+                id={id}
+                type="range"
+                min={min}
+                max={max}
+                step={step}
+                value={value}
+                onChange={(event) => onChange(Number(event.target.value))}
+                className="timetable-options__slider"
+                aria-labelledby={`${labelId} ${captionId}`}
+            />
+            <div className="timetable-options__slider-caption" id={captionId}>
+                <span>{lowerLabel}</span>
+                <span>{upperLabel}</span>
+            </div>
+        </>
     );
 }
