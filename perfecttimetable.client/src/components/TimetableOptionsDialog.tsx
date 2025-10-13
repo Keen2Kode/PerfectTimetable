@@ -17,7 +17,7 @@ const normalizeOptions = (options: TimetableOptions): TimetableOptions => ({
     filter: options.filter ?? null,
 });
 
-export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsChange }: TimetableOptionsDialogProps) {
+export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsChange}: TimetableOptionsDialogProps) {
     const [options, setOptions] = useState<TimetableOptions>(() => normalizeOptions(oldOptions));
 
     useEffect(() => {
@@ -117,9 +117,9 @@ function renderScoringSection(
             {renderSliderField(
                 'slot-distance-slider',
                 'Slot distance weight',
-                0,
+                -10,
                 10,
-                1,
+                5,
                 slotDistance,
                 'Lower spread',
                 'Higher spread',
@@ -128,9 +128,9 @@ function renderScoringSection(
             {renderSliderField(
                 'different-day-slider',
                 'Different day weight',
-                0,
+                -10,
                 10,
-                1,
+                5,
                 differentDay,
                 'Lower priority',
                 'Higher priority',
@@ -159,17 +159,18 @@ function renderFiltersSection(
                 />
                 Block Length
             </label>
-            <label className="timetable-options__field">
-                <span>Max block length</span>
-                <input
-                    type="number"
-                    min={1}
-                    max={12}
-                    value={blockLengthFilter ?? 12}
-                    onChange={(event) => onBlockLengthChange(Number(event.target.value))}
-                    disabled={blockLengthFilter === null}
-                />
-            </label>
+            {blockLengthFilter !== null && (
+                <label className="timetable-options__field">
+                    <span>Max block length</span>
+                    <input
+                        type="number"
+                        min={1}
+                        max={12}
+                        value={blockLengthFilter}
+                        onChange={(event) => onBlockLengthChange(Number(event.target.value))}
+                    />
+                </label>
+            )}
         </section>
     );
 }
