@@ -22,7 +22,6 @@ export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSel
         setStatus('saving');
         setMessage(null);
 
-        console.log(options);
         const payload: GenerateTimetableRequest = {
             model: modelView.toCourseModel(),
             scoring: options.scoring,
@@ -52,24 +51,22 @@ export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSel
     };
 
     return (
-        <>
-            <div className="timetable__actions-row">
-                <button
-                    id="save-selections-button"
-                    type="button"
-                    className="timetable__actions-button"
-                    onClick={handleClick}
-                    disabled={status === 'saving'}
-                >
-                    {status === 'saving' ? 'Generating' : 'Generate Timetables'}
-                </button>
-            </div>
+        <div className="timetable__save-shell">
+            <button
+                id="save-selections-button"
+                type="button"
+                className="timetable__actions-button"
+                onClick={handleClick}
+                disabled={status === 'saving'}
+            >
+                {status === 'saving' ? 'Generating' : 'Generate Timetables'}
+            </button>
             {message ? (
                 <p className={`timetable__save-message timetable__save-message--${status}`}>
                     {message}
                 </p>
             ) : null}
-        </>
+        </div>
     );
 }
 

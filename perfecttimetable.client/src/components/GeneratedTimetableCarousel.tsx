@@ -1,22 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Timetable as ApiTimetable } from '../api/models';
-import type { TimetableOptions } from '../api/timetableOptions';
 import { ModelView } from '../api/modelView';
 import { MultiCourseTimetable } from './MultiCourseTimetable';
 import './GeneratedTimetableCarousel.css';
 import { ArrowLeftIcon, ArrowRightIcon } from './icons/ArrowIcons';
-import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 
 type GeneratedTimetableCarouselProps = {
     modelView: ModelView;
     timetables: ApiTimetable[];
-    options: TimetableOptions;
-    onOptionsChange: (options: TimetableOptions) => void;
 };
 
-export function GeneratedTimetableCarousel({ modelView, timetables, options, onOptionsChange }: GeneratedTimetableCarouselProps) {
+export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedTimetableCarouselProps) {
     const [index, setIndex] = useState(0);
-    const [optionsOpen, setOptionsOpen] = useState(false);
 
     const normalizedTimetables = useMemo(
         () => ModelView.fromApiTimetables(timetables),
@@ -79,22 +74,6 @@ export function GeneratedTimetableCarousel({ modelView, timetables, options, onO
                         <p className="generated-timetable__meta">
                             Timetable {activeIndex + 1} of {total}
                         </p>
-                        <button
-                            type="button"
-                            className="generated-timetable__options-button"
-                            onClick={() => setOptionsOpen(true)}
-                            aria-haspopup="dialog"
-                            aria-expanded={optionsOpen}
-                        >
-                            Options
-                        </button>
-
-                        <TimetableOptionsDialog
-                            open={optionsOpen}
-                            oldOptions={options}
-                            onClose={() => setOptionsOpen(false)}
-                            onOptionsChange={onOptionsChange}
-                        />
                     </div>
                 </div>
             </header>

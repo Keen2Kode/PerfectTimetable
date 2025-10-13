@@ -78,6 +78,16 @@
     margin-top: 2rem;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.timetable__save-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 
@@ -102,6 +112,17 @@
     cursor: default;
     transform: none;
     box-shadow: none;
+}
+
+.timetable__actions-button--secondary {
+    background: rgba(63, 71, 255, 0.12);
+    color: #3f47ff;
+    font-weight: 600;
+}
+
+.timetable__actions-button--secondary:hover,
+.timetable__actions-button--secondary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(99, 108, 255, 0.2);
 }
 
 .timetable__save-message {

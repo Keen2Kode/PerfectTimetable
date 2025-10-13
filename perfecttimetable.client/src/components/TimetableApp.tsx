@@ -5,6 +5,7 @@ import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
 import SingleCourseTimetable from './SingleCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
+import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 
 import type { Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
@@ -22,6 +23,7 @@ export function TimetableApp() {
     const [error, setError] = useState<string | null>(null);
     const [generatedTimetables, setGeneratedTimetables] = useState<ApiTimetable[]>([]);
     const [timetableOptions, setTimetableOptions] = useState<TimetableOptions>(defaultTimetableOptions);
+    const [optionsOpen, setOptionsOpen] = useState(false);
 
     useEffect(() => {
         void loadTimetable();
@@ -58,18 +60,34 @@ export function TimetableApp() {
                 ))}
             </section>
 
-            <SaveSelectionsButton
-                modelView={view}
-                options={timetableOptions}
-                onGenerate={setGeneratedTimetables}
-            />
+            <div className="timetable__actions-row">
+                <SaveSelectionsButton
+                    modelView={view}
+                    options={timetableOptions}
+                    onGenerate={setGeneratedTimetables}
+                />
+                <button
+                    type="button"
+                    className="timetable__actions-button timetable__actions-button--secondary"
+                    onClick={() => setOptionsOpen(true)}
+                    aria-haspopup="dialog"
+                    aria-expanded={optionsOpen}
+                >
+                    Options
+                </button>
+                <TimetableOptionsDialog
+                    open={optionsOpen}
+                    oldOptions={timetableOptions}
+                    onClose={() => setOptionsOpen(false)}
+                    onOptionsChange={setTimetableOptions}
+                />
+            </div>
 
             <GeneratedTimetableCarousel
                 modelView={view}
                 timetables={generatedTimetables}
-                options={timetableOptions}
-                onOptionsChange={setTimetableOptions}
             />
+
         </div>
     );
 
