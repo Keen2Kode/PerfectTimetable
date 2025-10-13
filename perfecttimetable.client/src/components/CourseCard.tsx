@@ -1,21 +1,21 @@
-import type { TimetableDay } from '../api/models';
 import type { Course } from '../api/models/course';
 import './CourseCard.css';
+import type { ModelView } from '../api/modelView';
 
 interface CourseCardProps {
     course: Course;
-    friendlyDays: TimetableDay[];
-    accentColour: string;
-    accentSurface: string;
+    modelView: ModelView;
 }
 
-export function CourseCard({ course, accentColour, accentSurface }: CourseCardProps) {
+
+export function CourseCard({ course, modelView}: CourseCardProps) {
+
     return (
         <section
             className="course-card"
             style={{
-                borderColor: accentColour,
-                backgroundColor: accentSurface,
+                borderColor: modelView.colours.getColour(course.id),
+                backgroundColor: modelView.colours.getColourWithAlpha(course.id, 0.5),
             }}
         >
             <header className="course-card__header">

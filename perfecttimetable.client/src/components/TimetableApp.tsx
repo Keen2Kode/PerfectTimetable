@@ -49,7 +49,7 @@ export function TimetableApp() {
             <section className="timetable__grid">
                 {view.getCourses().map((courseView) => (
                     <div key={courseView.id} className="timetable__course">
-                        <CourseCard course={courseView.toCourse()} friendlyDays={view.days} />
+                        <CourseCard modelView={view} course={courseView.toCourse()}  />
                         <SingleCourseTimetable
                             modelView={view}
                             courseView={courseView}
