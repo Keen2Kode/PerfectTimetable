@@ -104,6 +104,28 @@
     font-size: 0.95rem;
 }
 
+.generated-timetable__options-button {
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    color: #fff;
+    background: linear-gradient(90deg, #3f47ff 0%, #5c66ff 100%);
+    cursor: pointer;
+    transition: opacity 0.18s ease;
+}
+
+.generated-timetable__options-button:hover,
+.generated-timetable__options-button:focus-visible {
+    opacity: 0.85;
+}
+
+.generated-timetable__options-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 108, 255, 0.25);
+}
+
 .generated-timetable__calendar {
     border-radius: 0.75rem;
     overflow: hidden;

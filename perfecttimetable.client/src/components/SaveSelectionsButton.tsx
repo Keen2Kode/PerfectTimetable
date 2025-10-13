@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import type { Timetable as ApiTimetable } from '../api/models';
+import type { Timetable as ApiTimetable, GenerateTimetableRequest } from '../api/models';
 import { ModelView } from '../api/modelView';
 import { generateTimetable } from '../api/timetableApi';
+import type { TimetableOptions } from '../api/timetableOptions';
 
 type SaveStatus = 'idle' | 'saving' | 'success' | 'error';
 
 interface SaveSelectionsButtonProps {
     modelView: ModelView;
+    options: TimetableOptions;
     onGenerate?: (timetables: ApiTimetable[]) => void;
 }
 
-export function SaveSelectionsButton({ modelView, onGenerate }: SaveSelectionsButtonProps) {
+export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSelectionsButtonProps) {
     const [status, setStatus] = useState<SaveStatus>('idle');
     const [message, setMessage] = useState<string | null>(null);
 
@@ -20,7 +22,11 @@ export function SaveSelectionsButton({ modelView, onGenerate }: SaveSelectionsBu
         setStatus('saving');
         setMessage(null);
 
-        const payload = modelView.toCourseModel();
+        const payload: GenerateTimetableRequest = {
+            model: modelView.toCourseModel(),
+            scoring: options.scoring,
+            filter: options.filter,
+        };
 
         generateTimetable(payload)
             .then((data: ApiTimetable[]) => {
@@ -45,23 +51,22 @@ export function SaveSelectionsButton({ modelView, onGenerate }: SaveSelectionsBu
     };
 
     return (
-        <>
-            <div className="timetable__actions-row">
-                <button
-                    type="button"
-                    className="timetable__actions-button"
-                    onClick={handleClick}
-                    disabled={status === 'saving'}
-                >
-                    {status === 'saving' ? 'Saving.' : 'Save Selections'}
-                </button>
-            </div>
+        <div className="timetable__save-shell">
+            <button
+                id="save-selections-button"
+                type="button"
+                className="timetable__actions-button"
+                onClick={handleClick}
+                disabled={status === 'saving'}
+            >
+                {status === 'saving' ? 'Generating' : 'Generate Timetables'}
+            </button>
             {message ? (
                 <p className={`timetable__save-message timetable__save-message--${status}`}>
                     {message}
                 </p>
             ) : null}
-        </>
+        </div>
     );
 }
 

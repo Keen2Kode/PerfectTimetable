@@ -5,6 +5,7 @@ import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
 import SingleCourseTimetable from './SingleCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
+import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 
 import type { Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
@@ -13,6 +14,7 @@ import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
 import SelectionSummary from './SelectionSummary';
+import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
 
 dayjs.extend(customParseFormat);
 
@@ -20,6 +22,8 @@ export function TimetableApp() {
     const [view, setView] = useState<ModelView | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [generatedTimetables, setGeneratedTimetables] = useState<ApiTimetable[]>([]);
+    const [timetableOptions, setTimetableOptions] = useState<TimetableOptions>(defaultTimetableOptions);
+    const [optionsOpen, setOptionsOpen] = useState(false);
 
     useEffect(() => {
         void loadTimetable();
@@ -56,15 +60,34 @@ export function TimetableApp() {
                 ))}
             </section>
 
-            <SaveSelectionsButton
-                modelView={view}
-                onGenerate={setGeneratedTimetables}
-            />
+            <div className="timetable__actions-row">
+                <SaveSelectionsButton
+                    modelView={view}
+                    options={timetableOptions}
+                    onGenerate={setGeneratedTimetables}
+                />
+                <button
+                    type="button"
+                    className="timetable__actions-button timetable__actions-button--secondary"
+                    onClick={() => setOptionsOpen(true)}
+                    aria-haspopup="dialog"
+                    aria-expanded={optionsOpen}
+                >
+                    Options
+                </button>
+                <TimetableOptionsDialog
+                    open={optionsOpen}
+                    oldOptions={timetableOptions}
+                    onClose={() => setOptionsOpen(false)}
+                    onOptionsChange={setTimetableOptions}
+                />
+            </div>
 
             <GeneratedTimetableCarousel
                 modelView={view}
                 timetables={generatedTimetables}
             />
+
         </div>
     );
 
@@ -86,4 +109,3 @@ export function TimetableApp() {
 }
 
 export default TimetableApp;
-

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { CourseModel} from './models';
+import type { CourseModel, GenerateTimetableRequest } from './models';
 
 const client = axios.create({
   baseURL: '/',
@@ -8,9 +8,9 @@ const client = axios.create({
 export const fetchTimetable = () =>
   client.get<CourseModel>('/timetable').then(({ data }) => data);
 
-export async function generateTimetable(model: CourseModel) {
-    const response = await client.post('/timetable/generate', model);
-    console.log(response);
+
+export async function generateTimetable(request: GenerateTimetableRequest) {
+    const response = await client.post('/timetable/generate', request);
     return response.data;
 }
 

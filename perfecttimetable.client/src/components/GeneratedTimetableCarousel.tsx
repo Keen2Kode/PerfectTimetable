@@ -27,14 +27,7 @@ export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedT
     }, [total]);
 
     if (total === 0) {
-        return (
-            <section className="generated-timetable" aria-live="polite">
-                <h2 className="generated-timetable__title">Generated Timetables</h2>
-                <p className="generated-timetable__placeholder">
-                    Save your selections to preview the generated timetable combinations here.
-                </p>
-            </section>
-        );
+        return;
     }
 
     const disableNav = total <= 1;
@@ -91,6 +84,7 @@ export function GeneratedTimetableCarousel({ modelView, timetables }: GeneratedT
                     timetableSlots={current}
                 />
             </div>
+
         </section>
     );
 }

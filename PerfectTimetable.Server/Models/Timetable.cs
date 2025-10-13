@@ -6,11 +6,12 @@ namespace PerfectTimetable.Server.Models
     public class Timetable
     {
         [Required]
-        public HashSet<int> CourseIds { get; set; } = [];
-        [Required]
         public List<TimetableSlot> Slots { get; set; } = [];
         [Required]
-        public TimetableSlot LastSlot { get; set; }
+        public int Score { get; set; } = int.MinValue;
+        internal HashSet<int> CourseIds { get; set; } = [];
+
+        internal TimetableSlot LastSlot { get; set; }
         public Timetable(Timetable table)
         {
             CourseIds = [.. table.CourseIds];
@@ -18,6 +19,17 @@ namespace PerfectTimetable.Server.Models
             LastSlot = table.LastSlot;
         }
         public Timetable() { }
+
+
+        public bool Filter(Func<TimetableSlot, bool> filter)
+        {
+            foreach (TimetableSlot slot in Slots)
+            {
+                if (!filter(slot))
+                    return false;
+            }
+            return true;
+        }
 
         internal bool AddIfValid(TimetableSlot slot)
         {
@@ -51,5 +63,7 @@ namespace PerfectTimetable.Server.Models
         {
             return CourseIds.Count == courseCount;
         }
+
+        
     }
 }

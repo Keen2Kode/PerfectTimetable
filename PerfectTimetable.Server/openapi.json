@@ -48,17 +48,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CourseModel"
+                "$ref": "#/components/schemas/GenerateTimetableRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CourseModel"
+                "$ref": "#/components/schemas/GenerateTimetableRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CourseModel"
+                "$ref": "#/components/schemas/GenerateTimetableRequest"
               }
             }
           },
@@ -139,6 +139,19 @@
   },
   "components": {
     "schemas": {
+      "BlockLengthFilter": {
+        "required": [
+          "maxBlockLength"
+        ],
+        "type": "object",
+        "properties": {
+          "maxBlockLength": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "nullable": true
+      },
       "Course": {
         "required": [
           "id",
@@ -203,6 +216,36 @@
           }
         }
       },
+      "DistanceScoring": {
+        "type": "object",
+        "properties": {
+          "differentDayScore": {
+            "type": "integer",
+            "format": "int32",
+            "default": 8
+          },
+          "slotDistanceMultiplier": {
+            "type": "integer",
+            "format": "int32",
+            "default": 2
+          }
+        },
+        "nullable": true
+      },
+      "GenerateTimetableRequest": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/CourseModel"
+          },
+          "scoring": {
+            "$ref": "#/components/schemas/DistanceScoring"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/BlockLengthFilter"
+          }
+        }
+      },
       "TimeSlot": {
         "required": [
           "day",
@@ -221,27 +264,20 @@
       },
       "Timetable": {
         "required": [
-          "courseIds",
           "slots",
-          "lastSlot"
+          "score"
         ],
         "type": "object",
         "properties": {
-          "courseIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
           "slots": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TimetableSlot"
             }
           },
-          "lastSlot": {
-            "$ref": "#/components/schemas/TimetableSlot"
+          "score": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

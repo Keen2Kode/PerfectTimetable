@@ -7,7 +7,6 @@
 import type { TimetableSlot } from './timetableSlot';
 
 export interface Timetable {
-  courseIds: number[];
   slots: TimetableSlot[];
-  lastSlot: TimetableSlot;
+  score: number;
 }
