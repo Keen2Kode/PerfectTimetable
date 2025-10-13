@@ -122,8 +122,8 @@ function renderScoringSection(
                 10,
                 5,
                 slotDistance,
-                'Lower spread',
-                'Higher spread',
+                'Spread out slots',
+                'Closer slots',
                 onDistanceChange,
             )}
             {renderSliderField(
@@ -133,8 +133,8 @@ function renderScoringSection(
                 10,
                 5,
                 differentDay,
-                'Lower priority',
-                'Higher priority',
+                'Spread out days',
+                'Within same day',
                 onDifferentDayChange,
             )}
 
@@ -187,18 +187,10 @@ function renderSliderField(
     upperLabel: string,
     onChange: (value: number) => void,
 ) {
-    const labelId = `${id}-label`;
     const captionId = `${id}-caption`;
 
     return (
-        <>
-            <label
-                className="timetable-options__slider-label"
-                id={labelId}
-                htmlFor={id}
-            >
-                {label}
-            </label>
+        <div className="timetable-options__slider-shell">
             <input
                 id={id}
                 type="range"
@@ -208,12 +200,13 @@ function renderSliderField(
                 value={value}
                 onChange={(event) => onChange(Number(event.target.value))}
                 className="timetable-options__slider"
-                aria-labelledby={`${labelId} ${captionId}`}
+                aria-label={label}
+                aria-describedby={captionId}
             />
             <div className="timetable-options__slider-caption" id={captionId}>
                 <span>{lowerLabel}</span>
                 <span>{upperLabel}</span>
             </div>
-        </>
+        </div>
     );
 }

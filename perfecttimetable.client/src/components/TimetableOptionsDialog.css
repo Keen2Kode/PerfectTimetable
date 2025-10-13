@@ -45,8 +45,15 @@
     color: rgba(26, 28, 45, 0.65);
 }
 
+.timetable-options__slider-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
 .timetable-options__slider {
     width: 100%;
+    margin: 0;
 }
 
 .timetable-options__slider-caption {
