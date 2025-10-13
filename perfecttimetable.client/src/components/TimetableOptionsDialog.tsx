@@ -92,6 +92,7 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                         className="timetable-options__button timetable-options__button--primary"
                         onClick={() => {
                             onOptionsChange(options);
+                            document.getElementById('save-selections-button')?.click();
                             onClose();
                         }}
                     >
