@@ -129,9 +129,9 @@ function renderScoringSection(
             {renderSliderField(
                 'different-day-slider',
                 'Different day weight',
-                -10,
-                10,
-                5,
+                -100,
+                100,
+                50,
                 differentDay,
                 'Spread out days',
                 'Within same day',
