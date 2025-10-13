@@ -25,18 +25,6 @@ export function CourseCard({ course, modelView}: CourseCardProps) {
                 </p>
             </header>
 
-            <ul className="course-card__timeslots">
-                {course.timeslots.map((slot, index) => {
-                    const dayLabel = slot.day;
-
-                    return (
-                        <li key={`${course.id}-${index}`} className="course-card__timeslot">
-                            <span className="course-card__day">{dayLabel.toString()}</span>
-                            <span className="course-card__block">Starts at block {slot.startBlock}</span>
-                        </li>
-                    );
-                })}
-            </ul>
         </section>
     );
 }

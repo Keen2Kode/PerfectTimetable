@@ -13,7 +13,6 @@ import { TimetableSlotView } from '../api/timetableSlot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
-import SelectionSummary from './SelectionSummary';
 import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
 
 dayjs.extend(customParseFormat);
@@ -55,7 +54,6 @@ export function TimetableApp() {
                             courseView={courseView}
                             onChange={(slots) => updateCourseSlots(courseView.id, slots)}
                         />
-                        <SelectionSummary courseName={courseView.name} selections={courseView.getSlots()} />
                     </div>
                 ))}
             </section>
