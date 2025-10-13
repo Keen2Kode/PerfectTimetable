@@ -26,8 +26,13 @@
     border-color: rgba(100, 108, 255, 0.12);
 }
 
+/* correct the weird slot alignment */
+.course-timetable .rbc-day-slot .rbc-events-container {
+    margin-right: 0;
+}
+
 .course-timetable__selection {
-    background: rgba(100, 108, 255, 0.45);
+    background: rgba(100, 108, 255, 0.80);
     border: none;
     color: #1a1c2d;
     display: flex;

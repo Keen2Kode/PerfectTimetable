@@ -72,7 +72,10 @@ export function MultiCourseTimetable({
       const background = modelView.colours.getColourWithAlpha(event.slot.course.id, 0.65);
       return {
         className: 'course-timetable__selection',
-        style: { backgroundColor: background, borderColor: baseColour },
+          style: {
+              backgroundColor: background,
+              borderColor: baseColour,
+          },
       };
     },
     allDayAccessor: () => false,

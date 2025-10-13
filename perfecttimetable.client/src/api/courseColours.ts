@@ -7,11 +7,14 @@ export class CourseColours {
     private map: Map<number, string> = new Map<number, string>();
     constructor(courseViews: CourseView[]) {
         this.colours = [
-
-            '#D38FFF',
-            '#C267FF',
-            '#B649FA',
-            '#A832EA',
+            '#FBCFE8', // pastel pink
+            '#C7D2FE', // pastel indigo
+            '#BFDBFE', // pastel blue
+            '#FDE68A', // pastel yellow
+            '#BBF7D0', // pastel green
+            '#F5D0C5', // pastel coral
+            '#E9D5FF', // pastel purple
+            '#F8E9A1', // pastel gold
         ];
         for (const courseView of courseViews) {
             this.assignColour(courseView.id);
