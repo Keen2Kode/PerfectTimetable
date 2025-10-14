@@ -2,18 +2,16 @@ import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
-import { CourseCard } from './CourseCard';
-import SingleCourseTimetable from './SingleCourseTimetable';
+import { CourseCard, AddCourseCard } from './CourseCard';
+//import SingleCourseTimetable from './SingleCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 
 import type { Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
-import { TimetableSlotView } from '../api/timetableSlot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
-import SelectionSummary from './SelectionSummary';
 import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
 
 dayjs.extend(customParseFormat);
@@ -28,6 +26,7 @@ export function TimetableApp() {
     useEffect(() => {
         void loadTimetable();
     }, []);
+
 
     if (error) {
         return <p role="alert">Failed to load timetable: {error}</p>;
@@ -49,15 +48,19 @@ export function TimetableApp() {
             <section className="timetable__grid">
                 {view.getCourses().map((courseView) => (
                     <div key={courseView.id} className="timetable__course">
-                        <CourseCard course={courseView.toCourse()} friendlyDays={view.days} />
-                        <SingleCourseTimetable
+                        <CourseCard
                             modelView={view}
                             courseView={courseView}
-                            onChange={(slots) => updateCourseSlots(courseView.id, slots)}
+                            setView={setView}
                         />
-                        <SelectionSummary courseName={courseView.name} selections={courseView.getSlots()} />
                     </div>
                 ))}
+                <div className="timetable__course">
+                    <AddCourseCard
+                        setView={setView}
+                        nextColour={view.colours.peekNextColour()}
+                    />
+                </div>
             </section>
 
             <div className="timetable__actions-row">
@@ -98,13 +101,6 @@ export function TimetableApp() {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         }
-    }
-
-    function updateCourseSlots(courseId: number, slots: TimetableSlotView[]) {
-        setView((previous) => {
-            if (!previous) return previous;
-            return previous.withUpdatedCourse(courseId, slots);
-        });
     }
 }
 

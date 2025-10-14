@@ -1,4 +1,4 @@
-import type { CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from './models';
+import type { Course, CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from './models';
 import { TimetableSlotView } from './timetableSlot';
 import { CourseView } from './courseView';
 import { CourseColours } from './courseColours';
@@ -31,6 +31,34 @@ export class ModelView {
         return this.courses.find((course) => course.id === id);
     }
 
+    withCourseAdded(): ModelView {
+        const model = this.toCourseModel();
+        const nextCourse = ModelView.createEmptyCourse(model.courses);
+        return new ModelView({
+            ...model,
+            courses: [...model.courses, nextCourse],
+        });
+    }
+
+    withCourseRemoved(courseId: number): ModelView {
+        const model = this.toCourseModel();
+        return new ModelView({
+            ...model,
+            courses: model.courses.filter((course) => course.id !== courseId),
+        });
+    }
+
+withCourseDurationUpdated(courseId: number, durationBlocks: number): ModelView {
+    const model = this.toCourseModel();
+    const updatedCourses = model.courses.map(course =>
+        course.id === courseId
+            ? { ...course, durationBlocks }
+            : course
+    );
+    return new ModelView({ ...model, courses: updatedCourses });
+}
+
+
     withUpdatedCourse(courseId: number, slots: TimetableSlotView[]): ModelView {
         const clone = new ModelView(this.toCourseModel());
         clone.updateCourseSlots(courseId, slots);
@@ -59,5 +87,15 @@ export class ModelView {
 
     private static toSlot(slot: ApiTimetableSlot): TimetableSlotView {
         return new TimetableSlotView(slot.course, slot.timeSlot);
+    }
+
+    private static createEmptyCourse(existing: Course[]): Course {
+        const nextId = existing.length > 0 ? Math.max(...existing.map((course) => course.id)) + 1 : 1;
+        return {
+            id: nextId,
+            name: `New course ${nextId}`,
+            durationBlocks: 1,
+            timeslots: [],
+        };
     }
 }

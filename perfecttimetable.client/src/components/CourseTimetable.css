@@ -22,12 +22,30 @@
     border-top: 1px solid rgba(100, 108, 255, 0.12);
 }
 
-.course-timetable .rbc-time-slot {
-    border-color: rgba(100, 108, 255, 0.12);
+
+.course-timetable :is(
+  .rbc-time-header-content,
+  .rbc-timeslot-group,
+  .rbc-day-slot .rbc-time-slot,
+  .rbc-time-content > * + * > *,
+  .rbc-day-bg + .rbc-day-bg
+) {
+  /* border-color: rgba(251, 207, 232, 0.5);
+  border-width: 2px; */
+  border: none;
+}
+
+/* .course-timetable .rbc-time-view {
+  border-color: rgba(0,0,0,0);
+} */
+
+/* correct the weird slot alignment */
+.course-timetable .rbc-day-slot .rbc-events-container {
+    margin-right: 0;
 }
 
 .course-timetable__selection {
-    background: rgba(100, 108, 255, 0.45);
+    background: rgba(100, 108, 255, 0.80);
     border: none;
     color: #1a1c2d;
     display: flex;
