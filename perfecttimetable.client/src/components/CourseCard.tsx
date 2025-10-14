@@ -28,7 +28,17 @@ export function CourseCard({ courseView, modelView, setView, setCourseSlots}: Co
             }}
         >
             <header className="course-card__header">
-                <h2 className="course-card__title">{course.name}</h2>
+                <div className="course-card__title-row">
+                    <h2 className="course-card__title">{course.name}</h2>
+                    <button
+                        type="button"
+                        className="course-card__remove"
+                        onClick={() => setView((previous) => previous?.withCourseRemoved(course.id) ?? null)}
+                        aria-label={`Remove ${course.name}`}
+                    >
+                        Remove
+                    </button>
+                </div>
                 <div className="course-card__meta">
                     <input
                         type="range"

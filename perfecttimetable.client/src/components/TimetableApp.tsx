@@ -28,6 +28,10 @@ export function TimetableApp() {
         void loadTimetable();
     }, []);
 
+
+    const handleAddCourse = () => setView(prev => prev?.withCourseAdded() ?? null);
+
+
     if (error) {
         return <p role="alert">Failed to load timetable: {error}</p>;
     }
@@ -59,6 +63,13 @@ export function TimetableApp() {
             </section>
 
             <div className="timetable__actions-row">
+                <button
+                    type="button"
+                    className="timetable__actions-button"
+                    onClick={handleAddCourse}
+                >
+                    Add course
+                </button>
                 <SaveSelectionsButton
                     modelView={view}
                     options={timetableOptions}
@@ -99,10 +110,7 @@ export function TimetableApp() {
     }
 
     function updateCourseSlots(courseId: number, slots: TimetableSlotView[]) {
-        setView((previous) => {
-            if (!previous) return previous;
-            return previous.withUpdatedCourse(courseId, slots);
-        });
+        setView((previous) => previous?.withUpdatedCourse(courseId, slots) ?? null);
     }
 }
 

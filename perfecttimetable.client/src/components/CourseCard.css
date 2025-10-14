@@ -16,6 +16,26 @@
     gap: 0.25rem;
 }
 
+.course-card__title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.course-card__remove {
+    border: none;
+    background: transparent;
+    color: rgba(185, 28, 28, 0.85);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.course-card__remove:hover,
+.course-card__remove:focus-visible {
+    text-decoration: underline;
+}
+
 .course-card__meta {
     margin: 0;
     color: rgba(60, 66, 87, 0.75);
