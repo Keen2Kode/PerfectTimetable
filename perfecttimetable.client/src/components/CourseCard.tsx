@@ -11,6 +11,10 @@ interface CourseCardProps {
     setView: Dispatch<SetStateAction<ModelView | null>>;
 }
 
+interface AddCourseCardProps {
+    onAdd: () => void;
+}
+
 
 export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     const course = courseView.toCourse();
@@ -77,4 +81,16 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
             <span>{currentDuration} blocks duration</span>
         </div>;
     }
+}
+
+export function AddCourseCard({ onAdd }: AddCourseCardProps) {
+    return (
+        <button
+            type="button"
+            className="course-card course-card--add"
+            onClick={onAdd}
+        >
+            <PlusIcon aria-hidden className="course-card__add-icon" />
+        </button>
+    );
 }

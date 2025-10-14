@@ -124,3 +124,44 @@
     font-size: 0.9rem;
     text-transform: capitalize;
 }
+
+.course-card--add {
+    border-color: rgba(99, 108, 255, 0.3);
+    background-color: rgba(99, 108, 255, 0.12);
+    color: #1f254d;
+    cursor: pointer;
+    transition: background-color 120ms ease-in-out, border-color 120ms ease-in-out, transform 120ms ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.course-card--add:hover,
+.course-card--add:focus-visible {
+    background-color: rgba(99, 108, 255, 0.18);
+    border-color: rgba(99, 108, 255, 0.42);
+}
+
+.course-card--add:focus-visible {
+    outline: 2px solid rgba(99, 108, 255, 0.45);
+    outline-offset: 2px;
+}
+
+.course-card__add-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: rgba(49, 46, 129, 0.85);
+    transition: transform 120ms ease-in-out, color 120ms ease-in-out;
+}
+
+.course-card--add:hover .course-card__add-icon,
+.course-card--add:focus-visible .course-card__add-icon {
+    color: rgba(49, 46, 129, 0.95);
+    transform: scale(1.05);
+}
+
+.course-card__add-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}

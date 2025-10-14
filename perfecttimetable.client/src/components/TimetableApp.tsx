@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
-import { CourseCard } from './CourseCard';
+import { CourseCard, AddCourseCard } from './CourseCard';
 //import SingleCourseTimetable from './SingleCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 import { TimetableOptionsDialog } from './TimetableOptionsDialog';
@@ -55,16 +55,14 @@ export function TimetableApp() {
                         />
                     </div>
                 ))}
+                <div className="timetable__course">
+                    <AddCourseCard
+                        onAdd={() => setView((previous) => previous?.withCourseAdded() ?? null)}
+                    />
+                </div>
             </section>
 
             <div className="timetable__actions-row">
-                <button
-                    type="button"
-                    className="timetable__actions-button"
-                    onClick={() => setView((previous) => previous?.withCourseAdded() ?? null)}
-                >
-                    Add course
-                </button>
                 <SaveSelectionsButton
                     modelView={view}
                     options={timetableOptions}
