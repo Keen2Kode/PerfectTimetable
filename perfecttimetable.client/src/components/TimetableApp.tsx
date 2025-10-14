@@ -57,7 +57,8 @@ export function TimetableApp() {
                 ))}
                 <div className="timetable__course">
                     <AddCourseCard
-                        onAdd={() => setView((previous) => previous?.withCourseAdded() ?? null)}
+                        setView={setView}
+                        nextColour={view.colours.peekNextColour()}
                     />
                 </div>
             </section>

@@ -1,4 +1,3 @@
-import { produce } from 'immer';
 import type { Course, CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from './models';
 import { TimetableSlotView } from './timetableSlot';
 import { CourseView } from './courseView';
