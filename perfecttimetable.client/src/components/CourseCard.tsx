@@ -20,6 +20,7 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     const course = courseView.toCourse();
     const currentDuration =  modelView.getCourse(course.id)?.durationBlocks ?? course.durationBlocks;
     const [isCollapsed, setCollapsed] = useState(false);
+    const actionIconClass = 'course-card__icon course-card__icon--button';
 
     return (
         <section
@@ -39,7 +40,9 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
                             onClick={() => setCollapsed((previous) => !previous)}
                             title={isCollapsed ? 'Expand' : 'Minimize'}
                         >
-                            {isCollapsed ? <PlusIcon aria-hidden /> : <MinusIcon aria-hidden />}
+                            {isCollapsed
+                                ? <PlusIcon aria-hidden className={actionIconClass} />
+                                : <MinusIcon aria-hidden className={actionIconClass} />}
                         </button>
                         <div className="course-card__actions-divider" aria-hidden="true" />
                         <button
@@ -48,7 +51,7 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
                             onClick={() => setView((previous) => previous?.withCourseRemoved(course.id) ?? null)}
                             title="Remove"
                         >
-                            <TrashIcon aria-hidden />
+                            <TrashIcon aria-hidden className={actionIconClass} />
                         </button>
                     </div>
                 </div>
@@ -87,10 +90,10 @@ export function AddCourseCard({ onAdd }: AddCourseCardProps) {
     return (
         <button
             type="button"
-            className="course-card course-card--add"
+            className="course-card course-card--add course-card--interactive"
             onClick={onAdd}
         >
-            <PlusIcon aria-hidden className="course-card__add-icon" />
+            <PlusIcon aria-hidden className="course-card__icon course-card__icon--add" />
         </button>
     );
 }
