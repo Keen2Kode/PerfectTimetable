@@ -17,23 +17,45 @@
 }
 
 .course-card__title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: stretch;
     gap: 0.5rem;
+}
+
+.course-card__title {
+    margin: 0;
+    align-items: center;
 }
 
 .course-card__remove {
     border: none;
-    background: transparent;
-    color: rgba(185, 28, 28, 0.85);
-    font-weight: 600;
+    background: rgba(236, 42, 42, 0.1);
+    color: rgba(236, 42, 42, 0.85);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.2rem 0.5rem 0.5rem 0.2rem;
+    padding: 0;
 }
 
 .course-card__remove:hover,
 .course-card__remove:focus-visible {
-    text-decoration: underline;
+    background: rgba(236, 42, 42, 0.3);
+}
+
+.course-card__remove:focus-visible {
+    outline: 2px solid rgba(49, 46, 129, 0.6);
+    outline-offset: 2px;
+}
+
+.course-card__remove svg {
+    width: 60%;
+    height: 60%;
+    display: block;
 }
 
 .course-card__meta {

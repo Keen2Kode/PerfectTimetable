@@ -5,6 +5,7 @@ import { ModelView} from '../api/modelView';
 import type { CourseView } from '../api/courseView';
 import type { TimetableSlotView } from '../api/timetableSlot';
 import SingleCourseTimetable from './SingleCourseTimetable';
+import { TrashIcon } from './icons/LucideIcons';
 
 interface CourseCardProps {
     courseView: CourseView;
@@ -34,7 +35,7 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
                         onClick={() => setView((previous) => previous?.withCourseRemoved(course.id) ?? null)}
                         aria-label={`Remove ${course.name}`}
                     >
-                        Remove
+                        <TrashIcon aria-hidden />
                     </button>
                 </div>
                 <div className="course-card__meta">
