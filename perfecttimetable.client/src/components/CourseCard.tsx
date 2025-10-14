@@ -1,5 +1,4 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { produce } from 'immer';
 import './CourseCard.css';
 import { ModelView} from '../api/modelView';
 import type { CourseView } from '../api/courseView';
@@ -70,17 +69,8 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
                 max={6}
                 value={currentDuration}
                 onChange={(event) => {
-                    const nextValue = Number(event.currentTarget.value);
-                    setView((previous) => {
-                        if (!previous) return previous;
-                        const updated = produce(previous.toCourseModel(), (draft) => {
-                            const target = draft.courses.find((item) => item.id === course.id);
-                            if (target) {
-                                target.durationBlocks = nextValue;
-                            }
-                        });
-                        return new ModelView(updated);
-                    });
+                    const durationBlocks = Number(event.currentTarget.value);
+                    setView((previous) => previous?.withCourseDurationUpdated(course.id, durationBlocks) ?? null);
                 } }
                 aria-label="Course duration in blocks" />
             <span>{currentDuration} blocks duration</span>

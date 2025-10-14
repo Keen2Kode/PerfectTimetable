@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import type { Course, CourseModel, Timetable as ApiTimetable, TimetableSlot as ApiTimetableSlot } from './models';
 import { TimetableSlotView } from './timetableSlot';
 import { CourseView } from './courseView';
@@ -47,6 +48,17 @@ export class ModelView {
             courses: model.courses.filter((course) => course.id !== courseId),
         });
     }
+
+withCourseDurationUpdated(courseId: number, durationBlocks: number): ModelView {
+    const model = this.toCourseModel();
+    const updatedCourses = model.courses.map(course =>
+        course.id === courseId
+            ? { ...course, durationBlocks }
+            : course
+    );
+    return new ModelView({ ...model, courses: updatedCourses });
+}
+
 
     withUpdatedCourse(courseId: number, slots: TimetableSlotView[]): ModelView {
         const clone = new ModelView(this.toCourseModel());
