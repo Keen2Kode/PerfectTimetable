@@ -9,7 +9,6 @@ import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 
 import type { Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
-import { TimetableSlotView } from '../api/timetableSlot';
 import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
@@ -27,9 +26,6 @@ export function TimetableApp() {
     useEffect(() => {
         void loadTimetable();
     }, []);
-
-
-    const handleAddCourse = () => setView(prev => prev?.withCourseAdded() ?? null);
 
 
     if (error) {
@@ -56,7 +52,6 @@ export function TimetableApp() {
                             modelView={view}
                             courseView={courseView}
                             setView={setView}
-                            setCourseSlots={(slots) => updateCourseSlots(courseView.id, slots)}
                         />
                     </div>
                 ))}
@@ -66,7 +61,7 @@ export function TimetableApp() {
                 <button
                     type="button"
                     className="timetable__actions-button"
-                    onClick={handleAddCourse}
+                    onClick={() => setView((previous) => previous?.withCourseAdded() ?? null)}
                 >
                     Add course
                 </button>
@@ -107,10 +102,6 @@ export function TimetableApp() {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Unknown error');
         }
-    }
-
-    function updateCourseSlots(courseId: number, slots: TimetableSlotView[]) {
-        setView((previous) => previous?.withUpdatedCourse(courseId, slots) ?? null);
     }
 }
 

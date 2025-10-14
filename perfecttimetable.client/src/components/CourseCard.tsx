@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { produce } from 'immer';
 import './CourseCard.css';
-import { ModelView } from '../api/modelView';
+import { ModelView} from '../api/modelView';
 import type { CourseView } from '../api/courseView';
 import type { TimetableSlotView } from '../api/timetableSlot';
 import SingleCourseTimetable from './SingleCourseTimetable';
@@ -10,14 +10,12 @@ interface CourseCardProps {
     courseView: CourseView;
     modelView: ModelView;
     setView: Dispatch<SetStateAction<ModelView | null>>;
-    setCourseSlots: (slots: TimetableSlotView[]) => void;
 }
 
 
-export function CourseCard({ courseView, modelView, setView, setCourseSlots}: CourseCardProps) {
+export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     const course = courseView.toCourse();
-    const currentDuration =
-        modelView.getCourse(course.id)?.durationBlocks ?? course.durationBlocks;
+    const currentDuration =  modelView.getCourse(course.id)?.durationBlocks ?? course.durationBlocks;
 
     return (
         <section
@@ -67,7 +65,7 @@ export function CourseCard({ courseView, modelView, setView, setCourseSlots}: Co
             <SingleCourseTimetable
                 modelView={modelView}
                 courseView={courseView}
-                onChange={setCourseSlots}
+                setView={setView}
             />
 
         </section>
