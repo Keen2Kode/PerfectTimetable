@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
 import { CourseCard } from './CourseCard';
-import SingleCourseTimetable from './SingleCourseTimetable';
+//import SingleCourseTimetable from './SingleCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 
@@ -50,13 +50,9 @@ export function TimetableApp() {
                     <div key={courseView.id} className="timetable__course">
                         <CourseCard
                             modelView={view}
-                            course={courseView.toCourse()}
-                            setView={setView}
-                        />
-                        <SingleCourseTimetable
-                            modelView={view}
                             courseView={courseView}
-                            onChange={(slots) => updateCourseSlots(courseView.id, slots)}
+                            setView={setView}
+                            setCourseSlots={(slots) => updateCourseSlots(courseView.id, slots)}
                         />
                     </div>
                 ))}

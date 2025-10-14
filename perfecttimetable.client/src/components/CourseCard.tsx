@@ -1,17 +1,21 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { produce } from 'immer';
-import type { Course } from '../api/models/course';
 import './CourseCard.css';
 import { ModelView } from '../api/modelView';
+import type { CourseView } from '../api/courseView';
+import type { TimetableSlotView } from '../api/timetableSlot';
+import SingleCourseTimetable from './SingleCourseTimetable';
 
 interface CourseCardProps {
-    course: Course;
+    courseView: CourseView;
     modelView: ModelView;
     setView: Dispatch<SetStateAction<ModelView | null>>;
+    setCourseSlots: (slots: TimetableSlotView[]) => void;
 }
 
 
-export function CourseCard({ course, modelView, setView }: CourseCardProps) {
+export function CourseCard({ courseView, modelView, setView, setCourseSlots}: CourseCardProps) {
+    const course = courseView.toCourse();
     const currentDuration =
         modelView.getCourse(course.id)?.durationBlocks ?? course.durationBlocks;
 
@@ -49,6 +53,12 @@ export function CourseCard({ course, modelView, setView }: CourseCardProps) {
                     <span>{currentDuration} blocks duration</span>
                 </div>
             </header>
+
+            <SingleCourseTimetable
+                modelView={modelView}
+                courseView={courseView}
+                onChange={setCourseSlots}
+            />
 
         </section>
     );
