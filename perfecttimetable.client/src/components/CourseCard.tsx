@@ -37,6 +37,7 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
                         >
                             {isCollapsed ? <PlusIcon aria-hidden /> : <MinusIcon aria-hidden />}
                         </button>
+                        <div className="course-card__actions-divider" aria-hidden="true" />
                         <button
                             type="button"
                             className="course-card__action course-card__remove"

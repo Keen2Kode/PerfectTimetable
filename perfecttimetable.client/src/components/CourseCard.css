@@ -32,6 +32,13 @@
 .course-card__actions {
     display: flex;
     gap: 0.35rem;
+    align-items: center;
+}
+
+.course-card__actions-divider {
+    width: 3px;
+    align-self: stretch;
+    background: rgba(49, 46, 129, 0.25);
 }
 
 .course-card__action {
@@ -71,11 +78,18 @@
 }
 
 
+.course-card__minimize {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
 .course-card__remove {
     --course-card-action-bg: rgba(236, 42, 42, 0.14);
     --course-card-action-bg-hover: rgba(236, 42, 42, 0.28);
     --course-card-action-fg: rgba(236, 42, 42, 0.9);
     --course-card-action-outline: rgba(236, 42, 42, 0.6);
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
 }
 
 .course-card__meta {
