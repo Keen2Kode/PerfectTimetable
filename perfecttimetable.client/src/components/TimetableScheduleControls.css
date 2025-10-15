@@ -1,0 +1,85 @@
+.timetable-schedule {
+    margin-top: 0.25rem;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.58);
+    box-shadow: inset 0 0 0 1px rgba(100, 108, 255, 0.16);
+}
+
+.timetable-schedule__control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.timetable-schedule__control label {
+    font-weight: 600;
+    color: #1a1c2d;
+}
+
+.timetable-schedule__control .MuiSlider-root {
+    padding: 0.35rem 0;
+    color: #3f47ff;
+}
+
+.timetable-schedule__control .MuiSlider-markLabel {
+    font-size: 0.75rem;
+    color: rgba(26, 28, 45, 0.55);
+}
+
+.timetable-schedule__control--range {
+    gap: 0.85rem;
+}
+
+.timetable-schedule__range-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.timetable-schedule__range-header span {
+    font-size: 0.9rem;
+    color: rgba(26, 28, 45, 0.7);
+    font-weight: 500;
+}
+
+.timetable-schedule__range-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: rgba(26, 28, 45, 0.45);
+}
+
+.timetable-schedule__actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.timetable-schedule__apply-button {
+    padding: 0.55rem 1.4rem;
+    font-weight: 600;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #3f47ff, #8791ff);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.timetable-schedule__apply-button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px -16px rgba(63, 71, 255, 0.7);
+}
+
+.timetable-schedule__apply-button:disabled {
+    opacity: 0.65;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+    background: rgba(63, 71, 255, 0.12);
+    color: rgba(26, 28, 45, 0.6);
+}

@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import './TimetableApp.css';
 import { CourseCard, AddCourseCard } from './CourseCard';
-//import SingleCourseTimetable from './SingleCourseTimetable';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 import { TimetableOptionsDialog } from './TimetableOptionsDialog';
+import { TimetableScheduleControls } from './TimetableScheduleControls';
 
 import type { Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
-import { parseMinutes, formatTime } from '../utils/timetableTime';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
 import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
-
-dayjs.extend(customParseFormat);
 
 export function TimetableApp() {
     const [view, setView] = useState<ModelView | null>(null);
@@ -40,9 +35,10 @@ export function TimetableApp() {
         <div className="timetable">
             <header>
                 <h1>Perfect Timetable</h1>
-                <p>Starting {formatTime(view.startTime)}</p>
-                <p>{parseMinutes(view.blockDuration)}-minute blocks</p>
-                <p>{view.blocks} blocks per day</p>
+                <TimetableScheduleControls
+                    view={view}
+                    setView={setView}
+                />
             </header>
 
             <section className="timetable__grid">

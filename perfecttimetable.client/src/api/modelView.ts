@@ -58,6 +58,16 @@ withCourseDurationUpdated(courseId: number, durationBlocks: number): ModelView {
     return new ModelView({ ...model, courses: updatedCourses });
 }
 
+    withUpdatedSchedule(startTime: string, blockDuration: string, blocks: number): ModelView {
+        const model = this.toCourseModel();
+        return new ModelView({
+            ...model,
+            startTime,
+            blockDuration,
+            blocks,
+        });
+    }
+
 
     withUpdatedCourse(courseId: number, slots: TimetableSlotView[]): ModelView {
         const clone = new ModelView(this.toCourseModel());
