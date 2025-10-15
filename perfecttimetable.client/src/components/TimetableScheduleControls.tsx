@@ -28,89 +28,60 @@ const timeStringToMinutes = (value: string): number => {
     return parsed.hour() * 60 + parsed.minute();
 };
 
-const clampToDay = (value: number): number => Math.min(Math.max(value, 0), FULL_DAY_MINUTES);
-
-const alignToStep = (value: number, step: number): number => {
-    if (step <= 0) {
-        return clampToDay(value);
-    }
-    const aligned = Math.round(clampToDay(value) / step) * step;
-    return clampToDay(aligned);
-};
-
 const toAllowedBlockMinutes = (value: number): number =>
     BLOCK_DURATION_OPTIONS.reduce((closest, option) =>
         Math.abs(option - value) < Math.abs(closest - value) ? option : closest,
         BLOCK_DURATION_OPTIONS[0]);
 
-const normalizeRange = (start: number, end: number, step: number): [number, number] => {
-    const effectiveStep = Math.max(step, BLOCK_DURATION_OPTIONS[0]);
-    let nextStart = alignToStep(start, effectiveStep);
-    let nextEnd = alignToStep(end, effectiveStep);
-
-    if (nextEnd < nextStart) {
-        [nextStart, nextEnd] = [nextEnd, nextStart];
-    }
-
-    if (nextEnd - nextStart < effectiveStep) {
-        if (nextStart + effectiveStep <= FULL_DAY_MINUTES) {
-            nextEnd = nextStart + effectiveStep;
-        } else {
-            nextEnd = FULL_DAY_MINUTES;
-            nextStart = Math.max(0, nextEnd - effectiveStep);
-            nextStart = alignToStep(nextStart, effectiveStep);
-            nextEnd = alignToStep(nextStart + effectiveStep, effectiveStep);
-        }
-    }
-
-    return [nextStart, nextEnd];
-};
-
+const clampToDay = (value: number): number => Math.min(Math.max(value, 0), FULL_DAY_MINUTES);
+const sortRange = (start: number, end: number): [number, number] => (start <= end ? [start, end] : [end, start]);
 
 export function TimetableScheduleControls({ view, setView }: TimetableScheduleControlsProps) {
     const [blockMinutes, setBlockMinutes] = useState(() => toAllowedBlockMinutes(parseMinutes(view.blockDuration)));
     const [rangeMinutes, setRangeMinutes] = useState<[number, number]>(() => {
-        const start = timeStringToMinutes(view.startTime);
+        const start = clampToDay(timeStringToMinutes(view.startTime));
         const block = toAllowedBlockMinutes(parseMinutes(view.blockDuration));
-        const end = start + block * view.blocks;
-        return normalizeRange(start, end, block);
+        const end = clampToDay(start + block * view.blocks);
+        return sortRange(start, end);
     });
 
     useEffect(() => {
-        const start = timeStringToMinutes(view.startTime);
+        const start = clampToDay(timeStringToMinutes(view.startTime));
         const block = toAllowedBlockMinutes(parseMinutes(view.blockDuration));
-        const end = start + block * view.blocks;
+        const end = clampToDay(start + block * view.blocks);
 
         setBlockMinutes(block);
-        setRangeMinutes(normalizeRange(start, end, block));
+        setRangeMinutes(sortRange(start, end));
     }, [view]);
 
+    useEffect(() => {
+        setRangeMinutes((current) => {
+            const [start, end] = current;
+            if (end - start >= blockMinutes) {
+                return current;
+            }
+            const adjustedEnd = Math.min(FULL_DAY_MINUTES, start + blockMinutes);
+            return sortRange(start, adjustedEnd);
+        });
+    }, [blockMinutes]);
 
-
-    const handleBlockDurationChange = (_event: Event, value: number) => {
-        const nextBlockMinutes = Number(value);
-        setBlockMinutes(nextBlockMinutes);
-        setRangeMinutes((current) => normalizeRange(current[0], current[1], nextBlockMinutes));
-    };
-
-    const handleRangeChange = (_event: Event, value: number | number[]) => {
-        if (!Array.isArray(value)) {
-            return;
-        }
+    const handleRangeChange = (_event: Event, value: number[]) => {
         const [rawStart, rawEnd] = value;
-        setRangeMinutes(normalizeRange(rawStart, rawEnd, blockMinutes));
+        setRangeMinutes(sortRange(clampToDay(rawStart), clampToDay(rawEnd)));
     };
 
     const handleApply = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const [start, end] = normalizeRange(rangeMinutes[0], rangeMinutes[1], blockMinutes);
-        const updatedStart = minutesToTimeString(start);
-        const updatedBlockDuration = minutesToTimeString(blockMinutes);
+        const [start, end] = sortRange(rangeMinutes[0], rangeMinutes[1]);
         const span = Math.max(blockMinutes, end - start);
-        const updatedBlocks = Math.max(1, Math.round(span / blockMinutes));
+        const updatedBlocks = Math.max(1, span/blockMinutes);
 
-        setView(view.withUpdatedSchedule(updatedStart, updatedBlockDuration, updatedBlocks));
+        setView(view.withUpdatedSchedule(
+            minutesToTimeString(start),
+            minutesToTimeString(blockMinutes),
+            updatedBlocks)
+        );
     };
 
     return (
@@ -123,7 +94,9 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
                     max={BLOCK_DURATION_OPTIONS.at(-1)}
                     step={null}
                     value={blockMinutes}
-                    onChange={handleBlockDurationChange}
+                    onChange={(_event: Event, value: number) => {
+                        setBlockMinutes(Number(value));
+                    }}
                     marks={BLOCK_DURATION_OPTIONS.map((option) => ({
                         value: option,
                         label: option.toString(),
@@ -147,6 +120,7 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
                     max={FULL_DAY_MINUTES}
                     step={blockMinutes}
                     onChange={handleRangeChange}
+                    disableSwap
                 />
             </div>
 
