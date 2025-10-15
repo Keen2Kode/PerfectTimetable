@@ -1,5 +1,8 @@
 import dayjs, { type Dayjs } from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import type { CourseModel, TimetableDay } from '../api/models';
+
+dayjs.extend(customParseFormat);
 
 const dayIndex: Record<TimetableDay, number> = {
     Sunday: 0,
@@ -17,6 +20,10 @@ export const parseMinutes = (value: string): number => {
     const parsed = dayjs(value, 'HH:mm:ss', true);
     return parsed.hour() * 60 + parsed.minute();
 };
+
+export const minutesToTimeString = (minutes: number): string =>
+    dayjs().startOf('day').add(minutes, 'minute').format('HH:mm:ss');
+
 
 export const buildDayStarts = (model: CourseModel, weekStart: Dayjs, startTime: Dayjs): Dayjs[] =>
     model.days.map((day) =>
@@ -39,3 +46,6 @@ export const anchor = (startTime: Dayjs): Dayjs =>
 export function formatTime(value: string) {
     return dayjs(value, 'HH:mm:ss', true).format('hh:mm A');
 }
+
+export const formatMinutes = (minutes: number): string =>
+    formatTime(minutesToTimeString(minutes));

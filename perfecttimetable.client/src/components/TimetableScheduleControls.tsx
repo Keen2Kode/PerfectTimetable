@@ -1,55 +1,28 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Slider from '@mui/material/Slider';
 
 import type { ModelView } from '../api/modelView';
-import { parseMinutes, parseTime, formatTime } from '../utils/timetableTime';
+import {
+    parseMinutes,
+    minutesToTimeString,
+    formatMinutes
+} from '../utils/timetableTime';
 import './TimetableScheduleControls.css';
-
-dayjs.extend(customParseFormat);
 interface TimetableScheduleControlsProps {
     view: ModelView;
     setView: (view: ModelView) => void;
 }
 
-const BLOCK_DURATION_OPTIONS = [15, 30, 60] as const;
-const FULL_DAY_MINUTES = 24 * 60;
-
-const minutesToTimeString = (minutes: number): string => dayjs().startOf('day').add(minutes, 'minute').format('HH:mm:ss');
-const formatMinutes = (minutes: number): string => formatTime(minutesToTimeString(minutes));
-
-const timeStringToMinutes = (value: string): number => {
-    const parsed = parseTime(value);
-    if (!parsed.isValid()) {
-        return 0;
-    }
-    return parsed.hour() * 60 + parsed.minute();
-};
-
-const toAllowedBlockMinutes = (value: number): number =>
-    BLOCK_DURATION_OPTIONS.reduce((closest, option) =>
-        Math.abs(option - value) < Math.abs(closest - value) ? option : closest,
-        BLOCK_DURATION_OPTIONS[0]);
-
-const clampToDay = (value: number): number => Math.min(Math.max(value, 0), FULL_DAY_MINUTES);
-const sortRange = (start: number, end: number): [number, number] => (start <= end ? [start, end] : [end, start]);
-
 export function TimetableScheduleControls({ view, setView }: TimetableScheduleControlsProps) {
     const [blockMinutes, setBlockMinutes] = useState(() => toAllowedBlockMinutes(parseMinutes(view.blockDuration)));
     const [rangeMinutes, setRangeMinutes] = useState<[number, number]>(() => {
-        const start = clampToDay(timeStringToMinutes(view.startTime));
-        const block = toAllowedBlockMinutes(parseMinutes(view.blockDuration));
-        const end = clampToDay(start + block * view.blocks);
+        const [start, , end] = initialValues(view)();
         return sortRange(start, end);
     });
 
     useEffect(() => {
-        const start = clampToDay(timeStringToMinutes(view.startTime));
-        const block = toAllowedBlockMinutes(parseMinutes(view.blockDuration));
-        const end = clampToDay(start + block * view.blocks);
-
+        const [start, block, end] = initialValues(view)();
         setBlockMinutes(block);
         setRangeMinutes(sortRange(start, end));
     }, [view]);
@@ -64,11 +37,6 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
             return sortRange(start, adjustedEnd);
         });
     }, [blockMinutes]);
-
-    const handleRangeChange = (_event: Event, value: number[]) => {
-        const [rawStart, rawEnd] = value;
-        setRangeMinutes(sortRange(clampToDay(rawStart), clampToDay(rawEnd)));
-    };
 
     const handleApply = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -90,14 +58,14 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
                 <label htmlFor="timetable-block-duration">Block duration</label>
                 <Slider
                     id="timetable-block-duration"
-                    min={BLOCK_DURATION_OPTIONS[0]}
-                    max={BLOCK_DURATION_OPTIONS.at(-1)}
+                    min={blockDurationOptions[0]}
+                    max={blockDurationOptions.at(-1)}
                     step={null}
                     value={blockMinutes}
                     onChange={(_event: Event, value: number) => {
                         setBlockMinutes(Number(value));
                     }}
-                    marks={BLOCK_DURATION_OPTIONS.map((option) => ({
+                    marks={blockDurationOptions.map((option) => ({
                         value: option,
                         label: option.toString(),
                     }))}
@@ -119,7 +87,9 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
                     min={0}
                     max={FULL_DAY_MINUTES}
                     step={blockMinutes}
-                    onChange={handleRangeChange}
+                    onChange={(_: Event, [start, end]: number[]) => {
+                        setRangeMinutes(sortRange(clampToDay(start), clampToDay(end)));
+                    }}
                     disableSwap
                 />
             </div>
@@ -135,5 +105,25 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
         </form>
     );
 }
+
+const FULL_DAY_MINUTES = 24 * 60;
+const clampToDay = (minutes: number): number =>
+    Math.min(Math.max(minutes, 0), FULL_DAY_MINUTES);
+const blockDurationOptions = [15, 30, 60];
+
+
+const toAllowedBlockMinutes = (value: number): number =>
+    blockDurationOptions.reduce((closest, option) =>
+        Math.abs(option - value) < Math.abs(closest - value) ? option : closest);
+
+const sortRange = (start: number, end: number): [number, number] => (start <= end ? [start, end] : [end, start]);
+
+const initialValues = (view: ModelView) => () => {
+    const start = clampToDay(parseMinutes(view.startTime));
+    const block = toAllowedBlockMinutes(parseMinutes(view.blockDuration));
+    const end = clampToDay(start + block * view.blocks);
+
+    return [start, block, end];
+};
 
 export default TimetableScheduleControls;
