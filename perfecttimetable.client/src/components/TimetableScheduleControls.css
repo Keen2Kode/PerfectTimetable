@@ -1,3 +1,4 @@
+
 .timetable-schedule {
     margin-top: 0.25rem;
     padding: 1.1rem 1.25rem;
@@ -78,3 +79,31 @@
     background: rgba(63, 71, 255, 0.12);
     color: rgba(26, 28, 45, 0.6);
 }
+
+
+/* src/components/TimetableScheduleControls.css */
+.timetable-schedule__block-toggle-group.MuiToggleButtonGroup-root {
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-bottom-width: 6px;
+    border-radius: 0.8rem;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+    /* src/components/TimetableScheduleControls.css */
+
+.timetable-schedule__block-toggle-group.MuiToggleButtonGroup-root .MuiToggleButton-root {
+    position: relative;
+    border: none;
+}
+
+.timetable-schedule__block-toggle-group.MuiToggleButtonGroup-root .MuiToggleButton-root:not(:last-of-type)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 2px;
+    height: 70%; /* shorter than the full button height */
+    background: rgba(0, 0, 0, 0.3); /* customize color as needed */
+    transform: translateY(-50%);
+}
+

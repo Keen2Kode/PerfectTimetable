@@ -144,6 +144,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-width: 4px;
+    border-bottom-width: 8px;
 }
 .course-card__icon--add {
     --course-card-icon-size: 1.75rem;
