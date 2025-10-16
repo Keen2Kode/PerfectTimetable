@@ -16,6 +16,23 @@
     gap: 0.65rem;
 }
 
+.timetable-schedule__primary {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.timetable-schedule__primary .timetable-schedule__control {
+    flex: 0 0 220px;
+}
+
+.timetable-schedule__primary .timetable-schedule__control.timetable-schedule__control--range {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+
 .timetable-schedule__control label {
     font-weight: 600;
     color: #1a1c2d;
@@ -106,4 +123,3 @@
     background: rgba(0, 0, 0, 0.3); /* customize color as needed */
     transform: translateY(-50%);
 }
-
