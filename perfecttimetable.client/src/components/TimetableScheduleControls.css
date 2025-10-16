@@ -16,6 +16,10 @@
     gap: 0.65rem;
 }
 
+.timetable-schedule__block-duration-label {
+    margin-left: 0.35rem;
+}
+
 .timetable-schedule__primary {
     display: flex;
     gap: 1.25rem;
@@ -54,6 +58,20 @@
     gap: 0.75rem;
 }
 
+.timetable-schedule__control .MuiSlider-root {
+    padding: 0.35rem 0;
+    color: rgb(150, 150, 150);
+}
+
+/*.timetable-schedule__control .MuiSlider-track {} */
+.timetable-schedule__control .MuiSlider-rail {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.timetable-schedule__control .MuiSlider-thumb {
+    border: 3px solid rgba(0, 0, 0, 0.3);
+}
+
 .timetable-schedule__range-header span {
     font-size: 0.9rem;
     color: rgba(26, 28, 45, 0.7);
@@ -83,19 +101,19 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.timetable-schedule__apply-button:not(:disabled):hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 24px -16px rgba(63, 71, 255, 0.7);
-}
+    .timetable-schedule__apply-button:not(:disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px -16px rgba(63, 71, 255, 0.7);
+    }
 
-.timetable-schedule__apply-button:disabled {
-    opacity: 0.65;
-    cursor: default;
-    transform: none;
-    box-shadow: none;
-    background: rgba(63, 71, 255, 0.12);
-    color: rgba(26, 28, 45, 0.6);
-}
+    .timetable-schedule__apply-button:disabled {
+        opacity: 0.65;
+        cursor: default;
+        transform: none;
+        box-shadow: none;
+        background: rgba(63, 71, 255, 0.12);
+        color: rgba(26, 28, 45, 0.6);
+    }
 
 
 /* src/components/TimetableScheduleControls.css */
@@ -113,13 +131,15 @@
     border: none;
 }
 
-.timetable-schedule__block-toggle-group.MuiToggleButtonGroup-root .MuiToggleButton-root:not(:last-of-type)::after {
+.timetable-schedule__block-toggle-group.MuiToggleButtonGroup-root 
+    .MuiToggleButton-root + .MuiToggleButton-root::before {
     content: "";
     position: absolute;
-    right: 0;
+    /* right: 0; */
+    left: 0;
     top: 50%;
     width: 2px;
-    height: 70%; /* shorter than the full button height */
-    background: rgba(0, 0, 0, 0.3); /* customize color as needed */
+    height: 70%;
+    background: rgba(0, 0, 0, 0.3);
     transform: translateY(-50%);
 }
