@@ -25,11 +25,6 @@
     color: #3f47ff;
 }
 
-.timetable-schedule__control .MuiSlider-markLabel {
-    font-size: 0.75rem;
-    color: rgba(26, 28, 45, 0.55);
-}
-
 .timetable-schedule__control--range {
     gap: 0.85rem;
 }

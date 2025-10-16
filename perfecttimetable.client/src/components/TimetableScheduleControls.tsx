@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import Slider from '@mui/material/Slider';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import type { ModelView } from '../api/modelView';
 import {
@@ -56,30 +58,38 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
         <form className="timetable-schedule" onSubmit={handleApply}>
             <div className="timetable-schedule__control">
                 <label htmlFor="timetable-block-duration">Block duration</label>
-                <Slider
-                    id="timetable-block-duration"
-                    min={blockDurationOptions[0]}
-                    max={blockDurationOptions.at(-1)}
-                    step={null}
-                    value={blockMinutes}
-                    onChange={(_event: Event, value: number) => {
-                        setBlockMinutes(Number(value));
-                    }}
-                    marks={blockDurationOptions.map((option) => ({
-                        value: option,
-                        label: option.toString(),
-                    }))}
-                />
+                <div className="timetable-schedule__block-duration">
+                    <ToggleButtonGroup
+                        id="timetable-block-duration"
+                        className="timetable-schedule__block-toggle-group"
+                        value={blockMinutes}
+                        exclusive
+                        onChange={(_event, value: number | null) => {
+                            if (value !== null) {
+                                setBlockMinutes(value);
+                            }
+                        }}
+                        aria-label="block duration"
+                    >
+                        {blockDurationOptions.map((option) => (
+                            <ToggleButton
+                                key={option}
+                                value={option}
+                                aria-label={`${option} minutes`}
+                                className="timetable-schedule__block-toggle"
+                            >
+                                {option}
+                            </ToggleButton>
+                        ))}
+                    </ToggleButtonGroup>
+                    <span className="timetable-schedule__block-duration-label">minutes</span>
+                </div>
             </div>
 
             <div className="timetable-schedule__control timetable-schedule__control--range">
                 <div className="timetable-schedule__range-header">
                     <label htmlFor="timetable-range">Time range</label>
                     <span>{formatMinutes(rangeMinutes[0])} – {formatMinutes(rangeMinutes[1])}</span>
-                </div>
-                <div className="timetable-schedule__range-scale" aria-hidden="true">
-                    <span>{formatMinutes(0)}</span>
-                    <span>{formatMinutes(FULL_DAY_MINUTES)}</span>
                 </div>
                 <Slider
                     id="timetable-range"
@@ -92,6 +102,10 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
                     }}
                     disableSwap
                 />
+                <div className="timetable-schedule__range-scale" aria-hidden="true">
+                    <span>{formatMinutes(0)}</span>
+                    <span>{formatMinutes(FULL_DAY_MINUTES)}</span>
+                </div>
             </div>
 
             <div className="timetable-schedule__actions">
