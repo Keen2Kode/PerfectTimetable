@@ -37,14 +37,6 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     [HttpPost("generate")]
     public ActionResult<List<Timetable>> PostTimetable([FromBody] GenerateTimetableRequest request)
     {
-        if (request == null) {
-            return BadRequest("Missing request");
-        }
-
-        if (request.Model is null)
-        {
-            return BadRequest("Model is required.");
-        }
         List<IScoring> scorers = [];
         List<IFilter> filters = [];
 
@@ -56,4 +48,10 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
         return new TimetableFactory(request.Model).GenerateTimetables(scorers, filters);
     }
 
+    [HttpPost("applyModelOptions")]
+    public ActionResult<CourseModel> ApplyModelOptions([FromBody] ModelPropertiesRequest modelRequest)
+    {
+        return modelRequest.Model.Normalize(
+            modelRequest.StartTime, modelRequest.BlockDuration, modelRequest.Blocks);
+    }
 }
