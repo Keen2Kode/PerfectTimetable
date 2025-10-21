@@ -5,6 +5,29 @@
     gap: 0.4rem;
 }
 
+.timetable-schedule__apply-button {
+    padding: 0.5rem 1.6rem;
+    font-weight: 600;
+    border-radius: 0.8rem;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+    border-bottom-width: 6px;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #1a1c2d;
+    cursor: pointer;
+}
+
+.timetable-schedule__apply-button:not(:disabled):hover {
+    background-color: rgba(26, 28, 45, 0.12);
+}
+
+.timetable-schedule__apply-button:disabled {
+    color: rgba(26, 28, 45, 0.45);
+    cursor: default;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.2);
+    border-bottom-width: 4px;
+    }
+
 .timetable-schedule__apply-message {
     font-size: 0.85rem;
     font-weight: 500;

@@ -90,32 +90,6 @@
     justify-content: flex-end;
 }
 
-.timetable-schedule__apply-button {
-    padding: 0.55rem 1.4rem;
-    font-weight: 600;
-    border-radius: 999px;
-    border: none;
-    background: linear-gradient(135deg, #3f47ff, #8791ff);
-    color: #fff;
-    cursor: pointer;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-    .timetable-schedule__apply-button:not(:disabled):hover {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 24px -16px rgba(63, 71, 255, 0.7);
-    }
-
-    .timetable-schedule__apply-button:disabled {
-        opacity: 0.65;
-        cursor: default;
-        transform: none;
-        box-shadow: none;
-        background: rgba(63, 71, 255, 0.12);
-        color: rgba(26, 28, 45, 0.6);
-    }
-
-
 /* src/components/TimetableScheduleControls.css */
 .timetable-schedule__block-toggle-group.MuiToggleButtonGroup-root {
     border: 3px solid rgba(0, 0, 0, 0.3);
