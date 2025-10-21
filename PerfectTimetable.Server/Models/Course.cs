@@ -17,6 +17,7 @@ namespace PerfectTimetable.Server.Models
         {
             Name = course.Name;
             DurationBlocks = course.DurationBlocks;
+            Id = course.Id;
             foreach (TimeSlot slot in course.Timeslots)
             {
                Timeslots.Add(new TimeSlot(slot));
