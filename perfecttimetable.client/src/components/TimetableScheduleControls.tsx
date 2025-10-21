@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react';
-import type { FormEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Slider from '@mui/material/Slider';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import type { ModelView } from '../api/modelView';
-import {
-    parseMinutes,
-    minutesToTimeString,
-    formatMinutes
-} from '../utils/timetableTime';
+import { formatMinutes, minutesToTimeString, parseMinutes } from '../utils/timetableTime';
+import { ApplyModelOptionsButton } from './ApplyModelOptionsButton';
 import './TimetableScheduleControls.css';
 interface TimetableScheduleControlsProps {
     view: ModelView;
@@ -40,22 +36,20 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
         });
     }, [blockMinutes]);
 
-    const handleApply = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
+    const schedule = useMemo(() => {
         const [start, end] = sortRange(rangeMinutes[0], rangeMinutes[1]);
         const span = Math.max(blockMinutes, end - start);
-        const updatedBlocks = Math.max(1, span/blockMinutes);
+        const blocks = Math.max(1, Math.ceil(span / blockMinutes));
 
-        setView(view.withUpdatedSchedule(
-            minutesToTimeString(start),
-            minutesToTimeString(blockMinutes),
-            updatedBlocks)
-        );
-    };
+        return {
+            start: minutesToTimeString(start),
+            blockDuration: minutesToTimeString(blockMinutes),
+            blocks,
+        };
+    }, [blockMinutes, rangeMinutes]);
 
     return (
-        <form className="timetable-schedule" onSubmit={handleApply}>
+        <form className="timetable-schedule" onSubmit={(event) => event.preventDefault()}>
             <div className="timetable-schedule__primary">
                 <div className="timetable-schedule__control">
                     <label htmlFor="timetable-block-duration">Block duration</label>
@@ -111,12 +105,13 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
             </div>
 
             <div className="timetable-schedule__actions">
-                <button
-                    type="submit"
-                    className="timetable-schedule__apply-button"
-                >
-                    Apply
-                </button>
+                <ApplyModelOptionsButton
+                    modelView={view}
+                    startTime={schedule.start}
+                    blockDuration={schedule.blockDuration}
+                    blocks={schedule.blocks}
+                    setView={setView}
+                />
             </div>
         </form>
     );

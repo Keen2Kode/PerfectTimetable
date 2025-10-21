@@ -1,0 +1,21 @@
+.timetable-schedule__apply {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+}
+
+.timetable-schedule__apply-message {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(26, 28, 45, 0.8);
+}
+
+.timetable-schedule__apply-message--error {
+    color: #d8345f;
+}
+
+.timetable-schedule__apply-message--success {
+    color: #1f7a4f;
+}
+
