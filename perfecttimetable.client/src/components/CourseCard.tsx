@@ -19,20 +19,21 @@ interface AddCourseCardProps {
     nextColour: string;
 }
 
-
 export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     const course = courseView.toCourse();
     const currentDuration =  modelView.getCourse(course.id)?.durationBlocks ?? course.durationBlocks;
     const [isCollapsed, setCollapsed] = useState(false);
     const actionIconClass = 'course-card__icon course-card__icon--button';
+    const baseColour = modelView.colours.getColour(course.id);
 
     return (
         <section
             className="course-card"
             style={{
+                '--course-card-base': baseColour,
                 borderColor: modelView.colours.getColour(course.id),
                 backgroundColor: modelView.colours.getColourWithAlpha(course.id, 0.5),
-            }}
+            } as CSSProperties}
         >
             <header className="course-card__header">
                 <div className="course-card__title-row">
@@ -97,6 +98,7 @@ export function AddCourseCard({ setView, nextColour }: AddCourseCardProps) {
     const baseColour = Color(nextColour);
     const withAlpha = (alpha: number) => Color(nextColour).alpha(alpha).rgb().string();
     const addCardStyle = {
+        '--course-card-base': nextColour,
         '--course-card-border': baseColour,
         '--course-card-border-hover': baseColour.darken(0.2),
         '--course-card-bg': withAlpha(0.5),
