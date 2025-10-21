@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models
 {
-    public class TimeSlot
+    public class TimeSlot : IEquatable<TimeSlot>
     {
         public TimeSlot() { }
         public TimeSlot(TimeSlot slot)
@@ -23,11 +23,26 @@ namespace PerfectTimetable.Server.Models
         [Required]
         public int StartBlock { get; set; }
 
+
         public bool Valid()
         {
             if (StartBlock < 1)
                 return false;
             return true;
         }
+
+
+
+
+        public bool Equals(TimeSlot? other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Day == other.Day && StartBlock == other.StartBlock;
+        }
+
+        public override bool Equals(object? obj) => Equals(obj as TimeSlot);
+
+        public override int GetHashCode() => HashCode.Combine(Day, StartBlock);
     }
 }

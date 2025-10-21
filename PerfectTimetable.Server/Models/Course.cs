@@ -35,5 +35,10 @@ namespace PerfectTimetable.Server.Models
         [Required]
         public List<TimeSlot> Timeslots { get; set; } = [];
 
+        public bool CanAdd(TimeSlot timeslot)
+        {
+            return !Timeslots.Contains(timeslot);
+        }
+
     }
 }
