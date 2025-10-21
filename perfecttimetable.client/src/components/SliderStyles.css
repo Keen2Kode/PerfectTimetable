@@ -1,0 +1,14 @@
+.MuiSlider-root.timetable-slider {
+    width: 100%;
+    padding: 0.35rem 0;
+    color: rgb(150, 150, 150);
+}
+
+/*.MuiSlider-root.timetable-slider .MuiSlider-track {} */
+.timetable-slider .MuiSlider-rail {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.timetable-slider .MuiSlider-thumb {
+    border: 3px solid rgba(0, 0, 0, 0.3);
+}

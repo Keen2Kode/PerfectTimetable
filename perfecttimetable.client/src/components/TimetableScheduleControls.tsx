@@ -7,6 +7,7 @@ import type { ModelView } from '../api/modelView';
 import { formatMinutes, minutesToTimeString, parseMinutes } from '../utils/timetableTime';
 import { ApplyModelOptionsButton } from './ApplyModelOptionsButton';
 import './TimetableScheduleControls.css';
+import './SliderStyles.css';
 interface TimetableScheduleControlsProps {
     view: ModelView;
     setView: (view: ModelView) => void;
@@ -88,6 +89,7 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
                     </div>
                     <Slider
                         id="timetable-range"
+                        className="timetable-slider"
                         value={rangeMinutes}
                         min={0}
                         max={FULL_DAY_MINUTES}
