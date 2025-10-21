@@ -2,7 +2,7 @@ import { useState, type Dispatch, type SetStateAction, type CSSProperties } from
 import Slider from '@mui/material/Slider';
 import Color from 'color';
 import './SliderStyles.css';
-import './CourseCard.css';
+import './CourseCard.scss';
 import { ModelView} from '../api/modelView';
 import type { CourseView } from '../api/courseView';
 import SingleCourseTimetable from './SingleCourseTimetable';
