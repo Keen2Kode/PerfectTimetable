@@ -1,34 +1,19 @@
 @use "sass:color";
 
-@mixin course-card-surface($base) {
-  $bg: color.mix($base, white, 12%);
-  $bg-hover: color.mix($base, white, 18%);
-  $border: color.mix($base, transparent, 30%);
-  $border-hover: color.mix($base, transparent, 42%);
-  $outline: color.mix($base, transparent, 45%);
+@mixin course-card-surface($base-var: --course-card-base) {
+    $base: var(#{$base-var});
 
-  background-color: $bg;
-  border-color: $border;
-  outline: 2px solid $outline;
-
-  &:hover,
-  &:focus-visible {
-    background-color: $bg-hover;
-    border-color: $border-hover;
-  }
+    background-color: color-mix(in srgb, $base 50%, white);
+    border-color: $base;
 }
+
+
 .course-card {
-    --course-card-border: rgba(100, 108, 255, 0.25);
-    --course-card-bg: rgba(100, 108, 255, 0.08);
-    --course-card-outline: rgba(99, 108, 255, 0.45);
-    --course-card-border-hover: var(--course-card-border);
-    --course-card-bg-hover: var(--course-card-bg);
+    @include course-card-surface(--course-card-base);
     padding: 1rem;
     border-radius: 0.75rem;
     border-width: 2px 2px 6px 2px;
     border-style: solid;
-    border-color: var(--course-card-border);
-    background-color: var(--course-card-bg);
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
