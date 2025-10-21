@@ -154,12 +154,10 @@
         &:focus-visible {
             background-color: var(--course-card-bg-hover);
             border-color: var(--course-card-border-hover);
+            outline: 4px dashed var(--course-card-outline);
+            outline-offset: 5px;
         }
 
-        &:focus-visible {
-            outline: 2px solid var(--course-card-outline);
-            outline-offset: 2px;
-        }
 
         &:not(:disabled):hover .course-card__icon,
         &:focus-visible .course-card__icon {
@@ -169,11 +167,6 @@
     }
 
     &--add {
-        --course-card-border: rgba(99, 108, 255, 0.3);
-        --course-card-bg: rgba(99, 108, 255, 0.12);
-        --course-card-border-hover: rgba(99, 108, 255, 0.42);
-        --course-card-bg-hover: rgba(99, 108, 255, 0.18);
-        color: #1f254d;
         display: flex;
         align-items: center;
         justify-content: center;
