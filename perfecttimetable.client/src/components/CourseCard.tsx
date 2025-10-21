@@ -1,6 +1,5 @@
 import { useState, type Dispatch, type SetStateAction, type CSSProperties } from 'react';
 import Slider from '@mui/material/Slider';
-import Color from 'color';
 import './SliderStyles.css';
 import './CourseCard.scss';
 import { ModelView} from '../api/modelView';
@@ -31,8 +30,6 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
             className="course-card"
             style={{
                 '--course-card-base': baseColour,
-                borderColor: modelView.colours.getColour(course.id),
-                backgroundColor: modelView.colours.getColourWithAlpha(course.id, 0.5),
             } as CSSProperties}
         >
             <header className="course-card__header">
@@ -95,15 +92,8 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
 }
 
 export function AddCourseCard({ setView, nextColour }: AddCourseCardProps) {
-    const baseColour = Color(nextColour);
-    const withAlpha = (alpha: number) => Color(nextColour).alpha(alpha).rgb().string();
     const addCardStyle = {
         '--course-card-base': nextColour,
-        '--course-card-border': baseColour,
-        '--course-card-border-hover': baseColour.darken(0.2),
-        '--course-card-bg': withAlpha(0.5),
-        '--course-card-bg-hover': withAlpha(0.7),
-        '--course-card-outline': withAlpha(0.45)
     } as CSSProperties;
 
     return (

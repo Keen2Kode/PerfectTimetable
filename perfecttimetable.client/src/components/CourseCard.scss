@@ -1,10 +1,18 @@
-@use "sass:color";
-
 @mixin course-card-surface($base-var: --course-card-base) {
     $base: var(#{$base-var});
 
     background-color: color-mix(in srgb, $base 50%, white);
     border-color: $base;
+}
+
+@mixin course-card-interactive($base-var: --course-card-base) {
+    --course-card-outline: color-mix(in srgb, var(#{$base-var}) 45%, transparent 55%); // = withAlpha(0.45)
+
+    &:not(:disabled):hover,
+    &:focus-visible {
+        background-color: color-mix(in srgb, var(#{$base-var}) 90%, transparent 10%);
+        border-color: color-mix(in srgb, var(#{$base-var}) 90%, black 10%);
+    }
 }
 
 
@@ -148,12 +156,13 @@
     }
 
     &--interactive {
+        @include course-card-interactive(--course-card-base);
         cursor: pointer;
 
         &:not(:disabled):hover,
         &:focus-visible {
-            background-color: var(--course-card-bg-hover);
-            border-color: var(--course-card-border-hover);
+            //background-color: var(--course-card-bg-hover);
+            //border-color: var(--course-card-border-hover);
             outline: 4px dashed var(--course-card-outline);
             outline-offset: 5px;
         }
@@ -167,6 +176,7 @@
     }
 
     &--add {
+        @include course-card-interactive(--course-card-base);
         display: flex;
         align-items: center;
         justify-content: center;
