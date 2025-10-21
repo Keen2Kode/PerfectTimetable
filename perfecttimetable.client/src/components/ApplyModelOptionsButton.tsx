@@ -55,7 +55,6 @@ export function ApplyModelOptionsButton({
         <div className="timetable-schedule__apply">
             <button
                 type="button"
-                className="timetable-schedule__apply-button"
                 onClick={handleClick}
                 disabled={isPending}
             >
