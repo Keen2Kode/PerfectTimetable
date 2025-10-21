@@ -1,5 +1,7 @@
 import { useState, type Dispatch, type SetStateAction, type CSSProperties } from 'react';
+import Slider from '@mui/material/Slider';
 import Color from 'color';
+import './SliderStyles.css';
 import './CourseCard.css';
 import { ModelView} from '../api/modelView';
 import type { CourseView } from '../api/courseView';
@@ -72,19 +74,22 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     );
 
     function BlockSizeSlider() {
-        return <div className="course-card__meta">
-            <input
-                type="range"
-                min={1}
-                max={6}
-                value={currentDuration}
-                onChange={(event) => {
-                    const durationBlocks = Number(event.currentTarget.value);
-                    setView((previous) => previous?.withCourseDurationUpdated(course.id, durationBlocks) ?? null);
-                } }
-                aria-label="Course duration in blocks" />
-            <span>{currentDuration} blocks duration</span>
-        </div>;
+        return (
+            <div className="course-card__meta">
+                <Slider
+                    className="app-slider"
+                    min={1}
+                    max={6}
+                    step={1}
+                    value={currentDuration}
+                    onChange={(_, value) => {
+                        setView((previous) => previous?.withCourseDurationUpdated(course.id, value) ?? null);
+                    }}
+                    aria-label="Course duration in blocks"
+                />
+                <span>{currentDuration} blocks duration</span>
+            </div>
+        );
     }
 }
 

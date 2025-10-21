@@ -20,11 +20,6 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
         return sortRange(start, end);
     });
 
-    useEffect(() => {
-        const [start, block, end] = initialValues(view)();
-        setBlockMinutes(block);
-        setRangeMinutes(sortRange(start, end));
-    }, [view]);
 
     useEffect(() => {
         setRangeMinutes((current) => {
@@ -89,7 +84,7 @@ export function TimetableScheduleControls({ view, setView }: TimetableScheduleCo
                     </div>
                     <Slider
                         id="timetable-range"
-                        className="timetable-slider"
+                        className="app-slider"
                         value={rangeMinutes}
                         min={0}
                         max={FULL_DAY_MINUTES}

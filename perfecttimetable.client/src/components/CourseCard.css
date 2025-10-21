@@ -112,6 +112,8 @@
     margin: 0;
     color: rgba(60, 66, 87, 0.75);
     font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
 }
 .course-card__timeslots {
     list-style: none;
