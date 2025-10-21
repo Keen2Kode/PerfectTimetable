@@ -45,12 +45,12 @@
 .course-card__action {
     --course-card-action-size: 2.5rem;
     --course-card-action-bg: rgba(49, 46, 129, 0.2);
-    --course-card-action-bg-hover: rgba(49, 46, 129, 0.3);
+    --course-card-action-bg-hover: rgba(49, 46, 129, 0.1);
     --course-card-action-fg: rgba(49, 46, 129, 0.85);
     --course-card-action-outline: rgba(49, 46, 129, 0.6);
-    border: none;
     background: var(--course-card-action-bg);
     color: var(--course-card-action-fg);
+    border-color: var(--course-card-action-bg);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -59,11 +59,11 @@
     height: var(--course-card-action-size);
     border-radius: 0.4rem;
     padding: 0;
-    transition: 120ms ease-in-out;
 }
 .course-card__action:hover,
 .course-card__action:focus-visible {
     background: var(--course-card-action-bg-hover);
+
 }
 .course-card__action:focus-visible {
     outline: 2px solid var(--course-card-action-outline);
@@ -78,7 +78,6 @@
 }
 .course-card--interactive {
     cursor: pointer;
-    transition: background-color 120ms ease-in-out, border-color 120ms ease-in-out, transform 120ms ease-in-out;
 }
 .course-card--interactive:not(:disabled):hover,
 .course-card--interactive:focus-visible {
@@ -92,7 +91,7 @@
 .course-card--interactive:not(:disabled):hover .course-card__icon,
 .course-card--interactive:focus-visible .course-card__icon {
     color: var(--course-card-icon-hover-color, var(--course-card-icon-color, inherit));
-    /* transform: var(--course-card-icon-hover-transform, none); */
+    transform: var(--course-card-icon-hover-transform, none);
 }
 .course-card__icon--button {
     --course-card-icon-size: 60%;
