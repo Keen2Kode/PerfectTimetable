@@ -7,6 +7,7 @@
 import type {
   CourseModel,
   GenerateTimetableRequest,
+  ModelPropertiesRequest,
   Timetable,
   WeatherForecast
 } from './models';
@@ -86,6 +87,46 @@ export const postTimetableGenerate = async (generateTimetableRequest: GenerateTi
   
   const data: postTimetableGenerateResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as postTimetableGenerateResponse
+}
+
+
+
+export type postTimetableApplyModelOptionsResponse200 = {
+  data: CourseModel
+  status: 200
+}
+    
+export type postTimetableApplyModelOptionsResponseSuccess = (postTimetableApplyModelOptionsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postTimetableApplyModelOptionsResponse = (postTimetableApplyModelOptionsResponseSuccess)
+
+export const getPostTimetableApplyModelOptionsUrl = () => {
+
+
+  
+
+  return `/timetable/applyModelOptions`
+}
+
+export const postTimetableApplyModelOptions = async (modelPropertiesRequest: ModelPropertiesRequest, options?: RequestInit): Promise<postTimetableApplyModelOptionsResponse> => {
+  
+  const res = await fetch(getPostTimetableApplyModelOptionsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      modelPropertiesRequest,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: postTimetableApplyModelOptionsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as postTimetableApplyModelOptionsResponse
 }
 
 

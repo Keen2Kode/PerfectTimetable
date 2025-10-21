@@ -11,6 +11,7 @@ export * from './courseModel';
 export * from './dayOfWeek';
 export * from './distanceScoring';
 export * from './generateTimetableRequest';
+export * from './modelPropertiesRequest';
 export * from './timeSlot';
 export * from './timetable';
 export * from './timetableDay';

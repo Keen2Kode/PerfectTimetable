@@ -9,7 +9,7 @@ import type { DistanceScoring } from './distanceScoring';
 import type { BlockLengthFilter } from './blockLengthFilter';
 
 export interface GenerateTimetableRequest {
-  model?: CourseModel;
+  model: CourseModel;
   scoring?: DistanceScoring;
   filter?: BlockLengthFilter;
 }

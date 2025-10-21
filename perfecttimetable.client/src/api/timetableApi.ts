@@ -14,3 +14,6 @@ export async function generateTimetable(request: GenerateTimetableRequest) {
     return response.data;
 }
 
+//export async function applyModelOptions(request: ModelPropertiesRequest) {
+//    const response = await client.post('/timetable/applyModelOptions', request);
+//}

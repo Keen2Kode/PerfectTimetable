@@ -97,6 +97,55 @@
         }
       }
     },
+    "/timetable/applyModelOptions": {
+      "post": {
+        "tags": [
+          "Timetable"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelPropertiesRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelPropertiesRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelPropertiesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -233,6 +282,9 @@
         "nullable": true
       },
       "GenerateTimetableRequest": {
+        "required": [
+          "model"
+        ],
         "type": "object",
         "properties": {
           "model": {
@@ -243,6 +295,32 @@
           },
           "filter": {
             "$ref": "#/components/schemas/BlockLengthFilter"
+          }
+        }
+      },
+      "ModelPropertiesRequest": {
+        "required": [
+          "model",
+          "startTime",
+          "blockDuration",
+          "blocks"
+        ],
+        "type": "object",
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/CourseModel"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "blockDuration": {
+            "type": "string",
+            "format": "time"
+          },
+          "blocks": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
