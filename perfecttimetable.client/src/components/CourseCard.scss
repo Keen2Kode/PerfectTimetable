@@ -6,12 +6,17 @@
 }
 
 @mixin course-card-interactive($base-var: --course-card-base) {
-    --course-card-outline: color-mix(in srgb, var(#{$base-var}) 45%, transparent 55%); // = withAlpha(0.45)
+    $base: var(#{$base-var});
+    color: $base;
+    --course-card-outline: color-mix(in srgb, $base 45%, transparent 55%); // = withAlpha(0.45)
+    background-color: color-mix(in srgb, $base 30%, white);
+    border-color: color-mix(in srgb, $base 50%, white);
 
+    
     &:not(:disabled):hover,
     &:focus-visible {
-        background-color: color-mix(in srgb, var(#{$base-var}) 90%, transparent 10%);
-        border-color: color-mix(in srgb, var(#{$base-var}) 90%, black 10%);
+        background-color: color-mix(in srgb, $base 40%, white 10%);
+        border-color: color-mix(in srgb, $base 60%, white 10%);
     }
 }
 
@@ -60,32 +65,17 @@
     }
 
     &__action {
-        --course-card-action-size: 2.5rem;
-        --course-card-action-bg: rgba(49, 46, 129, 0.2);
-        --course-card-action-bg-hover: rgba(49, 46, 129, 0.1);
-        --course-card-action-fg: rgba(49, 46, 129, 0.85);
-        --course-card-action-outline: rgba(49, 46, 129, 0.6);
-        background: var(--course-card-action-bg);
-        color: var(--course-card-action-fg);
-        border-color: var(--course-card-action-bg);
+        @include course-card-interactive(--course-card-action-bg);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: var(--course-card-action-size);
-        height: var(--course-card-action-size);
+        width: 2.5rem;
+        height: 2.5rem;
         border-radius: 0.4rem;
         padding: 0;
+  
 
-        &:hover,
-        &:focus-visible {
-            background: var(--course-card-action-bg-hover);
-        }
-
-        &:focus-visible {
-            outline: 2px solid var(--course-card-action-outline);
-            outline-offset: 2px;
-        }
     }
 
     &__icon {
@@ -109,15 +99,13 @@
     }
 
     &__minimize {
+        --course-card-action-bg: rgba(92, 80, 183, 0.801);
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 
     &__remove {
-        --course-card-action-bg: rgba(236, 42, 42, 0.14);
-        --course-card-action-bg-hover: rgba(236, 42, 42, 0.28);
-        --course-card-action-fg: rgba(236, 42, 42, 0.9);
-        --course-card-action-outline: rgba(236, 42, 42, 0.6);
+        --course-card-action-bg: rgb(220, 72, 72);
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
@@ -161,8 +149,6 @@
 
         &:not(:disabled):hover,
         &:focus-visible {
-            //background-color: var(--course-card-bg-hover);
-            //border-color: var(--course-card-border-hover);
             outline: 4px dashed var(--course-card-outline);
             outline-offset: 5px;
         }
