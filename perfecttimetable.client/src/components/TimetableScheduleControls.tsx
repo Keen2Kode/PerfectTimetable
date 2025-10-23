@@ -7,7 +7,7 @@ import type { ModelView } from '../api/modelView';
 import { formatMinutes, minutesToTimeString, parseMinutes } from '../utils/timetableTime';
 import { ApplyModelOptionsButton } from './ApplyModelOptionsButton';
 import './TimetableScheduleControls.css';
-import './SliderStyles.css';
+import './inputs/SliderStyles.css';
 interface TimetableScheduleControlsProps {
     view: ModelView;
     setView: (view: ModelView) => void;

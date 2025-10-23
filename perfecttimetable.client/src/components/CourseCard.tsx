@@ -1,6 +1,6 @@
 import { useState, type Dispatch, type SetStateAction, type CSSProperties } from 'react';
 import Slider from '@mui/material/Slider';
-import './SliderStyles.css';
+import './inputs/SliderStyles.css';
 import './CourseCard.scss';
 import { ModelView} from '../api/modelView';
 import type { CourseView } from '../api/courseView';

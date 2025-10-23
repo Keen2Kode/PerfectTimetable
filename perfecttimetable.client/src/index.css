@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
-
+@import './components/inputs/Button.css';
 :root {
     font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.5;
@@ -35,40 +35,7 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 1em;
-  padding: 0.5rem 1.6rem;
-  border-radius: 0.8rem;
-  border: 3px solid rgba(0, 0, 0, 0.3);
-  border-bottom-width: 6px;
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #1a1c2d;
-  cursor: pointer;
-}
 
-button:not(:disabled):hover {
-  background-color: rgba(26, 28, 45, 0.12);
-}
-
-button:not(:disabled):active {
-  border-bottom-width: 3px;
-  transform: translateY(2px);
-}
-
-button:disabled {
-  color: rgba(26, 28, 45, 0.45);
-  cursor: default;
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.2);
-  border-bottom-width: 4px;
-  transform: none;
-}
-
-button:focus-visible {
-  outline: none;
-}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
