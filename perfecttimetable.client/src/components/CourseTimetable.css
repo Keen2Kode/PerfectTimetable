@@ -13,14 +13,7 @@
     min-height: 420px;
 }
 
-.course-timetable .rbc-header {
-    background: rgba(100, 108, 255, 0.15);
-    font-weight: 600;
-}
 
-.course-timetable .rbc-time-content {
-    border-top: 1px solid rgba(100, 108, 255, 0.12);
-}
 
 
 .course-timetable :is(
@@ -73,3 +66,12 @@
     border-top: none;
 }
 
+.course-timetable .rbc-time-view .rbc-header {
+  background: var(--course-card-base, rgb(166, 167, 225));
+  border-bottom: none;
+  border-color: color-mix(in srgb, var(--course-card-base, rgb(166, 167, 225)) 85%, white);
+  border-width: 3px;
+}
+.course-timetable .rbc-time-view {
+    border: none;
+}
