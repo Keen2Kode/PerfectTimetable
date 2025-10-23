@@ -1,0 +1,15 @@
+.background-texture {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 140vh;
+  pointer-events: none;
+  z-index: -1;
+  background-image: url('../../assets/timetable-background-2.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: 150px 300px;
+  opacity: 0.4;
+  will-change: transform;
+}

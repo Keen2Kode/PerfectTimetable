@@ -10,6 +10,7 @@ import { ModelView } from '../api/modelView';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
 import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
+import BackgroundTexture from './icons/BackgroundTexture';
 
 export function TimetableApp() {
     const [view, setView] = useState<ModelView | null>(null);
@@ -32,62 +33,65 @@ export function TimetableApp() {
     }
 
     return (
-        <div className="timetable">
-            <header>
-                <h1>Perfect Timetable</h1>
-                <TimetableScheduleControls
-                    view={view}
-                    setView={setView}
-                />
-            </header>
+        <>
+            <BackgroundTexture/>
+            <div className="timetable">
+                <header>
+                    <h1>Perfect Timetable</h1>
+                    <TimetableScheduleControls
+                        view={view}
+                        setView={setView}
+                    />
+                </header>
 
-            <section className="timetable__grid">
-                {view.getCourses().map((courseView) => (
-                    <div key={courseView.id} className="timetable__course">
-                        <CourseCard
-                            modelView={view}
-                            courseView={courseView}
+                <section className="timetable__grid">
+                    {view.getCourses().map((courseView) => (
+                        <div key={courseView.id} className="timetable__course">
+                            <CourseCard
+                                modelView={view}
+                                courseView={courseView}
+                                setView={setView}
+                            />
+                        </div>
+                    ))}
+                    <div className="timetable__course">
+                        <AddCourseCard
                             setView={setView}
+                            nextColour={view.colours.peekNextColour()}
                         />
                     </div>
-                ))}
-                <div className="timetable__course">
-                    <AddCourseCard
-                        setView={setView}
-                        nextColour={view.colours.peekNextColour()}
+                </section>
+
+                <div className="timetable__actions-row">
+                    <SaveSelectionsButton
+                        modelView={view}
+                        options={timetableOptions}
+                        onGenerate={setGeneratedTimetables}
+                    />
+                    <button
+                        type="button"
+                        className="timetable__actions-button timetable__actions-button--secondary"
+                        onClick={() => setOptionsOpen(true)}
+                        aria-haspopup="dialog"
+                        aria-expanded={optionsOpen}
+                    >
+                        Options
+                    </button>
+                    <TimetableOptionsDialog
+                        open={optionsOpen}
+                        oldOptions={timetableOptions}
+                        onClose={() => setOptionsOpen(false)}
+                        onOptionsChange={setTimetableOptions}
                     />
                 </div>
-            </section>
 
-            <div className="timetable__actions-row">
-                <SaveSelectionsButton
+                <GeneratedTimetableCarousel
                     modelView={view}
-                    options={timetableOptions}
-                    onGenerate={setGeneratedTimetables}
+                    timetables={generatedTimetables}
                 />
-                <button
-                    type="button"
-                    className="timetable__actions-button timetable__actions-button--secondary"
-                    onClick={() => setOptionsOpen(true)}
-                    aria-haspopup="dialog"
-                    aria-expanded={optionsOpen}
-                >
-                    Options
-                </button>
-                <TimetableOptionsDialog
-                    open={optionsOpen}
-                    oldOptions={timetableOptions}
-                    onClose={() => setOptionsOpen(false)}
-                    onOptionsChange={setTimetableOptions}
-                />
+
             </div>
-
-            <GeneratedTimetableCarousel
-                modelView={view}
-                timetables={generatedTimetables}
-            />
-
-        </div>
+        </>
     );
 
     async function loadTimetable() {
