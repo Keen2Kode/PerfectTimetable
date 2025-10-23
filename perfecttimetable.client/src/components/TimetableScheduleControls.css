@@ -68,7 +68,7 @@
 
 .timetable-schedule__actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 /* src/components/TimetableScheduleControls.css */
