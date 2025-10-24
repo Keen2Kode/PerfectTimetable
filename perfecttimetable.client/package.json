@@ -25,6 +25,7 @@
     "react": "^19.1.1",
     "react-big-calendar": "^1.8.3",
     "react-dom": "^19.1.1",
+    "react-toastify": "^11.0.5",
     "rellax": "^1.12.1"
   },
   "devDependencies": {

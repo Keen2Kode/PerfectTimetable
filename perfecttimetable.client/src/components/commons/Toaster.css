@@ -1,0 +1,41 @@
+
+
+.Toastify__toast {
+    --toastify-color-success: rgba(113, 227, 107, 0.852);
+    --toastify-toast-shadow: none;
+    border-radius: 5rem;
+    top: 1rem;
+    right: 1rem;
+    border-radius: 10px;
+    border: 4px solid rgb(113, 227, 107);           /* pick any color you like */
+}
+.toast-fade-enter {
+    
+    animation: toast-fade-in 2ms ease forwards;
+}
+
+.toast-fade-exit {
+    animation: toast-fade-out 50ms ease forwards;
+}
+
+@keyframes toast-fade-in {
+    from {
+        opacity: 0;
+        transform: translateX(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes toast-fade-out {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(12px);
+    }
+}
