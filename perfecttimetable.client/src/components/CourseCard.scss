@@ -1,29 +1,7 @@
-@mixin course-card-surface($base-var: --course-card-base) {
-    $base: var(#{$base-var});
-
-    background-color: color-mix(in srgb, $base 50%, white);
-    border-color: $base;
-    color: color-mix(in srgb, $base 50%, rgba(0, 0, 0, 0.811));
-}
-
-@mixin course-card-interactive($base-var: --course-card-base) {
-    $base: var(#{$base-var});
-    color: $base;
-    --course-card-outline: color-mix(in srgb, $base 45%, transparent 55%); // = withAlpha(0.45)
-    background-color: color-mix(in srgb, $base 30%, white);
-    border-color: color-mix(in srgb, $base 50%, white);
-
-    
-    &:not(:disabled):hover,
-    &:focus-visible {
-        background-color: color-mix(in srgb, $base 40%, white 10%);
-        border-color: color-mix(in srgb, $base 60%, white 10%);
-    }
-}
-
+@use './styles/courseTheme' as theme;
 
 .course-card {
-    @include course-card-surface(--course-card-base);
+    @include theme.course-card-surface(--course-card-base);
     padding: 1rem;
     border-radius: 0.75rem;
     border-width: 2px 2px 6px 2px;
@@ -80,7 +58,7 @@
     }
 
     &__action {
-        @include course-card-interactive(--course-card-action-bg);
+        @include theme.course-card-interactive(--course-card-action-bg);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -159,7 +137,7 @@
     }
 
     &--interactive {
-        @include course-card-interactive(--course-card-base);
+        @include theme.course-card-interactive(--course-card-base);
         cursor: pointer;
 
         &:not(:disabled):hover,
@@ -177,7 +155,7 @@
     }
 
     &--add {
-        @include course-card-interactive(--course-card-base);
+        @include theme.course-card-interactive(--course-card-base);
         display: flex;
         align-items: center;
         justify-content: center;

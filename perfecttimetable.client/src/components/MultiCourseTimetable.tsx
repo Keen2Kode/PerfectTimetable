@@ -12,7 +12,7 @@ import type { ModelView } from '../api/modelView';
 import { TimetableSlotView } from '../api/timetableSlot';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
 import minMax from 'dayjs/plugin/minMax';
-import './CourseTimetable.css';
+import './CourseTimetable.scss';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
@@ -73,13 +73,14 @@ export function MultiCourseTimetable({
     max,
     eventPropGetter: (event) => {
       const baseColour = modelView.colours.getColour(event.slot.course.id);
-      const background = modelView.colours.getColourWithAlpha(event.slot.course.id, 0.65);
       return {
         className: 'course-timetable__selection',
         style: {
-          backgroundColor: background,
-          border: 'none',
+          '--course-timetable-slot-base': baseColour,
+          // backgroundColor: background,
+          // border: 'none',
           borderBottom: `5px solid ${baseColour}`,
+          
         },
       };
     },

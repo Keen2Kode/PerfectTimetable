@@ -1,3 +1,5 @@
+@use './styles/courseTheme' as theme;
+
 .course-timetable {
     border-radius: 0.5rem;
     background: rgba(255, 255, 255, 0.55);
@@ -13,9 +15,6 @@
     min-height: 420px;
 }
 
-
-
-
 .course-timetable :is(
   .rbc-time-header-content,
   .rbc-timeslot-group,
@@ -23,23 +22,18 @@
   .rbc-time-content > * + * > *,
   .rbc-day-bg + .rbc-day-bg
 ) {
-  /* border-color: rgba(251, 207, 232, 0.5);
-  border-width: 2px; */
   border: none;
 }
 
-/* .course-timetable .rbc-time-view {
-  border-color: rgba(0,0,0,0);
-} */
-
-/* correct the weird slot alignment */
 .course-timetable .rbc-day-slot .rbc-events-container {
     margin-right: 0;
 }
 
 .course-timetable__selection {
-    background: rgba(100, 108, 255, 0.80);
+    @include theme.course-card-interactive(--course-timetable-slot-base);
+    background-color: color-mix(in srgb, var(--course-timetable-slot-base, rgba(100, 108, 255, 0.95)) 70%, white);
     border: none;
+    border-bottom: 5px solid var(--course-timetable-slot-base, rgba(100, 108, 255, 0.95));
     color: #1a1c2d;
     display: flex;
     align-items: center;
@@ -56,7 +50,6 @@
     opacity: 0.4;
 }
 
-/* perfecttimetable.client/src/components/CourseTimetable.css */
 .course-timetable .rbc-allday-header,
 .course-timetable .rbc-allday-cell {
     display: none;
@@ -72,6 +65,7 @@
   border-color: color-mix(in srgb, var(--course-card-base, rgb(166, 167, 225)) 85%, white);
   border-width: 3px;
 }
+
 .course-timetable .rbc-time-view {
     border: none;
 }
