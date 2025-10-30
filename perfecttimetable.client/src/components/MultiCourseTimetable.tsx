@@ -11,6 +11,7 @@ import { TimetableDay } from '../api/models';
 import type { ModelView } from '../api/modelView';
 import { TimetableSlotView } from '../api/timetableSlot';
 import { anchor, buildDayStarts, parseMinutes, parseTime } from '../utils/timetableTime';
+import minMax from 'dayjs/plugin/minMax';
 import './CourseTimetable.css';
 
 dayjs.extend(customParseFormat);
@@ -46,7 +47,10 @@ export function MultiCourseTimetable({
 
   const anchorDate = anchor(startTime);
   const min = anchorDate.toDate();
-  const max = anchorDate.add(blockDuration * model.blocks, 'minute').toDate();
+  const max = dayjs.min(
+    anchorDate.add(blockDuration * model.blocks, 'minute'),
+    anchorDate.endOf('day')
+  ).toDate();
 
     const events = timetableSlots.map((slot) => {
         const start = slot.StartDate(dayStarts, blockDuration);
