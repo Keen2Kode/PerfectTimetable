@@ -5,8 +5,8 @@ const client = axios.create({
     baseURL: '/timetable',
 });
 
-export const fetchTimetable = () =>
-  client.get<CourseModel>('/').then(({ data }) => data);
+export const fetchTimetable = (signal?: AbortSignal) =>
+  client.get<CourseModel>('/', { signal }).then(({ data }) => data);
 
 
 export async function generateTimetable(request: GenerateTimetableRequest) {
