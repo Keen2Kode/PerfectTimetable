@@ -72,12 +72,11 @@ export function TimetableApp() {
             <div className="timetable">
                 <header>
                     <h1>Perfect Timetable</h1>
-                    <TimetableScheduleControls
-                        view={view}
-                        setView={setView}
-                    />
                 </header>
-
+                <TimetableScheduleControls
+                    view={view}
+                    setView={setView}
+                />
                 <section className="timetable__grid">
                     {view.getCourses().map((courseView) => (
                         <div key={courseView.id} className="timetable__course">
