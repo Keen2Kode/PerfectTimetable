@@ -24,7 +24,7 @@ namespace PerfectTimetable.Server.Models
         public List<Course> Courses { get; set; } = [];
 
         [Required]
-        public TimetableDay[] Days { get; set;  } = [
+        public TimetableDay[] Days { get; set; } = [
             TimetableDay.Monday,
             TimetableDay.Tuesday,
             TimetableDay.Wednesday,
@@ -33,15 +33,15 @@ namespace PerfectTimetable.Server.Models
         ];
 
         [Required]
-        public TimeOnly StartTime { get; set; } = new TimeOnly(8,00); // 8 AM
-        public TimeOnly EndTime()
+        public TimeSpan StartTime { get; set; } = TimeSpan.FromHours(8); // 8 AM
+        public TimeSpan EndTime()
         {
-            return StartTime.AddMinutes(ToMinutes(BlockDuration) * Blocks);
+            return StartTime + TimeSpan.FromMinutes(ToMinutes(BlockDuration) * Blocks);
         }
 
 
         [Required]
-        public TimeOnly BlockDuration { get; set; } = new TimeOnly(0,30); // 30 minutes
+        public TimeSpan BlockDuration { get; set; } = TimeSpan.FromMinutes(30); // 30 minutes
         // 30-minutes blocks beginning from the Start Time
         // eg: 16 blocks from StartTime at 8 AM means the last block ends at 4 PM
 
@@ -49,7 +49,7 @@ namespace PerfectTimetable.Server.Models
         public int Blocks { get; set; } = 16;
 
 
-        public CourseModel Normalize(TimeOnly newStartTime, TimeOnly newBlockDuration, int newBlocks)
+        public CourseModel Normalize(TimeSpan newStartTime, TimeSpan newBlockDuration, int newBlocks)
         {
 
             CourseModel newModel = new(this)
@@ -123,9 +123,9 @@ namespace PerfectTimetable.Server.Models
 
 
 
-        private static int ToMinutes(TimeOnly time)
+        private static int ToMinutes(TimeSpan time)
         {
-            return (int)time.ToTimeSpan().TotalMinutes;
+            return (int)time.TotalMinutes;
         }
 
 

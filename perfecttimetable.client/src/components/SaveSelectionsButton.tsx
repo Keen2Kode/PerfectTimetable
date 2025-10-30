@@ -1,42 +1,36 @@
-import { useMutation } from '@tanstack/react-query';
-import type { Timetable as ApiTimetable} from '../api/models';
-import { ModelView } from '../api/modelView';
-import { generateTimetable } from '../api/timetableApi';
-import type { TimetableOptions } from '../api/timetableOptions';
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+import type { Timetable as ApiTimetable } from '../api/models'
+import { ModelView } from '../api/modelView'
+import { generateTimetable } from '../api/timetableApi'
+import type { TimetableOptions } from '../api/timetableOptions'
 
 interface SaveSelectionsButtonProps {
-    modelView: ModelView;
-    options: TimetableOptions;
-    onGenerate?: (timetables: ApiTimetable[]) => void;
+    modelView: ModelView
+    options: TimetableOptions
+    onGenerate?: (timetables: ApiTimetable[]) => void
 }
 
 export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSelectionsButtonProps) {
-    const mutation = useMutation({
+    const { mutate, isPending } = useMutation<ApiTimetable[], Error>({
         mutationFn: async () => {
             return await generateTimetable({
                 model: modelView.toCourseModel(),
                 scoring: options.scoring,
                 filter: options.filter,
-            });
+            })
         },
         onSuccess: (data: ApiTimetable[]) => {
-            onGenerate?.(data);
+            const total = data.length
+            toast.success(`Generated ${total} timetable${total === 1 ? '' : 's'}.`)
+            onGenerate?.(data)
         },
-    });
-
-    const { isPending, isSuccess, isError, data, error } = mutation;
+        onError: (err) => toast.error(err.message),
+    })
 
     const handleClick = () => {
-        if (isPending) return;
-        mutation.mutate();
-    };
-
-    let message: string | null = null;
-    if (isSuccess && data) {
-        const total = data.length;
-        message = `Generated ${total} timetable${total === 1 ? '' : 's'}.`;
-    } else if (isError) {
-        message = error instanceof Error ? error.message : 'Failed to save selections.';
+        if (isPending) return
+        mutate()
     }
 
     return (
@@ -50,13 +44,9 @@ export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSel
             >
                 {isPending ? 'Generating' : 'Generate Timetables'}
             </button>
-            {message && (
-                <p className={`timetable__save-message timetable__save-message--${isError ? 'error' : isSuccess ? 'success' : 'idle' }`}>
-                    {message}
-                </p>
-            )}
         </div>
-    );
+    )
 }
 
-export default SaveSelectionsButton;
+export default SaveSelectionsButton
+

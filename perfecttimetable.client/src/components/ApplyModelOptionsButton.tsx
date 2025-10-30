@@ -1,15 +1,16 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
-import { ModelView } from '../api/modelView';
-import { applyModelOptions } from '../api/timetableApi';
-import './ApplyModelOptionsButton.css';
+import { ModelView } from '../api/modelView'
+import { applyModelOptions } from '../api/timetableApi'
+import './ApplyModelOptionsButton.css'
 
 interface ApplyModelOptionsButtonProps {
-    modelView: ModelView;
-    startTime: string;
-    blockDuration: string;
-    blocks: number;
-    setView: (view: ModelView) => void;
+    modelView: ModelView
+    startTime: string
+    blockDuration: string
+    blocks: number
+    setView: (view: ModelView) => void
 }
 
 export function ApplyModelOptionsButton({
@@ -19,36 +20,32 @@ export function ApplyModelOptionsButton({
     blocks,
     setView,
 }: ApplyModelOptionsButtonProps) {
-    const mutation = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: async (): Promise<string> => {
             const nextModel = await applyModelOptions({
                 model: modelView.toCourseModel(),
                 startTime,
                 blockDuration,
                 blocks,
-            });
-            setView(new ModelView(nextModel));
-            return 'Schedule updated.';
+            })
+            setView(new ModelView(nextModel))
+            return 'Schedule updated.'
         },
-    });
-
-    const { mutate, isPending, isSuccess, isError, data, error, reset } = mutation;
+    })
 
     const handleClick = () => {
         if (isPending) {
-            return;
+            return
         }
-        if (isSuccess || isError) {
-            reset();
-        }
-        mutate();
-    };
-
-    let message: string | null = null;
-    if (isSuccess && data) {
-        message = data;
-    } else if (isError) {
-        message = error instanceof Error ? error.message : 'Failed to apply schedule.';
+        mutate(undefined, {
+            onSuccess: (message) => {
+                toast.success(message ?? 'Schedule updated.')
+            },
+            onError: (err) => {
+                const text = err instanceof Error ? err.message : 'Failed to apply schedule.'
+                toast.error(text)
+            },
+        })
     }
 
     return (
@@ -60,16 +57,8 @@ export function ApplyModelOptionsButton({
             >
                 {isPending ? 'Applying' : 'Apply'}
             </button>
-            {message && (
-                <p
-                    className={`timetable-schedule__apply-message timetable-schedule__apply-message--${isError ? 'error' : 'success'}`}
-                    role={isError ? 'alert' : 'status'}
-                >
-                    {message}
-                </p>
-            )}
         </div>
-    );
+    )
 }
 
-export default ApplyModelOptionsButton;
+export default ApplyModelOptionsButton

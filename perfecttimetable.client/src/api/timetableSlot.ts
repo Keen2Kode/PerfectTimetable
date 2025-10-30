@@ -26,8 +26,11 @@ export class TimetableSlotView {
   }
 
   EndDate(dayStarts: Dayjs[], blockMinutes: number): Date {
-    const instant = dayStarts[this.day].add((this.end - 1) * blockMinutes, 'minute');
-    return instant.toDate();
+    const dayStart = dayStarts[this.day];
+    const instant = dayStart.add((this.end - 1) * blockMinutes, 'minute');
+    const endOfDay = dayStart.endOf('day');
+    const clamped = instant.isAfter(endOfDay) ? endOfDay : instant;
+    return clamped.toDate();
   }
 
   static parseTime(value: Date | string | Dayjs, model: CourseModel, course: CourseView): TimetableSlotView | null {

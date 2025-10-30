@@ -25,9 +25,16 @@ namespace PerfectTimetable.Server.Models
 
         public List<Timetable> GenerateTimetables(List<IScoring> scorers, List<IFilter> filters)
         {
-            if (slots.Count == 0) {
-                return [];
+            if (_model.Courses.Count == 0)
+            {
+                throw new ArgumentException($"No courses added.");
             }
+            foreach(Course course in _model.Courses)
+            {
+                if (course.Timeslots.Count == 0)
+                    throw new ArgumentException($"Course {course.Name} has no selected slots.");
+            }
+
             List<Timetable> timetables = [];
             GenerateTimetables(0, new Timetable());
 

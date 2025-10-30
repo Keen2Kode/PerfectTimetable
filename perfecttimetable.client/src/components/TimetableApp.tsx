@@ -1,28 +1,62 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import './TimetableApp.css';
 import { CourseCard, AddCourseCard } from './CourseCard';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 import { TimetableScheduleControls } from './TimetableScheduleControls';
 
-import type { Timetable as ApiTimetable } from '../api/models';
+import type { CourseModel, Timetable as ApiTimetable } from '../api/models';
 import { ModelView } from '../api/modelView';
 import SaveSelectionsButton from './SaveSelectionsButton';
 import { fetchTimetable } from '../api/timetableApi';
 import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
 import BackgroundTexture from './icons/BackgroundTexture';
+import { useLocalStorage } from 'usehooks-ts';
 
 export function TimetableApp() {
-    const [view, setView] = useState<ModelView | null>(null);
+    const [storedModel, setStoredModel] = useLocalStorage<CourseModel | null>('perfect-timetable:model', null);
     const [error, setError] = useState<string | null>(null);
     const [generatedTimetables, setGeneratedTimetables] = useState<ApiTimetable[]>([]);
-    const [timetableOptions, setTimetableOptions] = useState<TimetableOptions>(defaultTimetableOptions);
+    const [timetableOptions, setTimetableOptions] = useLocalStorage<TimetableOptions>('perfect-timetable:options', defaultTimetableOptions);
     const [optionsOpen, setOptionsOpen] = useState(false);
 
-    useEffect(() => {
-        void loadTimetable();
-    }, []);
+    const view = useMemo(() => (storedModel ? new ModelView(storedModel) : null), [storedModel]);
 
+    const setView: Dispatch<SetStateAction<ModelView | null>> = useCallback((update) => {
+        setStoredModel((previousModel) => {
+            const previousView = previousModel && new ModelView(previousModel);
+
+            const nextView =
+                typeof update === 'function'
+                    ? update(previousView)
+                    : update;
+
+            return nextView?.toCourseModel() ?? null;
+        });
+    }, [setStoredModel]);
+
+    useEffect(() => {
+        if (storedModel) {
+            return;
+        }
+
+        const controller = new AbortController();
+
+        fetchTimetable(controller.signal)
+            .then((model) => {
+                if (!controller.signal.aborted) {
+                    setStoredModel(model);
+                    setError(null);
+                }
+            })
+            .catch((err) => {
+                if (!controller.signal.aborted) {
+                    setError(err instanceof Error ? err.message : 'Unknown error');
+                }
+            });
+
+        return () => controller.abort();
+    }, [storedModel, setStoredModel]);
 
     if (error) {
         return <p role="alert">Failed to load timetable: {error}</p>;
@@ -93,15 +127,6 @@ export function TimetableApp() {
             </div>
         </>
     );
-
-    async function loadTimetable() {
-        try {
-            const model = await fetchTimetable();
-            setView(new ModelView(model));
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Unknown error');
-        }
-    }
 }
 
 export default TimetableApp;
