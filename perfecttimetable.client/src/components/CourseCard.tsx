@@ -34,7 +34,14 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
         >
             <header className="course-card__header">
                 <div className="course-card__title-row">
-                    <h2 className="course-card__title">{course.name}</h2>
+                    <input
+                        type="text"
+                        className="course-card__title"
+                        value={course.name}
+                        onChange={(event) =>
+                            setView((previous) =>previous?.withCourseNameUpdated(course.id, event.target.value) ?? null)}
+                        aria-label="Course name"
+                    />
                     <div className="course-card__actions">
                         <button
                             type="button"

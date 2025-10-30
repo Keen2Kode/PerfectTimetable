@@ -48,15 +48,30 @@ export class ModelView {
         });
     }
 
-withCourseDurationUpdated(courseId: number, durationBlocks: number): ModelView {
-    const model = this.toCourseModel();
-    const updatedCourses = model.courses.map(course =>
-        course.id === courseId
-            ? { ...course, durationBlocks }
-            : course
-    );
-    return new ModelView({ ...model, courses: updatedCourses });
-}
+    withCourseDurationUpdated(courseId: number, durationBlocks: number): ModelView {
+        const model = this.toCourseModel();
+        const updatedCourses = model.courses.map((course) =>
+            course.id === courseId ? { ...course, durationBlocks } : course,
+        );
+        return new ModelView({ ...model, courses: updatedCourses });
+    }
+
+    withCourseNameUpdated(courseId: number, name: string): ModelView {
+        const trimmed = name.trim();
+        if (!trimmed) {
+            return this;
+        }
+        const namePattern = /^[A-Za-z0-9\s'-]*$/;
+        if (!namePattern.test(trimmed)) {
+            return this;
+        }
+
+        const model = this.toCourseModel();
+        const updatedCourses = model.courses.map((course) =>
+            course.id === courseId ? { ...course, name: trimmed } : course,
+        );
+        return new ModelView({ ...model, courses: updatedCourses });
+    }
 
     withUpdatedSchedule(startTime: string, blockDuration: string, blocks: number): ModelView {
         const model = this.toCourseModel();
