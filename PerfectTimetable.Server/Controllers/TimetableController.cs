@@ -45,7 +45,14 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
         if (request.Filter != null)
             filters.Add(request.Filter);
 
-        return new TimetableFactory(request.Model).GenerateTimetables(scorers, filters);
+        try
+        {
+            return new TimetableFactory(request.Model).GenerateTimetables(scorers, filters);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPost("applyModelOptions")]

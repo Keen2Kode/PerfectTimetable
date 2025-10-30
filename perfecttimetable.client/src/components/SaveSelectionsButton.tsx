@@ -12,7 +12,7 @@ interface SaveSelectionsButtonProps {
 }
 
 export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSelectionsButtonProps) {
-    const { mutate, isPending } = useMutation({
+    const { mutate, isPending } = useMutation<ApiTimetable[], Error>({
         mutationFn: async () => {
             return await generateTimetable({
                 model: modelView.toCourseModel(),
@@ -25,10 +25,7 @@ export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSel
             toast.success(`Generated ${total} timetable${total === 1 ? '' : 's'}.`)
             onGenerate?.(data)
         },
-        onError: (err: unknown) => {
-            const text = err instanceof Error ? err.message : 'Failed to save selections.'
-            toast.error(text)
-        },
+        onError: (err) => toast.error(err.message),
     })
 
     const handleClick = () => {
@@ -52,3 +49,4 @@ export function SaveSelectionsButton({ modelView, options, onGenerate }: SaveSel
 }
 
 export default SaveSelectionsButton
+
