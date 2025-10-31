@@ -77,10 +77,9 @@ export function MultiCourseTimetable({
         className: 'course-timetable__selection',
         style: {
           '--course-timetable-slot-base': baseColour,
-          // backgroundColor: background,
-          // border: 'none',
+          border: '0 solid transparent',
           borderBottom: `5px solid ${baseColour}`,
-          
+
         },
       };
     },

@@ -1,4 +1,4 @@
-@use './styles/courseTheme' as theme;
+@use './CourseCard.scss' as card;
 
 .course-timetable {
     border-radius: 0.5rem;
@@ -30,14 +30,10 @@
 }
 
 .course-timetable__selection {
-    @include theme.course-card-interactive(--course-timetable-slot-base);
+    @include card.course-card-interactive(--course-timetable-slot-base);
     background-color: color-mix(in srgb, var(--course-timetable-slot-base, rgba(100, 108, 255, 0.95)) 70%, white);
-    border: none;
-    border-bottom: 5px solid var(--course-timetable-slot-base, rgba(100, 108, 255, 0.95));
     color: #1a1c2d;
     display: flex;
-    align-items: center;
-    justify-content: center;
     font-weight: 600;
 }
 
