@@ -8,15 +8,20 @@
 
 @mixin course-card-interactive($base-var: --course-card-base) {
     $base: var(#{$base-var});
-    color: $base;
+    $border: color-mix(in srgb, $base 90%, black 10%);
+    color: $border;
     --course-card-outline: color-mix(in srgb, $base 45%, transparent 55%);
-    background-color: color-mix(in srgb, $base 30%, white);
-    border-color: color-mix(in srgb, $base 50%, white);
+    background-color: color-mix(in srgb, $base 60%, white);
+    border-color: $border;
 
     &:not(:disabled):hover,
     &:focus-visible {
-        background-color: color-mix(in srgb, $base 40%, white 10%);
-        border-color: color-mix(in srgb, $base 60%, white 10%);
+        background-color: color-mix(in srgb, $base 80%, white);
+        border-color: color-mix(in srgb, $border 90%, black 10%);
+    }
+
+    &:not(:disabled):active {
+        color: color-mix(in srgb, $border 90%, black 10%);
     }
 }
 
@@ -112,13 +117,13 @@
     }
 
     &__minimize {
-        --course-card-action-bg: rgba(92, 80, 183, 0.801);
+        --course-card-action-bg: rgba(168, 160, 228, 0.801);
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 
     &__remove {
-        --course-card-action-bg: rgb(220, 72, 72);
+        --course-card-action-bg: rgba(254, 120, 120, 0.797);
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
@@ -182,4 +187,13 @@
         /* border-width: 4px;
         border-bottom-width: 8px; */
     }
+}
+
+.course-card__add-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.course-card__add-group > .course-card {
+    flex: 1 1 0;
 }
