@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Mvc;
 using PerfectTimetable.Server.Models;
+using PerfectTimetable.Server.Models.AI;
 using PerfectTimetable.Server.Models.DTOs;
 using PerfectTimetable.Server.Models.Filter;
 using PerfectTimetable.Server.Models.Scoring;
@@ -15,6 +16,7 @@ namespace PerfectTimetable.Server.Controllers;
 [Route("timetable")]
 public sealed class TimetableController(IWebHostEnvironment env) : ControllerBase
 {
+    public OpenAIService aiService = new();
     [HttpGet]
     public ActionResult<CourseModel> Get()
     {
@@ -60,5 +62,12 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     {
         return modelRequest.Model.Normalize(
             modelRequest.StartTime, modelRequest.BlockDuration, modelRequest.Blocks);
+    }
+
+    [HttpPost("aiCourse")]
+    public async void GetCourse()
+    {
+        await aiService.TestResponseAsync();
+        //return new Course();
     }
 }
