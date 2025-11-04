@@ -65,8 +65,9 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     }
 
     [HttpPost("aiCourse")]
-    public async void GetCourse()
+    public async void GetCourse(IFormFile image)
     {
+        Console.WriteLine(image.Name);
         await aiService.TestResponseAsync();
         //return new Course();
     }

@@ -1,4 +1,4 @@
-import { useRef, useState, type Dispatch, type SetStateAction, type CSSProperties } from 'react';
+import { useState, type Dispatch, type SetStateAction, type CSSProperties } from 'react';
 import Slider from '@mui/material/Slider';
 import './inputs/SliderStyles.css';
 import './CourseCard.scss';
@@ -13,10 +13,6 @@ interface CourseCardProps {
     setView: Dispatch<SetStateAction<ModelView | null>>;
 }
 
-interface AddCourseCardProps {
-    setView: Dispatch<SetStateAction<ModelView | null>>;
-    nextColour: string;
-}
 
 export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     const course = courseView.toCourse();
@@ -98,39 +94,3 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     }
 }
 
-export function AddCourseCard({ setView, nextColour }: AddCourseCardProps) {
-    const addCardStyle = {
-        '--course-card-base': nextColour,
-    } as CSSProperties;
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-    return (
-        <div className="course-card__add-group">
-            <button
-                type="button"
-                className="course-card course-card--add course-card--interactive"
-                onClick={() => setView((previous) => previous?.withCourseAdded() ?? null)}
-                style={addCardStyle}
-            >
-                <PlusIcon aria-hidden className="course-card__icon course-card__icon--add" />
-            </button>
-            <button
-                type="button"
-                className="course-card course-card--add course-card--interactive"
-                onClick={() => fileInputRef.current?.click()}
-                style={addCardStyle}
-            >
-                AI upload screenshots
-            </button>
-            <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={() => {
-                    /* no-op until upload flow is implemented */
-                }}
-            />
-        </div>
-    );
-}

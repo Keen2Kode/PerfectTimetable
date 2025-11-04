@@ -27,6 +27,17 @@ export async function applyModelOptions(request: ModelPropertiesRequest) {
     return response.data
 }
 
+export async function uploadCourseScreenshot(file: File) {
+    const formData = new FormData()
+    formData.append('image', file)
+
+    const response = await client.post('/aiCourse', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    })
+
+    return response.data
+}
+
 function normalizeAxiosError(error: AxiosError<ApiErrorResponse> | unknown): Error {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
         const data = error.response?.data
