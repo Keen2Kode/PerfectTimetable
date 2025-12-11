@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models
 {
@@ -24,15 +25,19 @@ namespace PerfectTimetable.Server.Models
             }
         }
         [Required]
+        [JsonRequired]
         public int Id { get; set; }
 
         [Required]
+        [JsonRequired]
         public string Name { get; set; }
 
         // Duration in number of blocks for every timeslot
         [Required]
+        [JsonRequired]
         public int DurationBlocks { get; set; }
         [Required]
+        [JsonRequired]
         public List<TimeSlot> Timeslots { get; set; } = [];
 
         public bool CanAdd(TimeSlot timeslot)

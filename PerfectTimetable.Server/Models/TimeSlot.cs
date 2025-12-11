@@ -18,9 +18,11 @@ namespace PerfectTimetable.Server.Models
             StartBlock = startBlock;
         }
         [Required]
+        [JsonRequired]
         public TimetableDay Day { get; set; }
 
         [Required]
+        [JsonRequired]
         public int StartBlock { get; set; }
 
 
