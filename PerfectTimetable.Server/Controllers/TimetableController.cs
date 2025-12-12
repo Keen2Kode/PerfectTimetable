@@ -5,10 +5,10 @@ using System.Text.Json;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Mvc;
 using PerfectTimetable.Server.Models;
-using PerfectTimetable.Server.Models.AI;
 using PerfectTimetable.Server.Models.DTOs;
 using PerfectTimetable.Server.Models.Filter;
 using PerfectTimetable.Server.Models.Scoring;
+using PerfectTimetable.Server.Services;
 
 namespace PerfectTimetable.Server.Controllers;
 
@@ -68,7 +68,7 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     public async void GetCourse(IFormFile image)
     {
         Console.WriteLine(image.Name);
-        await aiService.TestResponseAsync();
+        await aiService.ImageToCourseData(image);
         //return new Course();
     }
 }
