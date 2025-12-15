@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { ModelView } from '../api/modelView';
 import { uploadCourseScreenshot } from '../api/timetableApi';
 import { PlusIcon } from './icons/LucideIcons';
+import type { Course } from '../api/models';
 
 interface CourseCardAddProps {
     modelView: ModelView;
@@ -17,11 +18,16 @@ export function CourseCardAdd({ modelView, setView, nextColour }: CourseCardAddP
     } as CSSProperties;
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const { mutateAsync: submitScreenshot, isPending } = useMutation<unknown, Error, File>({
-        mutationFn: async (file: File) => uploadCourseScreenshot(file),
-        onSuccess: () => {
+    const { mutateAsync: submitScreenshot, isPending } = useMutation<Course, Error, File>({
+        mutationFn: async (file: File) => {
+            return await uploadCourseScreenshot({
+                ModelJson: JSON.stringify(modelView.toCourseModel()),
+                Image: file
+            })
+        },
+        onSuccess: (course: Course) => {
             toast.success('Uploaded screenshot for AI parsing.');
-            setView((previous) => previous?.withCourseAdded() ?? modelView.withCourseAdded());
+            setView((previous) => previous?.withCourseAdded(course) ?? previous);
         },
         onError: (error) => {
             toast.error(error.message);
@@ -75,4 +81,3 @@ export function CourseCardAdd({ modelView, setView, nextColour }: CourseCardAddP
 }
 
 export default CourseCardAdd;
-

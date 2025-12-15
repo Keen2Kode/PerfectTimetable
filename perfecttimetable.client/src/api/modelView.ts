@@ -31,12 +31,14 @@ export class ModelView {
         return this.courses.find((course) => course.id === id);
     }
 
-    withCourseAdded(): ModelView {
+    withCourseAdded(course?: Course): ModelView {
         const model = this.toCourseModel();
-        const nextCourse = ModelView.createEmptyCourse(model.courses);
+        const courseToAdd =
+            course ?? ModelView.createEmptyCourse(model.courses);
+
         return new ModelView({
             ...model,
-            courses: [...model.courses, nextCourse],
+            courses: [...model.courses, courseToAdd],
         });
     }
 
@@ -47,6 +49,8 @@ export class ModelView {
             courses: model.courses.filter((course) => course.id !== courseId),
         });
     }
+
+
 
     withCourseDurationUpdated(courseId: number, durationBlocks: number): ModelView {
         const model = this.toCourseModel();

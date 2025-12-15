@@ -1,6 +1,8 @@
-﻿using OpenAI;
+﻿using Microsoft.AspNetCore.Mvc;
+using OpenAI;
 using OpenAI.Chat;
 using OpenAI.Responses;
+using PerfectTimetable.Server.Models;
 using PerfectTimetable.Server.Models.DTOs;
 using System.Reflection;
 using System.Text.Json;
@@ -20,19 +22,19 @@ namespace PerfectTimetable.Server.Services
 
         // grab image data
         // read openapi schema
-        public async Task ImageToCourseData(IFormFile image)
+        public async Task<ActionResult<Course>> ImageToCourseData(IFormFile image, CourseModel model)
         {
             if (!ValidImage(image))
-                return;
+                throw new ArgumentException("Image is not valid.");
 
-            BinaryData imageBytes = BinaryData.FromStream(image.OpenReadStream());
+            await using var stream = image.OpenReadStream();
+            var imageBytes = await BinaryData.FromStreamAsync(stream);
 
             ChatMessage message =
                 new UserChatMessage(
                 ChatMessageContentPart.CreateTextPart("Extract a Course. Return JSON that matches the schema. "),
                 ChatMessageContentPart.CreateImagePart(imageBytes, image.ContentType));
 
-            //ChatCompletion completion = await client.CompleteChatAsync(message);
 
 
 
@@ -49,27 +51,18 @@ namespace PerfectTimetable.Server.Services
             ChatCompletion completion = await client.CompleteChatAsync([message], options);
 
             Console.WriteLine(completion.Content[0].Text);
+            Course course = ExtractCourse(completion, model);
+            Console.WriteLine(course);
 
-            ExtractCourse(completion);
-
-
-
-            //using JsonDocument structuredJson = JsonDocument.Parse(completion.Content[0].Text);
-
-            //Console.WriteLine($"Final answer: {structuredJson.RootElement.GetProperty("final_answer")}");
+            return course;
         }
 
-        private static CourseDTO ExtractCourse(ChatCompletion completion)
+        private static Course ExtractCourse(ChatCompletion completion, CourseModel model)
         {
-            JsonSerializerOptions serializerOptions = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
 
-            CourseDTO courseDTO = JsonSerializer.Deserialize<CourseDTO>(completion.Content[0].Text, serializerOptions) ?? throw new JsonException("JSON did not match CourseDTO.");
+            CourseDTO courseDTO = JsonSerializer.Deserialize<CourseDTO>(completion.Content[0].Text) ?? throw new JsonException("JSON did not match CourseDTO.");
 
-            //return courseDTO.ToDomain();
-            return null;
+            return courseDTO.ToDomain(model);
         }
 
         // TODO: better validation. use mimedetective?
