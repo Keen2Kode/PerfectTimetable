@@ -51,6 +51,7 @@ namespace PerfectTimetable.Server.Services
             ChatCompletion completion = await client.CompleteChatAsync([message], options);
 
             Console.WriteLine(completion.Content[0].Text);
+            Console.WriteLine(model);
             Course course = ExtractCourse(completion, model);
             Console.WriteLine(course);
 
@@ -59,8 +60,11 @@ namespace PerfectTimetable.Server.Services
 
         private static Course ExtractCourse(ChatCompletion completion, CourseModel model)
         {
-
-            CourseDTO courseDTO = JsonSerializer.Deserialize<CourseDTO>(completion.Content[0].Text) ?? throw new JsonException("JSON did not match CourseDTO.");
+            JsonSerializerOptions serializerOptions = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            CourseDTO courseDTO = JsonSerializer.Deserialize<CourseDTO>(completion.Content[0].Text, serializerOptions) ?? throw new JsonException("JSON did not match CourseDTO.");
 
             return courseDTO.ToDomain(model);
         }

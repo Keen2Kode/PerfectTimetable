@@ -1,14 +1,15 @@
 // PerfectTimetable.Server/Controllers/TimetableController.cs
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks.Dataflow;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using PerfectTimetable.Server.Models;
 using PerfectTimetable.Server.Models.DTOs;
 using PerfectTimetable.Server.Models.Filter;
 using PerfectTimetable.Server.Models.Scoring;
 using PerfectTimetable.Server.Services;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks.Dataflow;
 
 namespace PerfectTimetable.Server.Controllers;
 
@@ -71,7 +72,8 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
     public async Task<ActionResult<Course>> GetCourse([FromForm] AICourseRequest courseRequest)
     {
         Console.WriteLine(courseRequest.Image.Name);
-        CourseModel model = JsonSerializer.Deserialize<CourseModel>(courseRequest.ModelJson) ?? throw new JsonException("JSON did not match course model.");
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        CourseModel model = JsonSerializer.Deserialize<CourseModel>(courseRequest.ModelJson, options) ?? throw new JsonException("JSON did not match course model.");
         return await aiService.ImageToCourseData(courseRequest.Image, model);
     }
 }

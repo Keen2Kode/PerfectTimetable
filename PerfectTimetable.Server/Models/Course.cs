@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PerfectTimetable.Server.Models.DTOs;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models
@@ -47,7 +48,12 @@ namespace PerfectTimetable.Server.Models
 
         public override string ToString()
         {
-            return $"Course {Name} with {DurationBlocks} blocks and {Timeslots.Count} slots.";
+            string value = $"Course Name: {Name}, {DurationBlocks} blocks with {Timeslots.Count} slots.";
+            foreach (TimeSlot slot in Timeslots)
+            {
+                value += "\n" + slot;
+            }
+            return value;
         }
     }
 }

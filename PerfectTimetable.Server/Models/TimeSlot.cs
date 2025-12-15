@@ -46,5 +46,10 @@ namespace PerfectTimetable.Server.Models
         public override bool Equals(object? obj) => Equals(obj as TimeSlot);
 
         public override int GetHashCode() => HashCode.Combine(Day, StartBlock);
+
+        public override string ToString()
+        {
+            return $"Timeslot on Day: {Day}, Start time: {StartBlock}";
+        }
     }
 }

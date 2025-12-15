@@ -136,6 +136,11 @@ namespace PerfectTimetable.Server.Models
             return (slotStartMinutes, slotEndMinutes);
         }
 
+        public override string ToString()
+        {
+            return $"Block duration: {BlockDuration}, Blocks: {Blocks}, StartTime: {StartTime}";
+        }
+
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter<TimetableDay>))]
@@ -143,4 +148,5 @@ namespace PerfectTimetable.Server.Models
     {
         Monday, Tuesday, Wednesday, Thursday,Friday, Saturday,Sunday
     }
+
 }
