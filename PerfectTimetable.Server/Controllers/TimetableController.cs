@@ -71,4 +71,14 @@ public sealed class TimetableController(IWebHostEnvironment env) : ControllerBas
         await aiService.ImageToCourseData(image);
         //return new Course();
     }
+
+    [HttpPost("aiCourse2")]
+
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<Course>> GetCourse([FromForm] AICourseRequest courseRequest)
+    {
+        CourseModel model = JsonSerializer.Deserialize<CourseModel>(courseRequest.ModelJson) ?? throw new JsonException("JSON did not match course model.");
+        await aiService.ImageToCourseData(courseRequest.Image);
+        return null;
+    }
 }
