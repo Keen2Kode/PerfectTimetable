@@ -1,6 +1,7 @@
 ﻿using OpenAI;
 using OpenAI.Chat;
 using OpenAI.Responses;
+using PerfectTimetable.Server.Models.DTOs;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Schema;
@@ -21,7 +22,7 @@ namespace PerfectTimetable.Server.Services
         // read openapi schema
         public async Task ImageToCourseData(IFormFile image)
         {
-            if (!ValidImage(image)) 
+            if (!ValidImage(image))
                 return;
 
             BinaryData imageBytes = BinaryData.FromStream(image.OpenReadStream());
@@ -33,7 +34,7 @@ namespace PerfectTimetable.Server.Services
 
             //ChatCompletion completion = await client.CompleteChatAsync(message);
 
-           
+
 
             ChatCompletionOptions options = new()
             {
@@ -44,26 +45,35 @@ namespace PerfectTimetable.Server.Services
                 Temperature = 0
             };
 
-            Console.WriteLine(CourseSchema());
 
             ChatCompletion completion = await client.CompleteChatAsync([message], options);
 
             Console.WriteLine(completion.Content[0].Text);
 
+            ExtractCourse(completion);
+
+
+
             //using JsonDocument structuredJson = JsonDocument.Parse(completion.Content[0].Text);
 
             //Console.WriteLine($"Final answer: {structuredJson.RootElement.GetProperty("final_answer")}");
-            //Console.WriteLine("Reasoning steps:");
+        }
 
-            //foreach (JsonElement stepElement in structuredJson.RootElement.GetProperty("steps").EnumerateArray())
-            //{
-            //    Console.WriteLine($"  - Explanation: {stepElement.GetProperty("explanation")}");
-            //    Console.WriteLine($"    Output: {stepElement.GetProperty("output")}");
-            //}
+        private static CourseDTO ExtractCourse(ChatCompletion completion)
+        {
+            JsonSerializerOptions serializerOptions = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            CourseDTO courseDTO = JsonSerializer.Deserialize<CourseDTO>(completion.Content[0].Text, serializerOptions) ?? throw new JsonException("JSON did not match CourseDTO.");
+
+            //return courseDTO.ToDomain();
+            return null;
         }
 
         // TODO: better validation. use mimedetective?
-        private bool ValidImage(IFormFile image) {
+        private static bool ValidImage(IFormFile image) {
             string[] allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
 
             if (image == null || image.Length == 0)

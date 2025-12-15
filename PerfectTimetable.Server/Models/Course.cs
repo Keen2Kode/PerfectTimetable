@@ -45,5 +45,9 @@ namespace PerfectTimetable.Server.Models
             return !Timeslots.Contains(timeslot);
         }
 
+        public override string ToString()
+        {
+            return $"Course {Name} with {DurationBlocks} blocks and {Timeslots.Count} slots.";
+        }
     }
 }
