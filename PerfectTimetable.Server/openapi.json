@@ -146,38 +146,48 @@
         }
       }
     },
-    "/WeatherForecast": {
-      "get": {
+    "/timetable/aiCourse": {
+      "post": {
         "tags": [
-          "WeatherForecast"
+          "Timetable"
         ],
-        "operationId": "GetWeatherForecast",
+        "operationId": "AICourseRequest",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ModelJson": {
+                    "type": "string"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/Course"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/Course"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/Course"
                 }
               }
             }
@@ -252,12 +262,12 @@
             }
           },
           "startTime": {
-            "type": "string",
-            "format": "time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "blockDuration": {
-            "type": "string",
-            "format": "time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "blocks": {
             "type": "integer",
@@ -311,12 +321,12 @@
             "$ref": "#/components/schemas/CourseModel"
           },
           "startTime": {
-            "type": "string",
-            "format": "time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "blockDuration": {
-            "type": "string",
-            "format": "time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "blocks": {
             "type": "integer",
@@ -384,36 +394,12 @@
             "$ref": "#/components/schemas/TimeSlot"
           }
         }
-      },
-      "WeatherForecast": {
-        "type": "object",
-        "properties": {
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
-          }
-        }
       }
     }
   },
   "tags": [
     {
       "name": "Timetable"
-    },
-    {
-      "name": "WeatherForecast"
     }
   ]
 }

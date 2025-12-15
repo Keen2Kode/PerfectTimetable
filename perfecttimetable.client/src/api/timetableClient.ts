@@ -5,11 +5,12 @@
  * OpenAPI spec version: 1.0.0
  */
 import type {
+  AICourseRequestBody,
+  Course,
   CourseModel,
   GenerateTimetableRequest,
   ModelPropertiesRequest,
-  Timetable,
-  WeatherForecast
+  Timetable
 } from './models';
 
 export type getTimetableResponse200 = {
@@ -131,39 +132,47 @@ export const postTimetableApplyModelOptions = async (modelPropertiesRequest: Mod
 
 
 
-export type getWeatherForecastResponse200 = {
-  data: WeatherForecast[]
+export type aICourseRequestResponse200 = {
+  data: Course
   status: 200
 }
     
-export type getWeatherForecastResponseSuccess = (getWeatherForecastResponse200) & {
+export type aICourseRequestResponseSuccess = (aICourseRequestResponse200) & {
   headers: Headers;
 };
 ;
 
-export type getWeatherForecastResponse = (getWeatherForecastResponseSuccess)
+export type aICourseRequestResponse = (aICourseRequestResponseSuccess)
 
-export const getGetWeatherForecastUrl = () => {
+export const getAICourseRequestUrl = () => {
 
 
   
 
-  return `/WeatherForecast`
+  return `/timetable/aiCourse`
 }
 
-export const getWeatherForecast = async ( options?: RequestInit): Promise<getWeatherForecastResponse> => {
-  
-  const res = await fetch(getGetWeatherForecastUrl(),
+export const aICourseRequest = async (aICourseRequestBody: AICourseRequestBody, options?: RequestInit): Promise<aICourseRequestResponse> => {
+    const formData = new FormData();
+if(aICourseRequestBody.ModelJson !== undefined) {
+ formData.append(`ModelJson`, aICourseRequestBody.ModelJson)
+ }
+if(aICourseRequestBody.Image !== undefined) {
+ formData.append(`Image`, aICourseRequestBody.Image)
+ }
+
+  const res = await fetch(getAICourseRequestUrl(),
   {      
     ...options,
-    method: 'GET'
-    
-    
+    method: 'POST'
+    ,
+    body: 
+      formData,
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: getWeatherForecastResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getWeatherForecastResponse
+  const data: aICourseRequestResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as aICourseRequestResponse
 }
