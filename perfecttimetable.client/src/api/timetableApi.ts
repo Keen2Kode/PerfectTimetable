@@ -2,13 +2,22 @@ import axios, { AxiosError } from 'axios'
 import type { CourseModel, GenerateTimetableRequest, ModelPropertiesRequest, AICourseRequestBody, Course} from './models'
 
 // Define the error shape your backend returns
-export type ApiErrorResponse = string | { message?: string; title?: string }
+//export type ApiErrorResponse = string | { message?: string; title?: string }
+
+export type ProblemDetails = {
+    type?: string;
+    title?: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
+    [key: string]: unknown; // for extensions like "message"
+};
 
 const client = axios.create({ baseURL: '/timetable' })
 
 client.interceptors.response.use(
     response => response,
-    (error: AxiosError<ApiErrorResponse>) => {
+    (error: AxiosError<ProblemDetails>) => {
         throw normalizeAxiosError(error)
     }
 )
@@ -43,8 +52,8 @@ export async function uploadCourseScreenshot(request: AICourseRequestBody ): Pro
     return response.data
 }
 
-function normalizeAxiosError(error: AxiosError<ApiErrorResponse> | unknown): Error {
-    if (axios.isAxiosError<ApiErrorResponse>(error)) {
+function normalizeAxiosError(error: AxiosError<ProblemDetails> | unknown): Error {
+    if (axios.isAxiosError<ProblemDetails>(error)) {
         const data = error.response?.data
 
         if (typeof data === 'string') {
@@ -52,7 +61,7 @@ function normalizeAxiosError(error: AxiosError<ApiErrorResponse> | unknown): Err
         }
 
         if (data && typeof data === 'object') {
-            const msg = data.message ?? data.title
+            const msg = data.detail ?? data.title
             if (typeof msg === 'string') {
                 return new Error(msg)
             }
