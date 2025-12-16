@@ -7,6 +7,8 @@ namespace PerfectTimetable.Server.Models
     // TODO: add validation for durationblocks and timeslots
     public class Course
     {
+        // JSON deserialization requires it
+        public Course() { }
         public Course(string name, int durationBlocks, List<TimeSlot> timeslots, CourseModel model)
         {
             // TODO: migrate to EF core.
