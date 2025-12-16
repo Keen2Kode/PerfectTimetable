@@ -30,7 +30,7 @@ namespace PerfectTimetable.Server.Models.DTOs
                 }
             }
 
-            return new Course(Name, durationBlocks, slots);
+            return new Course(Name, durationBlocks, slots, model);
         }
 
         public override string ToString()

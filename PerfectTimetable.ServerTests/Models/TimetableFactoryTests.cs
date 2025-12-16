@@ -9,26 +9,23 @@ namespace PerfectTimetable.ServerTests.Models;
 public class TimetableFactoryTests
 {
     [TestMethod]
-    public void GenerateTimetables_NoCourses_ReturnsEmpty()
+    public void GenerateTimetables_NoCourses_ThrowsArgumentException()
     {
-        var model = new CourseModel();
+        var model = ModelBuilder.CreateDefaultModel();
         var factory = new TimetableFactory(model);
 
-        var timetables = factory.GenerateTimetables();
-
-        Assert.AreEqual(0, timetables.Count);
-        AssertValidTimetables(timetables, model.Courses.Select(c => c.Id));
+        Assert.ThrowsException<System.ArgumentException>(() => factory.GenerateTimetables([], []));
     }
 
     [TestMethod]
     public void GenerateTimetables_SingleSlotPerCourse_ReturnsSingleTimetable()
     {
-        var courseA = ModelBuilder.CreateCourse(1, 1, (TimetableDay.Monday, 0));
-        var courseB = ModelBuilder.CreateCourse(2, 1, (TimetableDay.Monday, 1));
-        var model = ModelBuilder.CreateModel(courseA, courseB);
+        var model = ModelBuilder.CreateDefaultModel();
+        var courseA = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Monday, 0));
+        var courseB = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Monday, 1));
         var factory = new TimetableFactory(model);
 
-        var timetables = factory.GenerateTimetables();
+        var timetables = factory.GenerateTimetables([], []);
 
         Assert.AreEqual(1, timetables.Count);
         var single = timetables[0];
@@ -40,12 +37,12 @@ public class TimetableFactoryTests
     [TestMethod]
     public void GenerateTimetables_FiltersOverlappingCombinations()
     {
-        var courseA = ModelBuilder.CreateCourse(3, 2, (TimetableDay.Tuesday, 0));
-        var courseB = ModelBuilder.CreateCourse(4, 1, (TimetableDay.Tuesday, 0), (TimetableDay.Tuesday, 2));
-        var model = ModelBuilder.CreateModel(courseA, courseB);
+        var model = ModelBuilder.CreateDefaultModel();
+        var courseA = ModelBuilder.CreateCourse(model, 2, (TimetableDay.Tuesday, 0));
+        var courseB = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Tuesday, 0), (TimetableDay.Tuesday, 2));
         var factory = new TimetableFactory(model);
 
-        var timetables = factory.GenerateTimetables();
+        var timetables = factory.GenerateTimetables([], []);
 
         Assert.AreEqual(1, timetables.Count);
         var timetable = timetables[0];
@@ -59,12 +56,12 @@ public class TimetableFactoryTests
     [TestMethod]
     public void GenerateTimetables_ReturnsIndependentCopies()
     {
-        var courseA = ModelBuilder.CreateCourse(5, 1, (TimetableDay.Wednesday, 0), (TimetableDay.Thursday, 0));
-        var courseB = ModelBuilder.CreateCourse(6, 1, (TimetableDay.Wednesday, 2), (TimetableDay.Thursday, 2));
-        var model = ModelBuilder.CreateModel(courseA, courseB);
+        var model = ModelBuilder.CreateDefaultModel();
+        var courseA = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Wednesday, 0), (TimetableDay.Thursday, 0));
+        var courseB = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Wednesday, 2), (TimetableDay.Thursday, 2));
         var factory = new TimetableFactory(model);
 
-        var timetables = factory.GenerateTimetables();
+        var timetables = factory.GenerateTimetables([], []);
 
         Assert.AreEqual(4, timetables.Count);
         AssertValidTimetables(timetables, model.Courses.Select(c => c.Id));

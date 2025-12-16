@@ -7,9 +7,10 @@ namespace PerfectTimetable.Server.Models
     // TODO: add validation for durationblocks and timeslots
     public class Course
     {
-        public Course() { }
-        public Course(string name, int durationBlocks, List<TimeSlot> timeslots)
+        public Course(string name, int durationBlocks, List<TimeSlot> timeslots, CourseModel model)
         {
+            // TODO: migrate to EF core.
+            Id = model.Courses.Select(c => c.Id).DefaultIfEmpty(0).Max() + 1;
             Name = name;
             DurationBlocks = durationBlocks;
             Timeslots = timeslots;

@@ -10,7 +10,8 @@ public class TimetableTests
     [TestMethod]
     public void AddIfValid_AddsSlotAndUpdatesState()
     {
-        var course = ModelBuilder.CreateCourse(1, 2, (TimetableDay.Monday, 0));
+        var model = ModelBuilder.CreateDefaultModel();
+        var course = ModelBuilder.CreateCourse(model, 2, (TimetableDay.Monday, 0));
         var slot = new TimetableSlot(course, course.Timeslots[0]);
         var timetable = new Timetable();
 
@@ -38,8 +39,9 @@ public class TimetableTests
     [TestMethod]
     public void AddIfValid_RejectsOverlappingSlots()
     {
-        var math = ModelBuilder.CreateCourse(2, 2, (TimetableDay.Tuesday, 1));
-        var physics = ModelBuilder.CreateCourse(3, 1, (TimetableDay.Tuesday, 1));
+        var model = ModelBuilder.CreateDefaultModel();
+        var math = ModelBuilder.CreateCourse(model, 2, (TimetableDay.Tuesday, 1));
+        var physics = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Tuesday, 1));
         var firstSlot = new TimetableSlot(math, math.Timeslots[0]);
         var overlappingSlot = new TimetableSlot(physics, physics.Timeslots[0]);
         var timetable = new Timetable();
@@ -56,7 +58,8 @@ public class TimetableTests
     [TestMethod]
     public void AddIfValid_RejectsDuplicateCourses()
     {
-        var course = ModelBuilder.CreateCourse(4, 1, (TimetableDay.Wednesday, 0), (TimetableDay.Thursday, 0));
+        var model = ModelBuilder.CreateDefaultModel();
+        var course = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Wednesday, 0), (TimetableDay.Thursday, 0));
         var firstSlot = new TimetableSlot(course, course.Timeslots[0]);
         var secondSlot = new TimetableSlot(course, course.Timeslots[1]);
         var timetable = new Timetable();
