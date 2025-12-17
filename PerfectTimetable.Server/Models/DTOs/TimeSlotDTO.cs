@@ -5,8 +5,11 @@
         public string Day { get; set; } = default!;       // "Monday"..."Sunday"
         public string StartTime { get; set; } = default!; // "HH:MM:SS"
 
-        public TimeSlot ToDomain(CourseModel model)
+        public TimeSlot ToDomain(CourseModel model, int durationBlocks)
         {
+            if (durationBlocks < 1)
+                throw new ArgumentOutOfRangeException($"{this} has an invalid duration {durationBlocks} ");
+
             if (!Enum.TryParse<TimetableDay>(Day, ignoreCase: true, out var day))
                 throw new FormatException($"{this} has an Invalid Day.");
 
@@ -22,10 +25,10 @@
             // start block = 1
             int deltaMinutes = startMinutes - modelStartMinutes;
             int startBlock = 1 + (int)Math.Floor(deltaMinutes / (double)modelBlockDuration);
-
-            // Optional: clamp/validate to model range
-            if (startBlock < 1 || startBlock > model.Blocks)
-                throw new ArgumentOutOfRangeException($"{this} has an invalid StartTime. '{StartTime}' maps to StartBlock {startBlock}, outside model range.");
+            int endBlock = startBlock + durationBlocks - 1;
+            // Clamp/validate to model range
+            if (startBlock < 1 || startBlock > model.Blocks || endBlock > model.Blocks)
+                throw new ArgumentOutOfRangeException($"{this} is outside the course time range.");
 
             return new TimeSlot(day, startBlock);
         }

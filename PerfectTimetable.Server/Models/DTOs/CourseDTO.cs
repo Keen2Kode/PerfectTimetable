@@ -23,7 +23,7 @@ namespace PerfectTimetable.Server.Models.DTOs
             {
                 try
                 {
-                    slots.Add(slotDTO.ToDomain(model));
+                    slots.Add(slotDTO.ToDomain(model, durationBlocks));
                 }
                 catch (Exception ex)
                 {
