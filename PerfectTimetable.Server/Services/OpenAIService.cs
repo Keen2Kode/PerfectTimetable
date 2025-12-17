@@ -65,8 +65,8 @@ namespace PerfectTimetable.Server.Services
                 PropertyNameCaseInsensitive = true
             };
             CourseDTO courseDTO = JsonSerializer.Deserialize<CourseDTO>(completion.Content[0].Text, serializerOptions) ?? throw new JsonException("JSON did not match CourseDTO.");
-
-            return courseDTO.ToDomain(model);
+            Course course = courseDTO.ToDomain(model, out List<string> failedSlots);
+            return course;
         }
 
         // TODO: better validation. use mimedetective?

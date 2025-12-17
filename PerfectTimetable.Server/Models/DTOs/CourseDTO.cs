@@ -8,9 +8,12 @@ namespace PerfectTimetable.Server.Models.DTOs
         public int DurationMinutes { get; set; }
         public List<TimeSlotDto> Timeslots { get; set; } = [];
 
-        public Course ToDomain(CourseModel model)
+        public Course ToDomain(CourseModel model, out List<string> failedSlots)
         {
+            failedSlots = [];
+
             int blockMinutes = (int)model.BlockDuration.TotalMinutes;
+
 
             // Round up so the course fits in the requested minutes
             int durationBlocks = (int)Math.Ceiling(DurationMinutes / (double)blockMinutes);
@@ -24,6 +27,7 @@ namespace PerfectTimetable.Server.Models.DTOs
                 }
                 catch (Exception ex)
                 {
+                    failedSlots.Add(ex.Message);
                     Console.Error.WriteLine(ex.Message);
                     // TODO: store and return them as a warning to the frontend.
 
