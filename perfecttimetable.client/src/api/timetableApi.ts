@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import type { CourseModel, GenerateTimetableRequest, ModelPropertiesRequest, AICourseRequestBody, Course} from './models'
+import type { CourseModel, GenerateTimetableRequest, ModelPropertiesRequest, AICourseRequestBody, AICourseResponseDto } from './models'
 
 // Define the error shape your backend returns
 //export type ApiErrorResponse = string | { message?: string; title?: string }
@@ -37,7 +37,7 @@ export async function applyModelOptions(request: ModelPropertiesRequest) {
 }
 
 
-export async function uploadCourseScreenshot(request: AICourseRequestBody ): Promise<Course> {
+export async function uploadCourseScreenshot(request: AICourseRequestBody ): Promise<AICourseResponseDto> {
     const formData = new FormData()
     if (request.Image) {
         formData.append('Image', request.Image);

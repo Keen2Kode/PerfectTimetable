@@ -22,7 +22,7 @@ namespace PerfectTimetable.Server.Services
 
         // grab image data
         // read openapi schema
-        public async Task<ActionResult<Course>> ImageToCourseData(IFormFile image, CourseModel model)
+        public async Task<ActionResult<AICourseResponseDto>> ImageToCourseData(IFormFile image, CourseModel model)
         {
             if (!ValidImage(image))
                 throw new ArgumentException("Image is not valid.");
@@ -52,13 +52,13 @@ namespace PerfectTimetable.Server.Services
 
             Console.WriteLine(completion.Content[0].Text);
             Console.WriteLine(model);
-            Course course = ExtractCourse(completion, model);
-            Console.WriteLine(course);
+            AICourseResponseDto result = ExtractCourse(completion, model);
+            Console.WriteLine(result.Course);
 
-            return course;
+            return result;
         }
 
-        private static Course ExtractCourse(ChatCompletion completion, CourseModel model)
+        private static AICourseResponseDto ExtractCourse(ChatCompletion completion, CourseModel model)
         {
             JsonSerializerOptions serializerOptions = new()
             {
@@ -66,7 +66,7 @@ namespace PerfectTimetable.Server.Services
             };
             CourseDTO courseDTO = JsonSerializer.Deserialize<CourseDTO>(completion.Content[0].Text, serializerOptions) ?? throw new JsonException("JSON did not match CourseDTO.");
             Course course = courseDTO.ToDomain(model, out List<string> failedSlots);
-            return course;
+            return new AICourseResponseDto(course, failedSlots);
         }
 
         // TODO: better validation. use mimedetective?

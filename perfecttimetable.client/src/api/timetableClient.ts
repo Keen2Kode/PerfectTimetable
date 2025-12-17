@@ -6,7 +6,7 @@
  */
 import type {
   AICourseRequestBody,
-  Course,
+  AICourseResponseDto,
   CourseModel,
   GenerateTimetableRequest,
   ModelPropertiesRequest,
@@ -133,7 +133,7 @@ export const postTimetableApplyModelOptions = async (modelPropertiesRequest: Mod
 
 
 export type aICourseRequestResponse200 = {
-  data: Course
+  data: AICourseResponseDto
   status: 200
 }
     

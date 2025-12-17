@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:7137/"
+      "url": "https://localhost:7140/"
     }
   ],
   "paths": {
@@ -177,17 +177,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Course"
+                  "$ref": "#/components/schemas/AICourseResponseDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Course"
+                  "$ref": "#/components/schemas/AICourseResponseDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Course"
+                  "$ref": "#/components/schemas/AICourseResponseDto"
                 }
               }
             }
@@ -198,6 +198,24 @@
   },
   "components": {
     "schemas": {
+      "AICourseResponseDto": {
+        "required": [
+          "course",
+          "failedSlots"
+        ],
+        "type": "object",
+        "properties": {
+          "course": {
+            "$ref": "#/components/schemas/Course"
+          },
+          "failedSlots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "BlockLengthFilter": {
         "required": [
           "maxBlockLength"

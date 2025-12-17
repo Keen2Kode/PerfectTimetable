@@ -6,6 +6,7 @@
  */
 
 export * from './aICourseRequestBody';
+export * from './aICourseResponseDto';
 export * from './blockLengthFilter';
 export * from './course';
 export * from './courseModel';
