@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace PerfectTimetable.Server.Models
@@ -36,7 +34,7 @@ namespace PerfectTimetable.Server.Models
         public TimeSpan StartTime { get; set; } = TimeSpan.FromHours(8); // 8 AM
         public TimeSpan EndTime()
         {
-            return StartTime + TimeSpan.FromMinutes(ToMinutes(BlockDuration) * Blocks);
+            return TimeGridMath.EndTime(this);
         }
 
 
@@ -59,58 +57,36 @@ namespace PerfectTimetable.Server.Models
                 StartTime = newStartTime
             };
 
-            double conversionRate = (double)ToMinutes(BlockDuration) / ToMinutes(newModel.BlockDuration);
-
             newModel.Courses.Clear();
             foreach (Course oldCourse in Courses)
             {
-                Course newCourse = new(oldCourse);
-                NormalizeCourse(newCourse, conversionRate);
-
-                newCourse.Timeslots.Clear();
-                foreach (TimeSlot oldSlot in oldCourse.Timeslots)
-                {
-                    // approximate old slot start+end times to new model
-                    TimeSlot newSlot = new(oldSlot);
-                    NormalizeSlot(conversionRate, oldSlot, newSlot, newModel, this);
-
-                    // new start time <= new slot start time, new slot end time <= new end time
-                    // TODO: fix if eg: 40 vs 30 minutes
-                    if (SlotInRange(newCourse, newSlot, newModel) && newCourse.CanAdd(newSlot))
-                    {
-                        newCourse.Timeslots.Add(newSlot);
-                    }
-                }
+                Course newCourse = NormalizeCourse(oldCourse, newModel);
                 newModel.Courses.Add(newCourse);
             }
             return newModel;
         }
 
-        private static void NormalizeSlot(
-            double conversionRate,
-            TimeSlot oldSlot,
-            TimeSlot newSlot,
-            CourseModel newModel,
-            CourseModel oldModel)
+        private Course NormalizeCourse(Course oldCourse, CourseModel newModel)
         {
+            Course newCourse = new(oldCourse);
 
-            double startTimeBlocks = (ToMinutes(oldModel.StartTime) - ToMinutes(newModel.StartTime)) / (double)ToMinutes(newModel.BlockDuration);
-            double durationBlocks = (oldSlot.StartBlock - 1) * (double) conversionRate;
+            newCourse.DurationBlocks = TimeGridMath.NormalizeDurationBlocks(newCourse, BlockDuration, newModel.BlockDuration);
 
-            newSlot.StartBlock = 1 + (int)Math.Ceiling(startTimeBlocks + durationBlocks);
-        }
+            newCourse.Timeslots.Clear();
+            foreach (TimeSlot oldSlot in oldCourse.Timeslots)
+            {
+                // approximate old slot start+end times to new model
+                TimeSlot newSlot = new(oldSlot);
+                newSlot.StartBlock = TimeGridMath.NormalizeStartBlock(oldSlot, this, newModel);
 
-
-        private static void NormalizeCourse(Course course, double conversionRate)
-        {
-            course.DurationBlocks = (int) Math.Ceiling(course.DurationBlocks * conversionRate);
-        }
-
-
-        private static bool SlotInRange(Course course, TimeSlot slot, CourseModel model)
-        {
-            (int slotStartMinutes, int slotEndMinutes) = SlotTimeRange(slot, course, model);
-            return slotStartMinutes >= ToMinutes(model.StartTime) && slotEndMinutes <= ToMinutes(model.EndTime());
+                // new start time <= new slot start time, new slot end time <= new end time
+                // TODO: fix if eg: 40 vs 30 minutes
+                if (TimeGridMath.Fits(newSlot, newCourse, newModel) && newCourse.CanAdd(newSlot))
+                {
+                    newCourse.Timeslots.Add(newSlot);
+                }
+            }
+            return newCourse;
         }
 
 
@@ -123,18 +99,6 @@ namespace PerfectTimetable.Server.Models
 
 
 
-        private static int ToMinutes(TimeSpan time)
-        {
-            return (int)time.TotalMinutes;
-        }
-
-
-        private static (int, int) SlotTimeRange(TimeSlot slot, Course course, CourseModel model)
-        {
-            int slotStartMinutes = ToMinutes(model.StartTime) + (ToMinutes(model.BlockDuration) * (slot.StartBlock - 1));
-            int slotEndMinutes = slotStartMinutes + (ToMinutes(model.BlockDuration) * course.DurationBlocks);
-            return (slotStartMinutes, slotEndMinutes);
-        }
 
         public override string ToString()
         {
