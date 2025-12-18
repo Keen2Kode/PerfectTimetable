@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import './TimetableApp.css';
-import { CourseCard, AddCourseCard } from './CourseCard';
+import { CourseCard } from './CourseCard';
+import { CourseCardAdd } from './CourseCardAdd';
 import { GeneratedTimetableCarousel } from './GeneratedTimetableCarousel';
 import { TimetableOptionsDialog } from './TimetableOptionsDialog';
 import { TimetableScheduleControls } from './TimetableScheduleControls';
@@ -88,7 +89,8 @@ export function TimetableApp() {
                         </div>
                     ))}
                     <div className="timetable__course">
-                        <AddCourseCard
+                        <CourseCardAdd
+                            modelView={view}
                             setView={setView}
                             nextColour={view.colours.peekNextColour()}
                         />

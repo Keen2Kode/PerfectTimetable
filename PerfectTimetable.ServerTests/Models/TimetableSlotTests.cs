@@ -9,7 +9,8 @@ public class TimetableSlotTests
     [TestMethod]
     public void Constructor_ComputesDerivedProperties()
     {
-        var course = ModelBuilder.CreateCourse(1, 2, (TimetableDay.Monday, 3));
+        var model = ModelBuilder.CreateDefaultModel();
+        var course = ModelBuilder.CreateCourse(model, 2, (TimetableDay.Monday, 3));
         var timeSlot = course.Timeslots[0];
 
         var slot = new TimetableSlot(course, timeSlot);
@@ -24,7 +25,8 @@ public class TimetableSlotTests
     [TestMethod]
     public void Equality_UsesValueComparison()
     {
-        var course = ModelBuilder.CreateCourse(2, 1, (TimetableDay.Tuesday, 4));
+        var model = ModelBuilder.CreateDefaultModel();
+        var course = ModelBuilder.CreateCourse(model, 1, (TimetableDay.Tuesday, 4));
         var timeSlot = course.Timeslots[0];
 
         var first = new TimetableSlot(course, timeSlot);

@@ -10,7 +10,9 @@ import type { TimetableDay } from './timetableDay';
 export interface CourseModel {
   courses: Course[];
   days: TimetableDay[];
+  /** @pattern ^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$ */
   startTime: string;
+  /** @pattern ^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$ */
   blockDuration: string;
   blocks: number;
 }

@@ -8,7 +8,9 @@ import type { CourseModel } from './courseModel';
 
 export interface ModelPropertiesRequest {
   model: CourseModel;
+  /** @pattern ^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$ */
   startTime: string;
+  /** @pattern ^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$ */
   blockDuration: string;
   blocks: number;
 }

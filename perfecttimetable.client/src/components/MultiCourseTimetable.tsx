@@ -19,6 +19,7 @@ dayjs.extend(localizedFormat);
 dayjs.extend(weekOfYear);
 dayjs.extend(weekday);
 dayjs.extend(localeData);
+dayjs.extend(minMax);
 
 const localizer = dayjsLocalizer(dayjs);
 

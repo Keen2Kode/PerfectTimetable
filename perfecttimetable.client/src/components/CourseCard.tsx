@@ -13,10 +13,6 @@ interface CourseCardProps {
     setView: Dispatch<SetStateAction<ModelView | null>>;
 }
 
-interface AddCourseCardProps {
-    setView: Dispatch<SetStateAction<ModelView | null>>;
-    nextColour: string;
-}
 
 export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     const course = courseView.toCourse();
@@ -98,19 +94,3 @@ export function CourseCard({ courseView, modelView, setView}: CourseCardProps) {
     }
 }
 
-export function AddCourseCard({ setView, nextColour }: AddCourseCardProps) {
-    const addCardStyle = {
-        '--course-card-base': nextColour,
-    } as CSSProperties;
-
-    return (
-        <button
-            type="button"
-            className="course-card course-card--add course-card--interactive"
-            onClick={() => setView((previous) => previous?.withCourseAdded() ?? null)}
-            style={addCardStyle}
-        >
-            <PlusIcon aria-hidden className="course-card__icon course-card__icon--add" />
-        </button>
-    );
-}
