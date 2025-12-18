@@ -60,28 +60,29 @@ namespace PerfectTimetable.Server.Models
             newModel.Courses.Clear();
             foreach (Course oldCourse in Courses)
             {
-                Course newCourse = NormalizeCourse(oldCourse, newModel);
-                newModel.Courses.Add(newCourse);
+                Course? newCourse = NormalizeCourse(oldCourse, newModel);
+                if (newCourse != null)
+                    newModel.Courses.Add(newCourse);
             }
             return newModel;
         }
 
-        private Course NormalizeCourse(Course oldCourse, CourseModel newModel)
+        private Course? NormalizeCourse(Course oldCourse, CourseModel newModel)
         {
             Course newCourse = new(oldCourse);
 
-            newCourse.DurationBlocks = TimeGridMath.NormalizeDurationBlocks(newCourse, BlockDuration, newModel.BlockDuration);
+            if (!TimeGridMath.TryNormalizeDurationBlocks(newCourse, BlockDuration, newModel.BlockDuration, out int durationBlocks))
+            {
+                return null;
+            }
+
+            newCourse.DurationBlocks = durationBlocks;
 
             newCourse.Timeslots.Clear();
             foreach (TimeSlot oldSlot in oldCourse.Timeslots)
             {
-                // approximate old slot start+end times to new model
-                TimeSlot newSlot = new(oldSlot);
-                newSlot.StartBlock = TimeGridMath.NormalizeStartBlock(oldSlot, this, newModel);
-
-                // new start time <= new slot start time, new slot end time <= new end time
-                // TODO: fix if eg: 40 vs 30 minutes
-                if (TimeGridMath.Fits(newSlot, newCourse, newModel) && newCourse.CanAdd(newSlot))
+                TimeSlot? newSlot = NormalizeTimeSlot(oldSlot, newModel, newCourse);
+                if (newSlot != null)
                 {
                     newCourse.Timeslots.Add(newSlot);
                 }
@@ -89,7 +90,25 @@ namespace PerfectTimetable.Server.Models
             return newCourse;
         }
 
+        private TimeSlot? NormalizeTimeSlot(TimeSlot oldSlot, CourseModel newModel, Course newCourse)
+        {
+            // approximate old slot start+end times to new model
+            if (!TimeGridMath.TryNormalizeStartBlock(oldSlot, this, newModel, out int startBlock))
+                return null;
 
+            TimeSlot newSlot = new(oldSlot)
+            {
+                StartBlock = startBlock
+            };
+
+            // new start time <= new slot start time, new slot end time <= new end time
+            // TODO: fix if eg: 40 vs 30 minutes
+            if (!TimeGridMath.Fits(newSlot, newCourse, newModel) && newCourse.CanAdd(newSlot))
+            {
+                return null;
+            }
+            return newSlot;
+        }
 
 
 

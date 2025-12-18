@@ -29,6 +29,34 @@ namespace PerfectTimetable.Server.Models
         public static int NormalizeStartBlock(TimeSlot slot, CourseModel oldModel, CourseModel newModel)
             => NormalizeStartBlock(slot.StartBlock, oldModel.StartTime, oldModel.BlockDuration, newModel.StartTime, newModel.BlockDuration, newModel.Blocks);
 
+        public static bool TryNormalizeDurationBlocks(Course course, TimeSpan oldBlockDuration, TimeSpan newBlockDuration, out int durationBlocks)
+        {
+            try
+            {
+                durationBlocks = NormalizeDurationBlocks(course, oldBlockDuration, newBlockDuration);
+                return true;
+            }
+            catch
+            {
+                durationBlocks = default;
+                return false;
+            }
+        }
+
+        public static bool TryNormalizeStartBlock(TimeSlot slot, CourseModel oldModel, CourseModel newModel, out int startBlock)
+        {
+            try
+            {
+                startBlock = NormalizeStartBlock(slot, oldModel, newModel);
+                return true;
+            }
+            catch
+            {
+                startBlock = default;
+                return false;
+            }
+        }
+
         public static double ConversionRate(TimeSpan oldBlockDuration, TimeSpan newBlockDuration)
         {
             int oldMinutes = ToMinutes(oldBlockDuration);
