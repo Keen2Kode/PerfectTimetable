@@ -46,7 +46,7 @@ namespace PerfectTimetable.Server.Models
 
         public bool CanAdd(TimeSlot timeslot)
         {
-            return !Timeslots.Contains(timeslot);
+            return !Timeslots.Contains(timeslot) && timeslot.Valid();
         }
 
         public override string ToString()

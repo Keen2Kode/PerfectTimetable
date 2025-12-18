@@ -76,7 +76,7 @@ namespace PerfectTimetable.Server.Models
 
                     // new start time <= new slot start time, new slot end time <= new end time
                     // TODO: fix if eg: 40 vs 30 minutes
-                    if (SlotInRange(newCourse, newSlot, newModel) && newSlot.Valid() && newCourse.CanAdd(newSlot))
+                    if (SlotInRange(newCourse, newSlot, newModel) && newCourse.CanAdd(newSlot))
                     {
                         newCourse.Timeslots.Add(newSlot);
                     }
