@@ -15,9 +15,8 @@ namespace PerfectTimetable.Server.Controllers;
 
 [ApiController]
 [Route("timetable")]
-public sealed class TimetableController(IWebHostEnvironment env) : ControllerBase
+public sealed class TimetableController(IWebHostEnvironment env, OpenAIService aiService) : ControllerBase
 {
-    public OpenAIService aiService = new();
     [HttpGet]
     public ActionResult<CourseModel> Get()
     {

@@ -1,23 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OpenAI;
 using OpenAI.Chat;
-using OpenAI.Responses;
 using PerfectTimetable.Server.Models;
 using PerfectTimetable.Server.Models.DTOs;
-using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Schema;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
-using System.Xml.Linq;
 
 namespace PerfectTimetable.Server.Services
 {
     public class OpenAIService
     {
-        private ChatClient client;
-        public OpenAIService() {    
-            client = new(model: "gpt-4o", apiKey: "aa");
+        private readonly ChatClient client;
+
+        public OpenAIService(IConfiguration configuration)
+        {
+            var apiKey = configuration["OpenAI:ApiKey"]
+                ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                throw new InvalidOperationException("OpenAI API key is not configured. Set OpenAI__ApiKey or OPENAI_API_KEY.");
+            }
+
+            client = new(model: "gpt-4o", apiKey: apiKey);
         }
 
         // grab image data
