@@ -4,7 +4,7 @@ namespace PerfectTimetable.Server.Models
 {
     public static class TimeGridMath
     {
-        public static int ToMinutes(TimeSpan time) => checked((int)time.TotalMinutes);
+        public static int ToMinutes(TimeSpan time) => (int)time.TotalMinutes;
 
         public static TimeSpan EndTime(CourseModel model) => EndTime(model.StartTime, model.BlockDuration, model.Blocks);
 
@@ -102,7 +102,8 @@ namespace PerfectTimetable.Server.Models
             if (deltaMinutes < 0)
                 throw new ArgumentOutOfRangeException(nameof(slotStartTime), "Start time is before model start time.");
 
-            int index = CeilDiv(deltaMinutes, minutesPerBlock); // 0 => block 1
+            // Map a time within a block to that block (e.g. 08:01 with 30-minute blocks starting at 08:00 => block 1).
+            int index = deltaMinutes / minutesPerBlock; // 0 => block 1
             int startBlock = checked(1 + index);
             if (startBlock < 1 || startBlock > blocks)
                 throw new ArgumentOutOfRangeException(nameof(slotStartTime), "Start time is outside the model range.");
@@ -166,7 +167,7 @@ namespace PerfectTimetable.Server.Models
             if (deltaToNewStart < 0)
                 throw new ArgumentOutOfRangeException(nameof(oldStartBlock), "Normalized StartBlock is outside the new model range.");
 
-            int index = checked(CeilDiv(deltaToNewStart, newMinutesPerBlock)); // 0 => block 1
+            int index = checked(deltaToNewStart / newMinutesPerBlock); // 0 => block 1
             int newStartBlock = checked(1 + index);
             if (newStartBlock < 1 || newStartBlock > newBlocks)
                 throw new ArgumentOutOfRangeException(nameof(oldStartBlock), "Normalized StartBlock is outside the new model range.");

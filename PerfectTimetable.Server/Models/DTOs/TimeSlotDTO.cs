@@ -5,17 +5,20 @@
         public string Day { get; set; } = default!;       // "Monday"..."Sunday"
         public string StartTime { get; set; } = default!; // "HH:MM:SS"
 
-        public TimeSlot ToDomain(CourseModel model, int durationBlocks)
+        public TimeSlot ToDomain(CourseModel model, Course course)
         {
 
-            if (!Enum.TryParse<TimetableDay>(Day, ignoreCase: true, out var day))
+            if (!Enum.TryParse(Day, ignoreCase: true, out TimetableDay day))
                 throw new FormatException($"{this} has an Invalid Day.");
+            if (!model.Days.Contains(day))
+                throw new ArgumentOutOfRangeException($"{this} has an Invalid Day.");
 
             // schema already enforces HH:MM:SS
             TimeSpan start = TimeSpan.Parse(StartTime);
             int startBlock = TimeGridMath.StartBlock(start, model);
-            int endBlock = TimeGridMath.EndBlock(startBlock, durationBlocks);
-            if (endBlock > model.Blocks)
+
+            TimeSlot slot = new(day, startBlock);
+            if (!TimeGridMath.Fits(slot, course, model))
                 throw new ArgumentOutOfRangeException($"{this} is outside the course time range.");
 
             return new TimeSlot(day, startBlock);

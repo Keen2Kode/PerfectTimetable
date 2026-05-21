@@ -13,11 +13,12 @@ namespace PerfectTimetable.Server.Models.DTOs
             failedSlots = [];
             List<TimeSlot> slots = [];
             int durationBlocks = TimeGridMath.DurationBlocks(DurationMinutes, model);
+            Course course = new Course(Name, durationBlocks, slots, model);
 
             foreach (var slotDTO in Timeslots)
                 try
                 {
-                    slots.Add(slotDTO.ToDomain(model, durationBlocks));
+                    slots.Add(slotDTO.ToDomain(model, course));
                 }
                 catch (Exception ex)
                 {
@@ -25,7 +26,7 @@ namespace PerfectTimetable.Server.Models.DTOs
 
                 }
 
-            return new Course(Name, durationBlocks, slots, model);
+            return course;
         }
 
         public override string ToString()
