@@ -103,7 +103,7 @@ namespace PerfectTimetable.Server.Models
 
             // new start time <= new slot start time, new slot end time <= new end time
             // TODO: fix if eg: 40 vs 30 minutes
-            if (!TimeGridMath.Fits(newSlot, newCourse, newModel) && newCourse.CanAdd(newSlot))
+            if (!TimeGridMath.Fits(newSlot, newCourse, newModel) || !newCourse.CanAdd(newSlot))
             {
                 return null;
             }
