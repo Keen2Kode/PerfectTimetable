@@ -12,14 +12,9 @@ namespace PerfectTimetable.Server.Services
 
         public OpenAIService(IConfiguration configuration)
         {
-            var apiKey = configuration["OpenAI:ApiKey"]
-                ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-
-            if (string.IsNullOrWhiteSpace(apiKey))
-            {
-                throw new InvalidOperationException("OpenAI API key is not configured. Set OpenAI__ApiKey or OPENAI_API_KEY.");
-            }
-
+            // dotnet user-secrets set "OpenAI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
+            // .NET has a special secrets file in %APPDATA%, similar to .env
+            var apiKey = configuration["OpenAI:ApiKey"];
             client = new(model: "gpt-4o", apiKey: apiKey);
         }
 
@@ -33,10 +28,10 @@ namespace PerfectTimetable.Server.Services
             await using var stream = image.OpenReadStream();
             var imageBytes = await BinaryData.FromStreamAsync(stream);
 
-            ChatMessage message =
-                new UserChatMessage(
+            ChatMessage message = new UserChatMessage(
                 ChatMessageContentPart.CreateTextPart("Extract a Course. Return JSON that matches the schema. "),
-                ChatMessageContentPart.CreateImagePart(imageBytes, image.ContentType));
+                ChatMessageContentPart.CreateImagePart(imageBytes, image.ContentType)
+            );
 
 
 
