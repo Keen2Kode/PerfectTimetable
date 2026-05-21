@@ -8,14 +8,30 @@ namespace PerfectTimetable.Server.Services
 {
     public class OpenAIService
     {
-        private readonly ChatClient client;
+        private readonly IConfiguration configuration;
+        private ChatClient? client;
 
         public OpenAIService(IConfiguration configuration)
         {
             // dotnet user-secrets set "OpenAI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
             // .NET has a special secrets file in %APPDATA%, similar to .env
-            var apiKey = configuration["OpenAI:ApiKey"];
-            client = new(model: "gpt-4o", apiKey: apiKey);
+            this.configuration = configuration;
+        }
+
+        private ChatClient Client
+        {
+            get
+            {
+                if (client != null)
+                    return client;
+
+                var apiKey = configuration["OpenAI:ApiKey"];
+                if (string.IsNullOrWhiteSpace(apiKey))
+                    throw new InvalidOperationException("OpenAI:ApiKey is not configured.");
+
+                client = new(model: "gpt-4o", apiKey: apiKey);
+                return client;
+            }
         }
 
         // grab image data
@@ -46,7 +62,7 @@ namespace PerfectTimetable.Server.Services
             };
 
 
-            ChatCompletion completion = await client.CompleteChatAsync([message], options);
+            ChatCompletion completion = await Client.CompleteChatAsync([message], options);
 
             Console.WriteLine(completion.Content[0].Text);
             Console.WriteLine(model);
