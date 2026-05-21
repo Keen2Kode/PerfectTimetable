@@ -6,11 +6,36 @@ namespace PerfectTimetable.ServerTests.Models;
 
 internal static class ModelBuilder
 {
-    private static readonly CourseModel DefaultModel = new();
+    private static readonly CourseModel DefaultModel = new()
+    {
+        StartTime = TimeSpan.FromHours(8),
+        Blocks = 8,
+        BlockDuration = TimeSpan.FromMinutes(30),
+        // End Time = 12:00:00
+        Days = [
+            TimetableDay.Monday,
+            TimetableDay.Tuesday,
+            TimetableDay.Wednesday,
+            TimetableDay.Thursday,
+            TimetableDay.Friday
+        ]
+    };
 
     public static CourseModel CreateDefaultModel()
     {
         return new CourseModel(DefaultModel);
+    }
+
+    public static CourseModel CreateDefaultModelWithCourse()
+    {
+        return new CourseModel(DefaultModel)
+        {
+            Courses = [new Course() {
+                Id = 1,
+                DurationBlocks = 4,
+                Name = "Course 1"
+            }]
+        };
     }
 
     public static Course CreateCourse(CourseModel model, int durationBlocks, params (TimetableDay Day, int StartBlock)[] timeslots)

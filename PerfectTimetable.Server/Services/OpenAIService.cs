@@ -1,23 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OpenAI;
 using OpenAI.Chat;
-using OpenAI.Responses;
 using PerfectTimetable.Server.Models;
 using PerfectTimetable.Server.Models.DTOs;
-using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Schema;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
-using System.Xml.Linq;
 
 namespace PerfectTimetable.Server.Services
 {
     public class OpenAIService
     {
-        private ChatClient client;
-        public OpenAIService() {    
-            client = new(model: "gpt-4o", apiKey: "aa");
+        private readonly ChatClient client;
+
+        public OpenAIService(IConfiguration configuration)
+        {
+            // dotnet user-secrets set "OpenAI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
+            // .NET has a special secrets file in %APPDATA%, similar to .env
+            var apiKey = configuration["OpenAI:ApiKey"];
+            client = new(model: "gpt-4o", apiKey: apiKey);
         }
 
         // grab image data
@@ -30,10 +28,10 @@ namespace PerfectTimetable.Server.Services
             await using var stream = image.OpenReadStream();
             var imageBytes = await BinaryData.FromStreamAsync(stream);
 
-            ChatMessage message =
-                new UserChatMessage(
+            ChatMessage message = new UserChatMessage(
                 ChatMessageContentPart.CreateTextPart("Extract a Course. Return JSON that matches the schema. "),
-                ChatMessageContentPart.CreateImagePart(imageBytes, image.ContentType));
+                ChatMessageContentPart.CreateImagePart(imageBytes, image.ContentType)
+            );
 
 
 

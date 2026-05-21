@@ -11,30 +11,22 @@ namespace PerfectTimetable.Server.Models.DTOs
         public Course ToDomain(CourseModel model, out List<string> failedSlots)
         {
             failedSlots = [];
-
-            int blockMinutes = (int)model.BlockDuration.TotalMinutes;
-
-
-            // Round up so the course fits in the requested minutes
-            int durationBlocks = (int)Math.Ceiling(DurationMinutes / (double)blockMinutes);
-
             List<TimeSlot> slots = [];
+            int durationBlocks = TimeGridMath.DurationBlocks(DurationMinutes, model);
+            Course course = new Course(Name, durationBlocks, slots, model);
+
             foreach (var slotDTO in Timeslots)
-            {
                 try
                 {
-                    slots.Add(slotDTO.ToDomain(model, durationBlocks));
+                    slots.Add(slotDTO.ToDomain(model, course));
                 }
                 catch (Exception ex)
                 {
                     failedSlots.Add(ex.Message);
-                    Console.Error.WriteLine(ex.Message);
-                    // TODO: store and return them as a warning to the frontend.
 
                 }
-            }
 
-            return new Course(Name, durationBlocks, slots, model);
+            return course;
         }
 
         public override string ToString()

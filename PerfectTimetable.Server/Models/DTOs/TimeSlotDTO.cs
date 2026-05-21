@@ -5,29 +5,20 @@
         public string Day { get; set; } = default!;       // "Monday"..."Sunday"
         public string StartTime { get; set; } = default!; // "HH:MM:SS"
 
-        public TimeSlot ToDomain(CourseModel model, int durationBlocks)
+        public TimeSlot ToDomain(CourseModel model, Course course)
         {
-            if (durationBlocks < 1)
-                throw new ArgumentOutOfRangeException($"{this} has an invalid duration {durationBlocks} ");
 
-            if (!Enum.TryParse<TimetableDay>(Day, ignoreCase: true, out var day))
+            if (!Enum.TryParse(Day, ignoreCase: true, out TimetableDay day))
                 throw new FormatException($"{this} has an Invalid Day.");
+            if (!model.Days.Contains(day))
+                throw new ArgumentOutOfRangeException($"{this} has an Invalid Day.");
 
             // schema already enforces HH:MM:SS
-            TimeSpan start = TimeSpan.Parse(StartTime); 
-            int startMinutes = (int)start.TotalMinutes;
-            int modelStartMinutes = (int)model.StartTime.TotalMinutes;
-            int modelBlockDuration = (int)model.BlockDuration.TotalMinutes;
+            TimeSpan start = TimeSpan.Parse(StartTime);
+            int startBlock = TimeGridMath.StartBlock(start, model);
 
-            // eg: model start: 8:00 am (480), slot DTO start: 9:00am (540), block duration (30)
-            // start block = 3
-            // eg: if slot DTO start: 8:00am (480)
-            // start block = 1
-            int deltaMinutes = startMinutes - modelStartMinutes;
-            int startBlock = 1 + (int)Math.Floor(deltaMinutes / (double)modelBlockDuration);
-            int endBlock = startBlock + durationBlocks - 1;
-            // Clamp/validate to model range
-            if (startBlock < 1 || startBlock > model.Blocks || endBlock > model.Blocks)
+            TimeSlot slot = new(day, startBlock);
+            if (!TimeGridMath.Fits(slot, course, model))
                 throw new ArgumentOutOfRangeException($"{this} is outside the course time range.");
 
             return new TimeSlot(day, startBlock);
