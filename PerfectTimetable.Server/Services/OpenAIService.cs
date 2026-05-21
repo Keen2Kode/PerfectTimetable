@@ -12,6 +12,8 @@ namespace PerfectTimetable.Server.Services
 
         public OpenAIService(IConfiguration configuration)
         {
+            // dotnet user-secrets set "OpenAI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
+            // .NET has a special secrets file in %APPDATA%, similar to .env
             var apiKey = configuration["OpenAI:ApiKey"]
                 ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 
