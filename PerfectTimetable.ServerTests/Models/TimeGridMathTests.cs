@@ -23,7 +23,7 @@ public class TimeGridMathTests
     }
 
     [TestMethod]
-    public void StartBlockFromTime_UsesCeiling()
+    public void StartBlockFromTime_UsesFloor()
     {
         var model = new CourseModel
         {
@@ -33,9 +33,9 @@ public class TimeGridMathTests
         };
 
         Assert.AreEqual(1, TimeGridMath.StartBlock(TimeSpan.FromHours(8), model));
-        Assert.AreEqual(2, TimeGridMath.StartBlock(TimeSpan.FromHours(8) + TimeSpan.FromMinutes(1), model));
+        Assert.AreEqual(1, TimeGridMath.StartBlock(TimeSpan.FromHours(8) + TimeSpan.FromMinutes(1), model));
         Assert.AreEqual(2, TimeGridMath.StartBlock(TimeSpan.FromHours(8) + TimeSpan.FromMinutes(30), model));
-        Assert.AreEqual(3, TimeGridMath.StartBlock(TimeSpan.FromHours(8) + TimeSpan.FromMinutes(31), model));
+        Assert.AreEqual(2, TimeGridMath.StartBlock(TimeSpan.FromHours(8) + TimeSpan.FromMinutes(31), model));
     }
 
     [TestMethod]
@@ -49,7 +49,7 @@ public class TimeGridMathTests
     }
 
     [TestMethod]
-    public void NormalizeStartBlock_UsesCeiling()
+    public void NormalizeStartBlock_UsesFloor()
     {
         var oldModel = new CourseModel
         {
@@ -71,6 +71,6 @@ public class TimeGridMathTests
         };
 
         Assert.AreEqual(1, TimeGridMath.NormalizeStartBlock(new TimeSlot(TimetableDay.Monday, 1), oldModel, sameModel));
-        Assert.AreEqual(2, TimeGridMath.NormalizeStartBlock(new TimeSlot(TimetableDay.Monday, 2), oldModel, newModel)); // old time: 8:30 => ceil(30/40)=1 -> startBlock=2
+        Assert.AreEqual(1, TimeGridMath.NormalizeStartBlock(new TimeSlot(TimetableDay.Monday, 2), oldModel, newModel)); // old time: 8:30 is within new block 1 (8:00-8:39)
     }
 }
