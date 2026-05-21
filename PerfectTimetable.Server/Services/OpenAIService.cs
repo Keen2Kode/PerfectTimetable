@@ -25,7 +25,7 @@ namespace PerfectTimetable.Server.Services
                 if (client != null)
                     return client;
 
-                var apiKey = configuration["OpenAI:ApiKey"];
+                var apiKey = configuration["OpenAIKey"];
                 if (string.IsNullOrWhiteSpace(apiKey))
                     throw new InvalidOperationException("OpenAI:ApiKey is not configured.");
 
