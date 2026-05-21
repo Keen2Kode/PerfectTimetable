@@ -15,6 +15,40 @@ const baseFolder =
 const certificateName = "perfecttimetable.client";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
+const launchSettingsPath = fileURLToPath(new URL('../PerfectTimetable.Server/Properties/launchSettings.json', import.meta.url));
+const target = getServerProxyTarget();
+console.log('Proxy target:', target);
+
+type LaunchSettings = {
+    profiles: {
+        https?: {
+            applicationUrl?: string;
+        };
+    };
+};
+
+function getServerProxyTarget(): string {
+    const target = getServerHttpsUrlFromLaunchSettings();
+    if (!target) {
+        throw new Error('Missing server https launchSettings URL for Vite proxy');
+    }
+    return target;
+}
+
+function getServerHttpsUrlFromLaunchSettings(): string | undefined {
+    const launchSettings = JSON.parse(fs.readFileSync(launchSettingsPath, 'utf8')) as LaunchSettings;
+    const applicationUrl = launchSettings.profiles.https?.applicationUrl;
+
+    return applicationUrl ? getHttpsUrls(applicationUrl)[0] : undefined;
+}
+
+function getHttpsUrls(urls: string): string[] {
+    return urls
+        .split(';')
+        .map(url => url.trim())
+        .filter(url => url.startsWith('https://'));
+}
+
 
 if (!fs.existsSync(baseFolder)) {
     fs.mkdirSync(baseFolder, { recursive: true });
@@ -35,21 +69,6 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 }
 
 
-//const httpsPort = env.ASPNETCORE_HTTPS_PORT?.trim();
-//const urls = env.ASPNETCORE_URLS?.split(';').map(u => u.trim()).filter(Boolean) ?? [];
-
-//if (!httpsPort && urls.length === 0) {
-//    throw new Error('Missing ASPNETCORE_HTTPS_PORT or ASPNETCORE_URLS for Vite proxy');
-//}
-
-//const target = httpsPort ? `https://localhost:${httpsPort}` : urls[0];
-const target = 'https://localhost:7137';
-
-
-
-
-console.log('Proxy target:', target);
-
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [plugin()],
@@ -65,7 +84,7 @@ export default defineConfig({
                 secure: false,
             },
         },
-        port: parseInt(env.DEV_SERVER_PORT || '49935'),
+        port: 49935,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
