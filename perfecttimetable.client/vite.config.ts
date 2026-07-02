@@ -16,8 +16,6 @@ const certificateName = "perfecttimetable.client";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 const launchSettingsPath = fileURLToPath(new URL('../PerfectTimetable.Server/Properties/launchSettings.json', import.meta.url));
-const target = getServerProxyTarget();
-console.log('Proxy target:', target);
 
 type LaunchSettings = {
     profiles: {
@@ -49,35 +47,49 @@ function getHttpsUrls(urls: string): string[] {
         .filter(url => url.startsWith('https://'));
 }
 
+function ensureDevCertificate() {
+    if (!fs.existsSync(baseFolder)) {
+        fs.mkdirSync(baseFolder, { recursive: true });
+    }
 
-if (!fs.existsSync(baseFolder)) {
-    fs.mkdirSync(baseFolder, { recursive: true });
-}
-
-if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-    if (0 !== child_process.spawnSync('dotnet', [
-        'dev-certs',
-        'https',
-        '--export-path',
-        certFilePath,
-        '--format',
-        'Pem',
-        '--no-password',
-    ], { stdio: 'inherit', }).status) {
-        throw new Error("Could not create certificate.");
+    if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+        if (0 !== child_process.spawnSync('dotnet', [
+            'dev-certs',
+            'https',
+            '--export-path',
+            certFilePath,
+            '--format',
+            'Pem',
+            '--no-password',
+        ], { stdio: 'inherit', }).status) {
+            throw new Error("Could not create certificate.");
+        }
     }
 }
 
 
 // https://vitejs.dev/config/
-export default defineConfig({
-    plugins: [plugin()],
-    resolve: {
-        alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
-        }
-    },
-    server: {
+export default defineConfig(({ command }) => {
+    const isServe = command === 'serve';
+
+    return {
+        plugins: [plugin()],
+        resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./src', import.meta.url))
+            }
+        },
+        server: isServe ? getDevServerConfig() : undefined,
+    };
+});
+
+function getDevServerConfig() {
+    ensureDevCertificate();
+
+    const target = getServerProxyTarget();
+    console.log('Proxy target:', target);
+
+    return {
         proxy: {
             '^/(timetable|weatherforecast)': {
                 target,
@@ -89,5 +101,5 @@ export default defineConfig({
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
         }
-    }
-})
+    };
+}
