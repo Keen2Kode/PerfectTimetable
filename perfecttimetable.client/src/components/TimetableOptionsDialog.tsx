@@ -200,7 +200,7 @@ function renderSliderField(
                 step={step}
                 value={value}
                 onChange={(_, value) => onChange(value)}
-                className="app-slider timetable-options__slider"
+                className="app-slider"
                 aria-label={label}
                 slotProps={{ input: { 'aria-describedby': captionId } }}
             />
