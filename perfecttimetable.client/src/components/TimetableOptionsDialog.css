@@ -57,34 +57,11 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
-    margin-top: 0.5rem;
 }
 
-.timetable-options__button {
+ /* .timetable-options__button {
     border: none;
     border-radius: 999px;
     padding: 0.45rem 1.1rem;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: opacity 0.18s ease;
-}
-
-.timetable-options__button:hover,
-.timetable-options__button:focus-visible {
-    opacity: 0.9;
-}
-
-.timetable-options__button:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(99, 108, 255, 0.25);
-}
-
-.timetable-options__button--secondary {
-    color: #3f47ff;
-    background: rgba(63, 71, 255, 0.12);
-}
-
-.timetable-options__button--primary {
-    color: #fff;
-    background: linear-gradient(90deg, #3f47ff 0%, #5c66ff 100%);
-}
+    font-size: 1rem;
+} */

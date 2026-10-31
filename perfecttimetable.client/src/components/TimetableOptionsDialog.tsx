@@ -84,14 +84,14 @@ export function TimetableOptionsDialog({ open, oldOptions, onClose, onOptionsCha
                 <div className="timetable-options__actions">
                     <button
                         type="button"
-                        className="timetable-options__button timetable-options__button--secondary"
+                        className="timetable-options__button"
                         onClick={onClose}
                     >
                         Close
                     </button>
                     <button
                         type="button"
-                        className="timetable-options__button timetable-options__button--primary"
+                        className="timetable-options__button"
                         onClick={() => {
                             onOptionsChange(options);
                             document.getElementById('save-selections-button')?.click();
