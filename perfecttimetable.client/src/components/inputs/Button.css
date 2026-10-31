@@ -1,13 +1,12 @@
 button {
   font-family: inherit;
-  font-weight: 600;
   font-size: 1.5em;
-  padding: 0.5rem 1.6rem;
+  padding: 0.3em 1em;
   text-transform: uppercase;
   font-weight: bold;
-  border-radius: 0.8rem;
-  border: 3px solid rgb(150, 150, 150);
-  border-bottom-width: 8px;
+  border-radius: 0.5em;
+  border: 0.125em solid rgb(150, 150, 150);
+  border-bottom-width: 0.3em;
   background-color: rgb(216, 216, 216);
   color: rgb(130, 130, 130);
   cursor: pointer;
@@ -20,8 +19,8 @@ button:not(:disabled):hover {
 }
 
 button:not(:disabled):active {
-  border-bottom-width: 3px;
-  transform: translateY(4px);
+  border-bottom-width: 0.125em;
+  transform: translateY(0.1em);
   border-color: rgb(100, 100, 100);
   color: rgb(100, 100, 100);
 }
@@ -31,7 +30,7 @@ button:disabled {
   cursor: default;
   background-color: rgba(0, 0, 0, 0.04);
   border-color: rgba(0, 0, 0, 0.2);
-  border-bottom-width: 4px;
+  border-bottom-width: 0.1em;
   transform: none;
 }
 
