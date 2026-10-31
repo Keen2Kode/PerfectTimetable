@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:7140/"
+      "url": "https://localhost:7137/"
     }
   ],
   "paths": {
@@ -162,8 +162,7 @@
                     "type": "string"
                   },
                   "Image": {
-                    "type": "string",
-                    "format": "binary"
+                    "$ref": "#/components/schemas/IFormFile"
                   }
                 }
               }
@@ -267,6 +266,14 @@
         ],
         "type": "object",
         "properties": {
+          "maxCourses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxSlots": {
+            "type": "integer",
+            "format": "int32"
+          },
           "courses": {
             "type": "array",
             "items": {
@@ -325,6 +332,10 @@
             "$ref": "#/components/schemas/BlockLengthFilter"
           }
         }
+      },
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
       },
       "ModelPropertiesRequest": {
         "required": [
