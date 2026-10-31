@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run PerfectTimetable Server (https)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "dotnet run --project PerfectTimetable.Server --launch-profile https",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

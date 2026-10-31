@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+    image: perfecttimetable
+    ports:
+      - "8080:8080"
+    environment:
+      OpenAIKey: ${OpenAIKey:-}
