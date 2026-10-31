@@ -3,6 +3,7 @@ import Slider from '@mui/material/Slider';
 import { produce } from 'immer';
 import type { TimetableOptions } from '../api/timetableOptions';
 import './inputs/SliderStyles.css';
+import './TimetableScheduleControls.css';
 import './TimetableOptionsDialog.css';
 
 

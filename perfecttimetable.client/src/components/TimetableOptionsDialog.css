@@ -9,15 +9,9 @@
     z-index: 20;
 }
 
-.timetable-options__dialog {
+.timetable-options__overlay .timetable-options__dialog {
     width: min(480px, 100%);
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    background: #fff;
-    box-shadow: 0 24px 48px -24px rgba(42, 48, 128, 0.45);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .timetable-options__section {
