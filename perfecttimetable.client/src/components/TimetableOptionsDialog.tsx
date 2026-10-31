@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import Slider from '@mui/material/Slider';
 import { produce } from 'immer';
 import type { TimetableOptions } from '../api/timetableOptions';
+import './inputs/SliderStyles.css';
 import './TimetableOptionsDialog.css';
 
 
@@ -191,17 +193,16 @@ function renderSliderField(
 
     return (
         <div className="timetable-options__slider-shell">
-            <input
+            <Slider
                 id={id}
-                type="range"
                 min={min}
                 max={max}
                 step={step}
                 value={value}
-                onChange={(event) => onChange(Number(event.target.value))}
-                className="timetable-options__slider"
+                onChange={(_, value) => onChange(value)}
+                className="app-slider timetable-options__slider"
                 aria-label={label}
-                aria-describedby={captionId}
+                slotProps={{ input: { 'aria-describedby': captionId } }}
             />
             <div className="timetable-options__slider-caption" id={captionId}>
                 <span>{lowerLabel}</span>
