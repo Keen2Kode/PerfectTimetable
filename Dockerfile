@@ -19,7 +19,6 @@ WORKDIR /app
 
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
-ENV HttpsRedirection__Enabled=false
 
 EXPOSE 8080
 

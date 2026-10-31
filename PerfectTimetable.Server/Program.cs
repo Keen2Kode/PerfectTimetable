@@ -19,12 +19,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// when deploying with railway, https is handled already first
-if (!app.Environment.IsProduction())
-{
-    app.UseHttpsRedirection();
-}
-
 app.UseAuthorization();
 
 app.MapControllers();
