@@ -4,21 +4,20 @@
     gap: 1.5rem;
 }
 
-.timetable > header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    align-items: center;     
-    text-align: center;     
+
+
+
+.timetable__title {
+    width: min(100%, 36rem);
+    margin: 0 auto;
+    line-height: 1;
 }
-.timetable > header > h1 {
-  font-size: 4rem;
-  font-weight: 700;
-  color: rgba(100,100,100, 0.4);
-  backdrop-filter: blur(2px);
-  background: rgba(100,100,100, 0.1);
-  padding: 0.5em 1em;
-  border-radius: 12px;
+
+
+.timetable__logo {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
 .timetable__grid {

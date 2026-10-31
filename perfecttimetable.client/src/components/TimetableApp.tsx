@@ -13,6 +13,7 @@ import { fetchTimetable } from '../api/timetableApi';
 import { defaultTimetableOptions, type TimetableOptions } from '../api/timetableOptions';
 import BackgroundTexture from './icons/BackgroundTexture';
 import { useLocalStorage } from 'usehooks-ts';
+import perfectableLogo from '../assets/perfectable logo 1.png';
 
 export function TimetableApp() {
     const [storedModel, setStoredModel] = useLocalStorage<CourseModel | null>('perfect-timetable:model', null);
@@ -71,9 +72,13 @@ export function TimetableApp() {
         <>
             <BackgroundTexture/>
             <div className="timetable">
-                <header>
-                    <h1>Perfect Timetable</h1>
-                </header>
+                <h1 className="timetable__title">
+                    <img
+                        className="timetable__logo"
+                        src={perfectableLogo}
+                        alt="Perfectable"
+                    />
+                </h1>
                 <TimetableScheduleControls
                     view={view}
                     setView={setView}
