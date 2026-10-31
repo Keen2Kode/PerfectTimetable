@@ -263,7 +263,9 @@
           "days",
           "startTime",
           "blockDuration",
-          "blocks"
+          "blocks",
+          "maxCourses",
+          "maxSlots"
         ],
         "type": "object",
         "properties": {

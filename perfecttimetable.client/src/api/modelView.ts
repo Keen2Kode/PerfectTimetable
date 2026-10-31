@@ -4,6 +4,8 @@ import { CourseView } from './courseView';
 import { CourseColours } from './courseColours';
 
 export class ModelView {
+    readonly maxCourses: CourseModel['maxCourses'];
+    readonly maxSlots: CourseModel['maxSlots'];
     readonly startTime: string;
     readonly blockDuration: string;
     readonly blocks: number;
@@ -12,6 +14,8 @@ export class ModelView {
     readonly colours: CourseColours;
 
     constructor(source: CourseModel) {
+        this.maxCourses = source.maxCourses;
+        this.maxSlots = source.maxSlots;
         this.startTime = source.startTime;
         this.blockDuration = source.blockDuration;
         this.blocks = source.blocks;
@@ -100,6 +104,8 @@ export class ModelView {
 
     toCourseModel(): CourseModel {
         return {
+            maxCourses: this.maxCourses,
+            maxSlots: this.maxSlots,
             startTime: this.startTime,
             blockDuration: this.blockDuration,
             blocks: this.blocks,
