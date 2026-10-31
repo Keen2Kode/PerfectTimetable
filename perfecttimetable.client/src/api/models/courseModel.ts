@@ -8,6 +8,8 @@ import type { Course } from './course';
 import type { TimetableDay } from './timetableDay';
 
 export interface CourseModel {
+  maxCourses?: number;
+  maxSlots?: number;
   courses: Course[];
   days: TimetableDay[];
   /** @pattern ^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$ */

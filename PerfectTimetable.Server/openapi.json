@@ -162,7 +162,8 @@
                     "type": "string"
                   },
                   "Image": {
-                    "$ref": "#/components/schemas/IFormFile"
+                    "type": "string",
+                    "format": "binary"
                   }
                 }
               }
@@ -332,10 +333,6 @@
             "$ref": "#/components/schemas/BlockLengthFilter"
           }
         }
-      },
-      "IFormFile": {
-        "type": "string",
-        "format": "binary"
       },
       "ModelPropertiesRequest": {
         "required": [
