@@ -6,7 +6,14 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "dotnet run --project PerfectTimetable.Server --launch-profile https",
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "serverReadyAction": {
+        "pattern": "Now listening on:\\s+(https?://\\S+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome",
+        "webRoot": "${workspaceFolder}/perfecttimetable.client",
+        "killOnServerStop": true
+      }
     }
   ]
 }
