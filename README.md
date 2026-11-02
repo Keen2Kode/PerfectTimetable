@@ -14,7 +14,8 @@ npm ci --prefix perfecttimetable.client
 dotnet dev-certs https --trust
 ```
 
-To enable AI course import, store your API key using .NET user secrets:
+To enable AI course import, 
+choose the `appsettings.json`'s AI `Model` and `Endpoint`, Store the API key in your environment variables - my way locally is using .NET user secrets:
 
 ```powershell
 dotnet user-secrets set "AI:ApiKey" "YOUR_API_KEY" --project PerfectTimetable.Server
