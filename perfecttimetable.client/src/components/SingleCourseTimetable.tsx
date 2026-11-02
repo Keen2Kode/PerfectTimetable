@@ -4,6 +4,7 @@ import type { ModelView } from '../api/modelView';
 import type { CourseView } from '../api/courseView';
 import { TimetableSlotView } from '../api/timetableSlot';
 import { MultiCourseTimetable, type SlotEvent } from './MultiCourseTimetable';
+import {toast} from 'react-toastify';
 
 export type SingleCourseTimetableProps = {
   modelView: ModelView;
@@ -41,7 +42,18 @@ export default function SingleCourseTimetable({ modelView, courseView, setView}:
   const handleSelectSlot = (info: SlotInfo) => {
     const baseSlot = TimetableSlotView.parseTime(info.start, model, courseView);
     if (!baseSlot) return;
-      courseView.toggleSlots([baseSlot]);
+
+    const slots = courseView.getSlots();
+    const isSelected = slots.some((slot) => slot.key() === baseSlot.key());
+
+    if (!isSelected && slots.length >= modelView.maxSlots) {
+      toast.error(`You can add up to ${modelView.maxSlots} slots per course.`, {
+          toastId: `max-slots-${course.id}`,
+      });
+      return;
+    }
+
+    courseView.toggleSlots([baseSlot]);
 
     handleSlotsChange(courseView.getSlots());
   };
