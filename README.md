@@ -17,7 +17,7 @@ dotnet dev-certs https --trust
 To enable AI course import, store your API key using .NET user secrets:
 
 ```powershell
-dotnet user-secrets set "OpenAIKey" "YOUR_API_KEY" --project PerfectTimetable.Server
+dotnet user-secrets set "AI:ApiKey" "YOUR_API_KEY" --project PerfectTimetable.Server
 ```
 
 The rest of the app works without an API key.
@@ -39,3 +39,6 @@ npm run generate:api --prefix perfecttimetable.client
 ```
 
 This downloads the latest OpenAPI schema and regenerates the files in `perfecttimetable.client/src/api/`, hence updating the frontend API client and TypeScript models using Orval.
+
+## Configuration
+You can change the AI `Model` and `Endpoint`, ensure you update the environment variable `AI:ApiKey` accordingly.

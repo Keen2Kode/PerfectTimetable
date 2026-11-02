@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OpenAI;
 using OpenAI.Chat;
 using PerfectTimetable.Server.Models;
 using PerfectTimetable.Server.Models.DTOs;
+using System.ClientModel;
 using System.Text.Json;
 
 namespace PerfectTimetable.Server.Services
@@ -16,6 +18,7 @@ namespace PerfectTimetable.Server.Services
             this.configuration = configuration;
         }
 
+        // done this way instead of in constructor for lazy initialization
         private ChatClient Client
         {
             get
@@ -23,13 +26,18 @@ namespace PerfectTimetable.Server.Services
                 if (client != null)
                     return client;
 
-            // dotnet user-secrets set "OpenAI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
-            // .NET has a special secrets file in %APPDATA%, similar to .env
-                var apiKey = configuration["OpenAIKey"] ?? Environment.GetEnvironmentVariable("OpenAIKey");
+                // dotnet user-secrets set "OpenAI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
+                // .NET has a special secrets file in %APPDATA%, similar to .env
+                var apiKey = configuration["AI:ApiKey"];
                 if (string.IsNullOrWhiteSpace(apiKey))
-                    throw new InvalidOperationException("OpenAI key is not configured.");
+                    throw new InvalidOperationException("AI API key is not configured. Set AI:ApiKey or OpenAIKey.");
 
-                client = new(model: "gpt-4o", apiKey: apiKey);
+                var model = configuration["AI:Model"] ?? "gpt-4o";
+                var endpoint = configuration["AI:Endpoint"] ?? "https://api.openai.com/v1";
+                client = new(
+                    model: model,
+                    credential: new ApiKeyCredential(apiKey),
+                    options: new OpenAIClientOptions { Endpoint = new Uri(endpoint) });
                 return client;
             }
         }
