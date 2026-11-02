@@ -17,6 +17,52 @@ public class TimetableFactoryTests
         Assert.ThrowsException<System.ArgumentException>(() => factory.GenerateTimetables([], []));
     }
 
+    [DataTestMethod]
+    [DataRow(0)]
+    [DataRow(1)]
+    public void GenerateTimetables_CourseLimit_RejectsOnlyCountsAboveLimit(int extraCourses)
+    {
+        var model = ModelBuilder.CreateDefaultModel();
+        for (var i = 0; i < model.MaxCourses + extraCourses; i++)
+        {
+            // Overlapping courses keep the search small at the allowed boundary.
+            ModelBuilder.CreateCourse(model, 1, (TimetableDay.Monday, 1));
+        }
+        var factory = new TimetableFactory(model);
+
+        if (extraCourses > 0)
+        {
+            Assert.ThrowsException<System.ArgumentException>(() => factory.GenerateTimetables([], []));
+        }
+        else
+        {
+            Assert.AreEqual(0, factory.GenerateTimetables([], []).Count);
+        }
+    }
+
+    [DataTestMethod]
+    [DataRow(0)]
+    [DataRow(1)]
+    public void GenerateTimetables_SlotLimit_RejectsOnlyCountsAboveLimit(int extraSlots)
+    {
+        var model = ModelBuilder.CreateDefaultModel();
+        model.Blocks = model.MaxSlots + extraSlots;
+        var timeslots = Enumerable.Range(1, model.MaxSlots + extraSlots)
+            .Select(block => (TimetableDay.Monday, block))
+            .ToArray();
+        ModelBuilder.CreateCourse(model, 1, timeslots);
+        var factory = new TimetableFactory(model);
+
+        if (extraSlots > 0)
+        {
+            Assert.ThrowsException<System.ArgumentException>(() => factory.GenerateTimetables([], []));
+        }
+        else
+        {
+            Assert.AreEqual(model.MaxSlots, factory.GenerateTimetables([], []).Count);
+        }
+    }
+
     [TestMethod]
     public void GenerateTimetables_SingleSlotPerCourse_ReturnsSingleTimetable()
     {

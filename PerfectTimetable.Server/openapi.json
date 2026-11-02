@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:7140/"
+      "url": "https://localhost:7137/"
     }
   ],
   "paths": {
@@ -263,10 +263,20 @@
           "days",
           "startTime",
           "blockDuration",
-          "blocks"
+          "blocks",
+          "maxCourses",
+          "maxSlots"
         ],
         "type": "object",
         "properties": {
+          "maxCourses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxSlots": {
+            "type": "integer",
+            "format": "int32"
+          },
           "courses": {
             "type": "array",
             "items": {

@@ -97,6 +97,7 @@ function getDevServerConfig() {
             },
         },
         port: 49935,
+        strictPort: true,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),

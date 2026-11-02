@@ -29,10 +29,17 @@ namespace PerfectTimetable.Server.Models
             {
                 throw new ArgumentException($"No courses added.");
             }
+            else if (_model.Courses.Count > _model.MaxCourses)
+            {
+                throw new ArgumentException($"Max {_model.MaxCourses} courses allowed.");
+            }
+
             foreach(Course course in _model.Courses)
             {
                 if (course.Timeslots.Count == 0)
                     throw new ArgumentException($"Course {course.Name} has no selected slots.");
+                if (course.Timeslots.Count > _model.MaxSlots)
+                    throw new ArgumentException($"Course {course.Name} crossed the max slots allowed ({_model.MaxSlots}).");
             }
 
             List<Timetable> timetables = [];

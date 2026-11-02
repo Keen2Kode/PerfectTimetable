@@ -38,16 +38,16 @@ export function TimetableApp() {
     }, [setStoredModel]);
 
     useEffect(() => {
-        if (storedModel) {
-            return;
-        }
-
         const controller = new AbortController();
 
         fetchTimetable(controller.signal)
             .then((model) => {
                 if (!controller.signal.aborted) {
-                    setStoredModel(model);
+                    setView((previous) =>
+                        previous
+                            ? previous.withUpdatedConstants(model)
+                            : new ModelView(model)
+                    );
                     setError(null);
                 }
             })
@@ -58,7 +58,7 @@ export function TimetableApp() {
             });
 
         return () => controller.abort();
-    }, [storedModel, setStoredModel]);
+    }, [setView]);
 
     if (error) {
         return <p role="alert">Failed to load timetable: {error}</p>;
