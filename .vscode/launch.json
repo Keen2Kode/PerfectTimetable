@@ -3,10 +3,12 @@
   "configurations": [
     {
       "name": "Run PerfectTimetable Server (https)",
-      "type": "node-terminal",
+      "type": "coreclr",
       "request": "launch",
-      "command": "dotnet run --project PerfectTimetable.Server --launch-profile https",
-      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "dotnet: build",
+      "program": "${workspaceFolder}/PerfectTimetable.Server/bin/Debug/net9.0/PerfectTimetable.Server.dll",
+      "cwd": "${workspaceFolder}/PerfectTimetable.Server",
+      "console": "internalConsole",
       "serverReadyAction": {
         "pattern": "Now listening on:\\s+(https?://\\S+)",
         "uriFormat": "%s",
