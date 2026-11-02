@@ -29,3 +29,13 @@ dotnet run --project PerfectTimetable.Server --launch-profile https
 ```
 
 Open https://localhost:49935. The backend runs at https://localhost:7137 and automatically starts the Vite frontend.
+
+## Development notes
+
+After changing backend endpoints or models, start the app and run:
+
+```powershell
+npm run generate:api --prefix perfecttimetable.client
+```
+
+This downloads the latest OpenAPI schema and regenerates the files in `perfecttimetable.client/src/api/`, hence updating the frontend API client and TypeScript models using Orval.
