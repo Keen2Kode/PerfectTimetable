@@ -44,6 +44,10 @@ export class ModelView {
     }
 
     withCourseAdded(course?: Course): ModelView {
+        if (this.courses.length >= this.maxCourses) {
+            return this;
+        }
+
         const model = this.toCourseModel();
         const courseToAdd =
             course ?? ModelView.createEmptyCourse(model.courses);

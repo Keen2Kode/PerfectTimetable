@@ -18,6 +18,17 @@ export function CourseCardAdd({ modelView, setView, nextColour }: CourseCardAddP
     } as CSSProperties;
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+    const courseLimitReached = () => {
+        if (modelView.getCourses().length < modelView.maxCourses) {
+            return false;
+        }
+
+        toast.error(`You can add up to ${modelView.maxCourses} courses.`, {
+            toastId: 'max-courses',
+        });
+        return true;
+    };
+
     const { mutateAsync: submitScreenshot, isPending } = useMutation<AICourseResponseDto, Error, File>({
         mutationFn: async (file: File) => {
             return await uploadCourseScreenshot({
@@ -26,6 +37,8 @@ export function CourseCardAdd({ modelView, setView, nextColour }: CourseCardAddP
             })
         },
         onSuccess: ({ course, failedSlots }) => {
+            if (courseLimitReached()) return;
+
             toast.success('Uploaded screenshot for AI parsing.');
             if (failedSlots.length > 0) {
                 toast.warn(`${failedSlots.join('\n')}`);
@@ -43,6 +56,11 @@ export function CourseCardAdd({ modelView, setView, nextColour }: CourseCardAddP
             return;
         }
 
+        if (courseLimitReached()) {
+            event.target.value = '';
+            return;
+        }
+
         try {
             await submitScreenshot(file);
         } catch {
@@ -57,8 +75,11 @@ export function CourseCardAdd({ modelView, setView, nextColour }: CourseCardAddP
             <button
                 type="button"
                 className="course-card course-card--add course-card--interactive"
-                onClick={() =>
-                    setView((previous) => previous?.withCourseAdded() ?? modelView.withCourseAdded())}
+                onClick={() => {
+                    if (courseLimitReached()) return;
+
+                    setView((previous) => previous?.withCourseAdded() ?? modelView.withCourseAdded());
+                }}
                 style={addCardStyle}
             >
                 <PlusIcon aria-hidden className="course-card__icon course-card__icon--add" />
@@ -66,7 +87,11 @@ export function CourseCardAdd({ modelView, setView, nextColour }: CourseCardAddP
             <button
                 type="button"
                 className="course-card course-card--add course-card--interactive"
-                onClick={() => !isPending && fileInputRef.current?.click()}
+                onClick={() => {
+                    if (isPending || courseLimitReached()) return;
+
+                    fileInputRef.current?.click();
+                }}
                 disabled={isPending}
                 style={addCardStyle}
             >
