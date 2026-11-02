@@ -5,8 +5,11 @@ namespace PerfectTimetable.Server.Models
 {
     public class CourseModel
     {
-        public int MaxCourses => 20;
-        public int MaxSlots => 30;
+        public const int MaxCoursesLimit = 20;
+        public const int MaxSlotsLimit = 30;
+
+        public int MaxCourses => MaxCoursesLimit;
+        public int MaxSlots => MaxSlotsLimit;
 
         public CourseModel() { }
         public CourseModel(CourseModel model)

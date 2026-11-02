@@ -35,6 +35,14 @@ export class ModelView {
         return this.courses.find((course) => course.id === id);
     }
 
+    withUpdatedConstants(source: CourseModel): ModelView {
+        return new ModelView({
+            ...this.toCourseModel(),
+            maxCourses: source.maxCourses,
+            maxSlots: source.maxSlots,
+        });
+    }
+
     withCourseAdded(course?: Course): ModelView {
         const model = this.toCourseModel();
         const courseToAdd =
