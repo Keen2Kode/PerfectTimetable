@@ -26,11 +26,11 @@ namespace PerfectTimetable.Server.Services
                 if (client != null)
                     return client;
 
-                // dotnet user-secrets set "OpenAI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
+                // dotnet user-secrets set "AI:ApiKey" "your-api-key-here" --project PerfectTimetable.Server
                 // .NET has a special secrets file in %APPDATA%, similar to .env
                 var apiKey = configuration["AI:ApiKey"];
                 if (string.IsNullOrWhiteSpace(apiKey))
-                    throw new InvalidOperationException("AI API key is not configured. Set AI:ApiKey or OpenAIKey.");
+                    throw new InvalidOperationException("AI API key is not configured. Set AI:ApiKey environment variable.");
 
                 var model = configuration["AI:Model"] ?? "gpt-4o";
                 var endpoint = configuration["AI:Endpoint"] ?? "https://api.openai.com/v1";
