@@ -86,7 +86,7 @@ export function MultiCourseTimetable({
     },
     allDayAccessor: () => false,
     dayLayoutAlgorithm: 'no-overlap',
-    longPressThreshold: 1,
+    longPressThreshold: 600,
   };
 
   return (
