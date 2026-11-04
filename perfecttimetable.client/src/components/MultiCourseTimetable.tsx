@@ -65,6 +65,7 @@ export function MultiCourseTimetable({
     defaultDate: min,
     defaultView: view,
     views: [view],
+    formats: { dayFormat: 'ddd' },
     toolbar: false,
     selectable: false,
     events,
