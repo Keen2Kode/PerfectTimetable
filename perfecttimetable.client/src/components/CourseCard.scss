@@ -108,10 +108,8 @@
         }
 
         &--add {
-            --course-card-icon-size: 1.75rem;
-            --course-card-icon-color: rgba(49, 46, 129, 0.85);
+            --course-card-icon-size: 2.5rem;
             --course-card-icon-transition: transform 120ms ease-in-out, color 120ms ease-in-out;
-            --course-card-icon-hover-color: rgba(49, 46, 129, 0.95);
             --course-card-icon-hover-transform: scale(1.05);
         }
     }
