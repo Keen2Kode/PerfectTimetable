@@ -29,6 +29,15 @@
     margin-right: 0;
 }
 
+// Let native browser taps reach empty slots through big-calendar's overlay, while keeping events tappable.
+.course-timetable--editable .rbc-events-container {
+    pointer-events: none;
+}
+
+.course-timetable--editable .rbc-event {
+    pointer-events: auto;
+}
+
 .course-timetable__selection {
     @include card.course-card-interactive(--course-timetable-slot-base);
     background-color: color-mix(in srgb, var(--course-timetable-slot-base, rgba(100, 108, 255, 0.95)) 70%, white);

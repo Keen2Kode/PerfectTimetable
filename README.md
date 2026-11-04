@@ -29,7 +29,16 @@ Start the app:
 dotnet run --project PerfectTimetable.Server --launch-profile https
 ```
 
-Open https://localhost:49935. The backend runs at https://localhost:7137 and automatically starts the Vite frontend.
+Find the **Network** URL in Vite's startup output, for example:
+
+```text
+Local:   https://localhost:49935/
+Network: https://{IP}:49935/
+```
+
+For PC, open the Local URL.
+For mobile devices, ensure the device is connected to the same Wi-Fi, and then open the Network URL.
+
 
 ## Development notes
 

@@ -1,5 +1,5 @@
-import type { ComponentType, Dispatch, ReactNode, SetStateAction } from 'react';
-import type { CalendarProps, SlotInfo } from 'react-big-calendar';
+import type { Dispatch, SetStateAction } from 'react';
+import type { CalendarProps } from 'react-big-calendar';
 import type { ModelView } from '../api/modelView';
 import type { CourseView } from '../api/courseView';
 import { TimetableSlotView } from '../api/timetableSlot';
@@ -21,26 +21,8 @@ export default function SingleCourseTimetable({ modelView, courseView, setView}:
         setView((previous) => previous?.withUpdatedCourse(course.id, slots) ?? null)
     };
 
-  const slotWrapper = ({ value, children }: { value: Date; children: ReactNode }) => {
-    const parsed = TimetableSlotView.parseTime(value, model, courseView);
-    const disabled = parsed == null;
-    return (
-      <div
-        className={disabled ? 'course-timetable__slot--disabled' : undefined}
-        style={disabled ? { pointerEvents: 'none' } : undefined}
-      >
-        {children}
-      </div>
-    );
-  };
-
-  const components = {
-    timeSlotWrapper: slotWrapper as ComponentType,
-    allDay: () => null,
-  } as CalendarProps<SlotEvent>['components'];
-
-  const handleSelectSlot = (info: SlotInfo) => {
-    const baseSlot = TimetableSlotView.parseTime(info.start, model, courseView);
+  const handleSelectSlot = (value: Date) => {
+    const baseSlot = TimetableSlotView.parseTime(value, model, courseView);
     if (!baseSlot) return;
 
     const slots = courseView.getSlots();
@@ -64,15 +46,32 @@ export default function SingleCourseTimetable({ modelView, courseView, setView}:
     handleSlotsChange(courseView.getSlots());
   };
 
+  const slotPropGetter: CalendarProps<SlotEvent>['slotPropGetter'] = (value) => {
+    const disabled = TimetableSlotView.parseTime(value, model, courseView) == null;
+
+    return {
+      className: disabled ? 'course-timetable__slot--disabled' : undefined,
+      style: disabled ? { pointerEvents: 'none' } : undefined,
+      onClick: (event) => {
+        // This getter also applies to time labels; only day cells select slots.
+        if (!disabled && event.currentTarget.closest('.rbc-day-slot')) {
+          handleSelectSlot(value);
+        }
+      },
+    };
+  };
+
   return (
     <MultiCourseTimetable
       modelView={modelView}
       timetableSlots={slots}
       calendarOverrideProps={{
-        selectable: true,
-        onSelectSlot: handleSelectSlot,
+        className: 'course-timetable--editable',
+        // Override big-calendar's selection gestures: native clicks handle taps,
+        // and the browser handles swipe scrolling.
+        selectable: false,
+        slotPropGetter,
         onSelectEvent: handleSelectEvent,
-        components,
       }}
     />
   );
