@@ -1,8 +1,8 @@
 ![Perfectable banner](readme_assets/perfectable_banner_fade.png)
 
-# Perfectable
+# Perfectable - Timetable Preferences Scheduler
 
-Perfectable was built as a passion project to make it easy for University students heading into their next semester to create the "Perfect" Timetable preferences.
+Helping University students create the "Perfect" Timetable preferences as they head into their next semester.
 
 Click [here](https://perfect-timetable.up.railway.app/) to view the deployed app. 
 
@@ -16,9 +16,34 @@ I made this with 2 specific goals in mind:
    ![Demo of generating a timetable from scheduling preferences](readme_assets/timetable_usecase_2.gif)
 
 
-## Developer Notes
 
-### Running Locally
+# Developer Notes
+
+## The Full-Stack
+
+### Backend
+
+- **C# + ASP.NET Core (.NET 9)** - REST API and timetable generation, using MVC infrastructure.
+- **OpenAI .NET SDK** - AI-assisted course import, dependency injected to the controller
+- **OpenAPI** - API schema and documentation
+
+### Frontend
+
+- **React + TypeScript**, built with **Vite**, component-based architecture with MVVM-inspired separation
+- **React Big Calendar** - Timetable display and date handling
+- **TanStack Query + Axios** - API requests and server state
+- **Orval** - Generated API client and TypeScript models
+
+### Testing
+
+- **MSTest** - Backend unit testing
+
+### Deployment
+
+- **Docker** - Multi-stage container build
+- **Railway** - Application hosting
+
+## Running Locally
 
 Requires the .NET 9 SDK and Node.js 22. Run these commands from the repository root.
 
@@ -46,7 +71,7 @@ For PC, open the Local URL.
 
 For mobile devices, ensure the device is connected to the same Wi-Fi, and then open the Network URL.
 
-### AI Configuration
+## AI Configuration
 To enable AI course import, 
 choose the `appsettings.json`'s AI `Model` and `Endpoint`, store the API key in your environment variables - my way locally is using .NET user secrets:
 
@@ -57,7 +82,7 @@ dotnet user-secrets set "AI:ApiKey" "YOUR_API_KEY" --project PerfectTimetable.Se
 The rest of the app works without an API key.
 
 
-### Refresh Frontend
+## Refresh Frontend
 
 After changing backend endpoints or models, start the app and run:
 
