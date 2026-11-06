@@ -9,11 +9,11 @@ Click [here](https://perfect-timetable.up.railway.app/) to view the deployed app
 I made this with 2 specific goals in mind:
 1. **Simplify class selection:** Current class selection tables are confusing. I wanted to make them a lot more visually editable (with a little AI-assist!).
 
-   ![Demo of visually editing timetable classes with AI assistance](readme_assets/timetable%20usecase%201.gif)
+   ![Demo of visually editing timetable classes with AI assistance](readme_assets/timetable_usecase_1.gif)
 
 2. **Generate "Perfect" Timetables:** Simplify the hassle of comparing all class slot times to get the "Perfect" Timetable. Simply adjust your preferences and push a button. Want to cram all your classes in 1-2 days? No problem.
 
-   ![Demo of generating a timetable from scheduling preferences](readme_assets/timetable%20usecase%202.gif)
+   ![Demo of generating a timetable from scheduling preferences](readme_assets/timetable_usecase_2.gif)
 
 
 ## Developer Notes
