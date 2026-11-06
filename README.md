@@ -1,3 +1,5 @@
+![Perfectable banner](readme_assets/perfectable_banner_fade.png)
+
 # Perfectable
 
 Perfectable was built as a passion project to make it easy for University students heading into their next semester to create the "Perfect" Timetable preferences.
@@ -5,9 +7,13 @@ Perfectable was built as a passion project to make it easy for University studen
 Click [here](https://perfect-timetable.up.railway.app/) to view the deployed app. 
 
 I made this with 2 specific goals in mind:
-1. Current class selection tables are confusing. I wanted to make them a lot more visually editable (with a little AI-assist!). (TODO: insert readme asset gif usecase 1)
-2. Simplify the hassle of comparing all class slot times to get the "Perfect" Timetable. Simply adjust your preferences and push a button. Want to cram all your classes in 1-2 days? No problem.
-(TODO: insert readme asset gif usecase 1)
+1. **Simplify class selection:** Current class selection tables are confusing. I wanted to make them a lot more visually editable (with a little AI-assist!).
+
+   ![Demo of visually editing timetable classes with AI assistance](readme_assets/timetable%20usecase%201.gif)
+
+2. **Generate "Perfect" Timetables:** Simplify the hassle of comparing all class slot times to get the "Perfect" Timetable. Simply adjust your preferences and push a button. Want to cram all your classes in 1-2 days? No problem.
+
+   ![Demo of generating a timetable from scheduling preferences](readme_assets/timetable%20usecase%202.gif)
 
 
 ## Developer Notes
